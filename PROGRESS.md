@@ -11,6 +11,17 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-10-22 - render scale with MSAA froze D3D12 (device removed)
+
+Harry: D3D12 only, MSAA on, any render scale change: the game stalls (about 10 fps, nothing new drawn) and never
+recovers. The new diagnostics showed pipelines failing with 887A0005 (DXGI_ERROR_DEVICE_REMOVED) from the moment of
+the change; video memory was fine (2 of 19.6 GB). Cause (SDK): RescaleTargets dropped every MSAA twin, which records
+the depth twin's resolve into its depth target, then erased the depth targets, releasing them under that unexecuted
+command; the GPU wrote freed memory. Every removal now goes through ReleaseTarget (resources kept until the frame's
+fence), also the failed colour remake and the extension reset. D3D11 holds its resources itself. Merged with the
+fork's main (PGR2's squeeze logging and depth-as-colour); smoke OK for PGR1 and PGR2. PGR2 gets the fix with its
+next SDK update. Next: Harry retests D3D12, MSAA 8x, render scale changes.
+
 ### 2026-10-22 - the icon
 
 Harry's drawing (.local/win/pgr1-icon.png, 1254 px, opaque) cut to its circle (the corners transparent) as
