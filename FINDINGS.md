@@ -53,3 +53,15 @@ game's own code and data, with its addresses).
 - **[game]** The car shadow: the car drawn from above into a 256x256 R5G6B5 target (cleared white, no depth, FVF
   0x112, colour TFACTOR), then a quad (FVF 0x142) multiplies it onto the road with alpha kill on. The draws leave
   alpha 0 in the silhouette; the console reads an R5G6B5 target's alpha as 1. **[console]** The SDK now does too.
+- **[game]** Start-up screens: after the movie the front end shows the Kudos splash, "Presented By Microsoft", the
+  Bizarre Creations logo and the warning (about 21 s). Frontend.ini's own SkipIntroScreens (0x2E92A8; read into it
+  by the INI loader 0x4DAB4, tested by the movie start 0xC9379 and the intro handler 0x566B1) skips them all.
+  SkipPresentation (0x2E92A0, copied to 0x2C85C4 at 0x53C2C) is something else; left alone.
+- **[game]** Race camera: every camera's projection goes through 0xA58E0 (cdecl: zoom, ...; fov 1.14 rad over the
+  zoom, horizontal negated); the race camera calls it at 0x7863E (zoom 1; 2 in the fly-by), the car shadow camera at
+  0x284BB (12), menus at 0xA6F39 and 0xAA65C (1.8); the rear mirror builds its own at 0xA59CA.
+- **[game]** The game's task table (0x15B9F0 to 0x15BEB8, 24 bytes each: name, flags, four handlers; slot 2 draws,
+  0x119E0 is an empty function): ARCADE_RACER (0x15BDB0) draws the race HUD at 0x820F0. OVERLAYS (0xC4CA0) and
+  COMMON_LOAD (0x94280) are not the HUD.
+- **[game]** Draw distance: location.ini's IngameDrawDistance / PresentationDrawDistance per city, read into the
+  location records (0x2D160A + city * 0x26E, +0x1C and +0x20); their reader not found yet.

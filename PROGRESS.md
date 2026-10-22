@@ -11,6 +11,15 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-10-22 - PC features: the whole intro skipped, field of view, hide HUD
+
+- skip_intro now also skips the logos and warning: Frontend.ini's own SkipIntroScreens (0x2E92A8) is set when the
+  movie is skipped. Headless: the title in under a second; a race reached from it.
+- fov_percent (50 to 200, PGR1_FOV): the race camera's zoom (its call to 0xA58E0 at 0x7863E) scaled; checked at 150%.
+- hide_hud (PGR1_HIDE_HUD): the ARCADE_RACER task's drawing (0x820F0) skipped; checked in a race.
+- Not done: draw distance (the location records' reader not found), the PC Settings menu entry, 60 fps races.
+Next (Harry, Windows): skip intro, field of view and hide HUD in the settings window (F1).
+
 ### 2026-10-22 - Windows round 2: widescreen good; skip intro skips only the movie; car shadow an outline on D3D12
 
 Harry: 16:9 and 21:9 work. "Skip intro doesn't work": his log shows `pgr1: intro movie d:\fmv\intro.bik skipped`, so
