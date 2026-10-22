@@ -50,3 +50,6 @@ game's own code and data, with its addresses).
   shape. No culling gaps seen at 2.39:1.
 - **[game]** The HUD and menus are pretransformed (FVF 0x144) with depth on and the comparison ALWAYS (0x207); the SDK's
   2D squeeze now counts only real depth tests, and squeezes PGR1's 2D into the centred 4:3 (GameInfo::hud_aspect).
+- **[game]** The car shadow: the car drawn from above into a 256x256 R5G6B5 target (cleared white, no depth, FVF
+  0x112, colour TFACTOR), then a quad (FVF 0x142) multiplies it onto the road with alpha kill on. The draws leave
+  alpha 0 in the silhouette; the console reads an R5G6B5 target's alpha as 1. **[console]** The SDK now does too.

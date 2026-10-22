@@ -19,7 +19,11 @@ not found yet (string ids 21/22, the mode runner 0xC4D40 with modes 0x15B9E0 and
 Car shadow on D3D12: only an outline. Headless (XBE_CLEAR_LOG=1, REF_DRAWLOG): the car is drawn from above into a
 256x256 R5G6B5 target (03A10000, cleared white each frame with flags F0, no depth, 21 draws, FVF 0x112) and one quad
 (FVF 0x142, blend ZERO/SRCCOLOR) multiplies it onto the road. The CPU reference renderer gets a solid shadow.
-Next: a D3D12 capture of a race frame (XBE_CAPTURE_DIR + F3) and a D3D11 comparison from Harry.
+Harry: the same on D3D11. His D3D12 capture: the shadow target holds the car's dark silhouette (76,76,88) with
+alpha 0 (cleared white, alpha 255); the shadow quad's shader discards texels with alpha 0 (AlphaKill on stage 0), so
+only the filtered edges drew: the outline. R5G6B5 has no alpha: the console reads it as 1. SDK fix: kTexOpaque, both
+renderers force alpha 1 when a target is read as R5G6B5, X1R5G5B5 or X8R8G8B8 (swizzled or linear). wincheck and
+DXC pass, both smoke tests pass.
 
 ### 2026-10-22 - PC features: skip intro, widescreen and ultrawide
 
