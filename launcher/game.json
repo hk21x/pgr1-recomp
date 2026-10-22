@@ -1,0 +1,12 @@
+{
+    "title": "Project Gotham Racing",
+    "short": "PGR1",
+    "exe": "PGR1",
+    "xbe": "default.xbe",
+    "releases": {
+        "4878c3bdbd44663b64ce64986b313e8c6b7f8917": "PAL (Europe)"
+    },
+    "repo": "https://github.com/hk21x/pgr1-recomp.git",
+    "branch": "main",
+    "toolchain": "https://raw.githubusercontent.com/hk21x/pgr1-recomp/main/launcher/toolchain.json"
+}
