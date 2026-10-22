@@ -4,7 +4,7 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Status
 - Milestone: 1 - inventory done (Ghidra project `pgr1`, push buffers checked, GOTHPOK decoder)
-- Repository: local git (main), SDK submodule on the fork's main; GitHub repo hk21x/pgr1-recomp (private) to make
+- Repository: local git (main), SDK submodule on the fork's main; GitHub hk21x/pgr1-recomp (private)
 - Push buffers: none (no D3DPushBuffer objects, no hand-written NV2A commands in game code)
 - XDK: 3911-3950 (D3D8 3948); no signatures yet (`sdk/xdk/3948/` to make)
 - Plan: .local/PGR1-plan.md (detailed, not committed) and .local/PGR1-summary.md
