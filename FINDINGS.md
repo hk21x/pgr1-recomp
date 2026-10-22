@@ -39,3 +39,14 @@ game's own code and data, with its addresses).
   compared with D3DTOP_BUMPENVMAP. 32 per stage at D3D_DeferredTextureState 0xF9400.
 - **[console]** The runtime keeps 5659's numbers and translates at the title's tables (sdk runtime/xdk/state_numbering.h,
   layout.toml `StateNumbering = 3948`). Simple states need no table: they are keyed by the encode table's method.
+
+## PC features
+- **[game]** The intro movie: startup 0xC9200 plays `FMV\Intro.bik` (IntroJ/G/F/S/I by language, 0xC9383) through the
+  movie player 0xE9780 (cdecl: the path, result unused; 0xDD920 loads the Bink sections around it with 1, then 0).
+  skip_intro returns from it for those paths.
+- **[game]** No widescreen mode: the game never calls XGetVideoFlags (0xD4321). Every 3D projection is built by
+  0xA57F0 (cdecl: out, height/width (0x2BBB64, 0.75 from 0xC8158), near, far, horizontal and vertical fov; the only
+  fptan in the game), x scale cot(hfov / aspect / 2) at out[0]. Widescreen is Hor+: out[0] times 4:3 over the frame's
+  shape. No culling gaps seen at 2.39:1.
+- **[game]** The HUD and menus are pretransformed (FVF 0x144) with depth on and the comparison ALWAYS (0x207); the SDK's
+  2D squeeze now counts only real depth tests, and squeezes PGR1's 2D into the centred 4:3 (GameInfo::hud_aspect).

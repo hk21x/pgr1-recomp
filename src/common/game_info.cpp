@@ -1,4 +1,17 @@
+#include <cstdlib>
+
 #include "app/app.h"
+
+namespace pgr1 {
+bool skip_intro = false;  // no intro movie at start (src/game/hooks.cpp)
+}
+
+namespace {
+// PGR1_SKIP_INTRO=1 sets the option without a settings file (the headless harness has none)
+void Init() {
+    if (const char* e = std::getenv("PGR1_SKIP_INTRO"); e && *e == '1') pgr1::skip_intro = true;
+}
+}  // namespace
 
 // what the runtime asks of the game; strings must be set, hooks may stay null
 const app::GameInfo app::kGame = {
@@ -10,10 +23,11 @@ const app::GameInfo app::kGame = {
     .splash = L"splash",                  // optional splash.png or splash.bmp beside the exe
     .missing = L"Put the game in the assets folder: its disc image (.iso), or default.xbe with its folders beside it.",
     .images = {{"default.xbe", "PGR1"}},  // each recompiled xbe and its exe, for title launches
-    .options = {},                        // game settings kept in the settings file
+    // game settings kept in the settings file
+    .options = {{"skip_intro", &pgr1::skip_intro, nullptr, "Skip intro movie", "At the next start."}},
     .load = nullptr,                      // reads more from the settings file's toml::table
     .save = nullptr,                      // writes more into it
-    .init = nullptr,                      // after the settings load, before the window and boot
+    .init = Init,                         // after the settings load, before the window and boot
     .loaded = nullptr,                    // image in memory, before its entry point runs
     .window = nullptr,                    // the game window is up
     .message = nullptr,                   // window messages first; true takes one
@@ -23,4 +37,5 @@ const app::GameInfo app::kGame = {
     // optional, after these: .achievements (conditions on guest memory), .same_code (other releases' xbe SHA-1s with
     // the same code), .wheel (what a steering wheel's force feedback follows)
     .bink_frame_hold = false,  // the movie player (0xE9780) waits on BinkWait itself (0xE98D0) and counts its frames
+    .hud_aspect = 4.0f / 3.0f,  // no widescreen mode: menus and HUD are laid out 4:3, the 3D widens (src/game/hooks.cpp)
 };

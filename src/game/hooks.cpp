@@ -1,8 +1,53 @@
-// Hooks for default.xbe. A strong definition replaces the recompiled function at that address, for example:
-//
-// #include "xdk/hle.h"
-//
-// X86_EXTERN_FUNC(__imp__sub_00012345);
-// X86_FUNC(sub_00012345) {
-//     __imp__sub_00012345(ctx, base);  // the original
-// }
+// Hooks for default.xbe. A strong definition replaces the recompiled function at that address.
+#include <algorithm>
+#include <cctype>
+#include <cstring>
+#include <string>
+
+#include "app/app.h"
+#include "core/log.h"
+#include "kernel/kernel.h"
+#include "xdk/hle.h"
+
+namespace pgr1 {
+extern bool skip_intro;
+}
+
+// skip_intro: startup (0xC9200) plays FMV\Intro.bik (IntroJ/G/F/S/I by language, 0xC9383) through the movie player
+// 0xE9780 (cdecl: the path; its result unused), which loads the Bink sections around the movie (0xDD920 with 1, then 0)
+X86_EXTERN_FUNC(__imp__sub_000E9780);
+X86_FUNC(sub_000E9780) {
+    if (pgr1::skip_intro) {
+        std::string path;
+        for (uint32_t p = kernel::R32(ctx.esp + 4); p && path.size() < 260; p++) {
+            char c = char(kernel::G<uint8_t>(p));
+            if (!c) break;
+            path += char(std::tolower(static_cast<unsigned char>(c)));
+        }
+        if (path.find("fmv\\intro") != std::string::npos) {
+            LOGR("pgr1: intro movie %s skipped", path.c_str());
+            ctx.esp += 4;  // ret
+            return;
+        }
+    }
+    __imp__sub_000E9780(ctx, base);
+}
+
+// Widescreen: PGR1 renders 4:3 only (it never asks XGetVideoFlags). Every 3D projection is built by 0xA57F0 (cdecl:
+// out, the view's height/width, near, far, horizontal fov, vertical fov; the only fptan in the game), shown at the
+// frame's shape it would stretch, so its x scale (out[0]) narrows by 4:3 over that shape: the same height, a wider
+// view. The 2D stays 4:3 in the middle (GameInfo::hud_aspect).
+X86_EXTERN_FUNC(__imp__sub_000A57F0);
+X86_FUNC(sub_000A57F0) {
+    uint32_t out = kernel::R32(ctx.esp + 4);
+    __imp__sub_000A57F0(ctx, base);
+    float aspect = app::FrameAspect(), k = 4.0f / 3.0f / aspect;
+    if (out && k < 0.999f) {
+        float m00;
+        std::memcpy(&m00, &kernel::G<uint32_t>(out), 4);
+        m00 *= k;
+        std::memcpy(&kernel::G<uint32_t>(out), &m00, 4);
+        static float logged = 0;
+        if (logged != aspect) LOGR("pgr1: 3D views widened to %.3f:1", logged = aspect);
+    }
+}

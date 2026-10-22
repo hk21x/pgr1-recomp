@@ -11,6 +11,18 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-10-22 - PC features: skip intro, widescreen and ultrawide
+
+- skip_intro (settings option, PGR1_SKIP_INTRO=1 headless): the movie player returns at once for FMV\Intro*.bik.
+- Widescreen: PGR1 is 4:3 only and was stretched on wide displays. The projection builder 0xA57F0 is hooked so 3D
+  widens (Hor+: same height, wider view) to the frame's shape (16:9, or the display's with aspect = 'screen').
+  SDK: GameInfo::hud_aspect (PGR1 4:3) for the 2D squeeze, and the squeeze skips only draws whose depth comparison
+  can fail (PGR1 draws its 2D with depth on and ALWAYS). Checked at 2.39:1 headless (FRAME_ASPECT_X100=239): the
+  car keeps its shape, scenery reaches the edges, HUD and menu panels 4:3 in the middle. PGR2 checked: none of its
+  pretransformed draws have depth on with ALWAYS, so its squeeze is unchanged.
+- Both smoke tests pass on the SDK branch (fork pc-features; its first commit is titled "wip": these changes).
+Next (Harry, Windows): skip intro, 16:9 and the 3440x1440 'screen' aspect in races and menus. Then FOV, hide HUD.
+
 ### 2026-10-22 - Windows: plays; sound overloaded, fixed by the library's mix bin headroom
 
 Harry's first Windows build: plays, sound "completely broken". His capture: 27% of samples at full scale (RMS -2 dB)
