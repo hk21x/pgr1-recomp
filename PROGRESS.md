@@ -11,6 +11,12 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-10-22 - the icon
+
+Harry's drawing (.local/win/pgr1-icon.png, 1254 px, opaque) cut to its circle (the corners transparent) as
+launcher/icon.png (512 px) and launcher/icon.ico (256 as PNG, 128, 64, 48, 32, 24, 16), as PGR2's. CMakeLists
+embeds launcher/icon.ico into PGR1.exe (resource 1) and the launcher's build uses it.
+
 ### 2026-10-22 - PC features: the whole intro skipped, field of view, hide HUD
 
 - skip_intro now also skips the logos and warning: Frontend.ini's own SkipIntroScreens (0x2E92A8) is set when the
