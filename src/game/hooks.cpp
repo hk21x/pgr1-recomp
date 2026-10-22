@@ -1,10 +1,14 @@
 // Hooks for default.xbe. A strong definition replaces the recompiled function at that address.
 #include <algorithm>
+#include <atomic>
+#include <chrono>
+#include <cmath>
 #include <cctype>
 #include <cstring>
 #include <string>
 
 #include "app/app.h"
+#include "core/input.h"
 #include "core/log.h"
 #include "kernel/kernel.h"
 #include "xdk/hle.h"
@@ -76,11 +80,32 @@ X86_FUNC(sub_000A58E0) {
 
 // hide_hud: the race HUD (time, targets, Kudos, rev counter, lap) is drawn by the ARCADE_RACER task (the task table's
 // entry 0x15BDB0: setup 0x807C0, drawing 0x820F0, 0x80940); its drawing is skipped, the race goes on
+namespace {
+std::atomic<int64_t> g_hud_drawn{0};  // steady clock ms: the race HUD's drawing ran (racing, not the attract demo)
+int64_t NowMs() {
+    using namespace std::chrono;
+    return duration_cast<milliseconds>(steady_clock::now().time_since_epoch()).count();
+}
+}  // namespace
+
 X86_EXTERN_FUNC(__imp__sub_000820F0);
 X86_FUNC(sub_000820F0) {
+    g_hud_drawn = NowMs();
     if (pgr1::hide_hud) {
         ctx.esp += 4;  // ret
         return;
     }
     __imp__sub_000820F0(ctx, base);
 }
+
+namespace pgr1 {
+// GameInfo::wheel: a steering wheel's forces follow the player's car while its race HUD is drawn (the ARCADE_RACER task
+// runs in the player's races, not the attract demo); its speed is the float at 0x2EC9D8, m/s (the top speed challenge
+// 0x44C60 times it by 3.6; 26.8 against the speedometer's 57 mph, 32.3 against 71, headless). The gear is not known.
+void WheelFeel(input::WheelFeel& feel) {
+    feel.racing = NowMs() - g_hud_drawn.load() < 200;
+    float speed;
+    std::memcpy(&speed, &kernel::G<uint32_t>(0x2EC9D8), 4);
+    feel.speed = feel.racing && std::isfinite(speed) ? speed : 0;
+}
+}  // namespace pgr1

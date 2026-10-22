@@ -17,8 +17,12 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
   movie is skipped. Headless: the title in under a second; a race reached from it.
 - fov_percent (50 to 200, PGR1_FOV): the race camera's zoom (its call to 0xA58E0 at 0x7863E) scaled; checked at 150%.
 - hide_hud (PGR1_HIDE_HUD): the ARCADE_RACER task's drawing (0x820F0) skipped; checked in a race.
-- Not done: draw distance (the location records' reader not found), the PC Settings menu entry, 60 fps races.
-Next (Harry, Windows): skip intro, field of view and hide HUD in the settings window (F1).
+- Wheel force feedback: GameInfo::wheel from the player's speed (0x2EC9D8, m/s; checked against the speedometer,
+  26.8 for 57 mph and 32.3 for 71) while the race HUD is drawn; the gear (H-pattern shifters) not yet.
+- 60 fps races: not needed. PGR1 races at 60 already (frames match vertical blanks in races; the clock keeps time).
+- Not done: draw distance (location.ini's IngameDrawDistance is read into the location records, 0x2D160A + city *
+  0x26E +0x1C, but nothing read Financial District's during a race: a watchpoint saw no read), the PC Settings entry.
+Next (Harry, Windows): skip intro, field of view and hide HUD in the settings window (F1); a wheel if you have one.
 
 ### 2026-10-22 - Windows round 2: widescreen good; skip intro skips only the movie; car shadow an outline on D3D12
 

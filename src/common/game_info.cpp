@@ -1,8 +1,10 @@
 #include <cstdlib>
 
 #include "app/app.h"
+#include "core/input.h"
 
 namespace pgr1 {
+void WheelFeel(input::WheelFeel& feel);  // src/game/hooks.cpp
 bool skip_intro = false;  // no intro movie, logos or warning at start (src/game/hooks.cpp)
 bool hide_hud = false;  // no race HUD, for screenshots (src/game/hooks.cpp)
 uint32_t fov_percent = 100;  // the race camera's field of view, percent of the console's (src/game/hooks.cpp)
@@ -43,6 +45,7 @@ const app::GameInfo app::kGame = {
     .rumble = nullptr,                    // changes a rumble before it is set
     // optional, after these: .achievements (conditions on guest memory), .same_code (other releases' xbe SHA-1s with
     // the same code), .wheel (what a steering wheel's force feedback follows)
+    .wheel = pgr1::WheelFeel,   // a steering wheel's force feedback follows the player's car (src/game/hooks.cpp)
     .bink_frame_hold = false,  // the movie player (0xE9780) waits on BinkWait itself (0xE98D0) and counts its frames
     .hud_aspect = 4.0f / 3.0f,  // no widescreen mode: menus and HUD are laid out 4:3, the 3D widens (src/game/hooks.cpp)
 };
