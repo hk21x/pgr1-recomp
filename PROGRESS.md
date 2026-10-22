@@ -11,6 +11,16 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-10-22 - Windows round 2: widescreen good; skip intro skips only the movie; car shadow an outline on D3D12
+
+Harry: 16:9 and 21:9 work. "Skip intro doesn't work": his log shows `pgr1: intro movie d:\fmv\intro.bik skipped`, so
+what remains is the Microsoft and Bizarre logos and the warning (about 15 s of timed screens, START skips each);
+not found yet (string ids 21/22, the mode runner 0xC4D40 with modes 0x15B9E0 and 0x15BE78).
+Car shadow on D3D12: only an outline. Headless (XBE_CLEAR_LOG=1, REF_DRAWLOG): the car is drawn from above into a
+256x256 R5G6B5 target (03A10000, cleared white each frame with flags F0, no depth, 21 draws, FVF 0x112) and one quad
+(FVF 0x142, blend ZERO/SRCCOLOR) multiplies it onto the road. The CPU reference renderer gets a solid shadow.
+Next: a D3D12 capture of a race frame (XBE_CAPTURE_DIR + F3) and a D3D11 comparison from Harry.
+
 ### 2026-10-22 - PC features: skip intro, widescreen and ultrawide
 
 - skip_intro (settings option, PGR1_SKIP_INTRO=1 headless): the movie player returns at once for FMV\Intro*.bik.
