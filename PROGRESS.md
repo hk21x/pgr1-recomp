@@ -23,7 +23,7 @@ Harry: the same on D3D11. His D3D12 capture: the shadow target holds the car's d
 alpha 0 (cleared white, alpha 255); the shadow quad's shader discards texels with alpha 0 (AlphaKill on stage 0), so
 only the filtered edges drew: the outline. R5G6B5 has no alpha: the console reads it as 1. SDK fix: kTexOpaque, both
 renderers force alpha 1 when a target is read as R5G6B5, X1R5G5B5 or X8R8G8B8 (swizzled or linear). wincheck and
-DXC pass, both smoke tests pass.
+DXC pass, both smoke tests pass. Harry: shadows solid on Windows (2026-10-22).
 
 ### 2026-10-22 - PC features: skip intro, widescreen and ultrawide
 
