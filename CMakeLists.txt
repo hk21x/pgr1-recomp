@@ -36,7 +36,8 @@ if(NOT GAME_PARTITIONS)
 endif()
 
 # target name = GAME_EXE in build.bat, xbe = GAME_XBE
-add_xbe_image(PGR1 default.xbe game.toml ${GAME_PARTITIONS} game)
+# config/pgr1.toml holds the hand-kept entries and includes the generated config/game.toml
+add_xbe_image(PGR1 default.xbe pgr1.toml ${GAME_PARTITIONS} game)
 
 # launcher/icon.ico, when there is one: the game's icon too (resource 1, which the window class loads)
 if(WIN32 AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/launcher/icon.ico)

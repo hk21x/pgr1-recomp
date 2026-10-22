@@ -19,3 +19,19 @@ game's own code and data, with its addresses).
   FUN_000CA2C0 (FileFastOpen, via the z: cache). `scripts/gothpok.py` (one file, or `--tree dir out`).
 - **[game]** FUN_00046E00 is the fatal error screen (draws a 1-bit message bitmap, then loops forever); the loader
   calls it when a file can't be opened.
+
+## XDK 3948 (D3D8)
+- **[console]** Render state numbering differs from 5659: 82 simple (0-81), 34 deferred (82-115), 28 complex
+  (116-143); 5659 has 92, 44 and 30. SetRenderStateNotInline 0xEA5E0: `< 0x52` simple, `< 0x74` deferred, else the
+  complex setter table 0xF8258 indexed by state - 116 (0xEA5E5, 0xEA609, 0xEA62F; simple ones go through the
+  encode table 0x142A08 to the simple setter 0xEA590 at 0xEA5F8). Deferred 82-115 are 5659's FogEnable to
+  PatchSegments (each read where 5659's is: fog 0xF1340, wraps 0xF1140, lighting 0xF1CB0/0xF0A60, point sprites
+  0xF0C50); no SwapFilter, PresentationInterval or unused slots. Complex: 5659's order without MultiSampleMode and
+  MultiSampleRenderTargetMode (one MultiSampleType at 134, setter 0xEA530) and without SampleAlpha; each setter
+  checked by its method (FrontFace 0x3A0, LogicOp 0x17BC, MultiSampleMask 0x1D7C, ShadowFunc 0x1E6C, cull 0x1D84).
+- **[console]** Texture stage state numbering: ColorOp, ColorArg0-2, AlphaOp, AlphaArg0-2, ResultArg,
+  TextureTransformFlags (0-9), then AddressU to AlphaKill (10-21), BumpEnvMat00 on as in 5659. The texture setup
+  0xF1140 packs slots 10-12 into method 0x1B04 (address) and 13-21 into the filter and control words; slot 0 is
+  compared with D3DTOP_BUMPENVMAP. 32 per stage at D3D_DeferredTextureState 0xF9400.
+- **[console]** The runtime keeps 5659's numbers and translates at the title's tables (sdk runtime/xdk/state_numbering.h,
+  layout.toml `StateNumbering = 3948`). Simple states need no table: they are keyed by the encode table's method.
