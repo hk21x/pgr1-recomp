@@ -16,14 +16,21 @@ This port was created using the [Xbox XBE Recomp](https://github.com/TGP482/Xbox
 ## Features
 
 ### Display
-
+- Any resolution, borderless, fullscreen or windowed, vsync, frame rate cap, FPS counter.
+- **Widescreen and ultrawide** - the game is 4:3 only on the console; here the 3D widens to the screen's shape and
+  the menus and HUD stay 4:3 in the middle.
 
 ### Graphics
+- Direct3D 12 or 11, render scale, MSAA up to 8x, FXAA, anisotropic filtering.
 
 ### Controller
-Supports Xbox, PlayStation and Switch controllers, with hot plugging and rumble.
+Supports Xbox, PlayStation and Switch controllers, with hot plugging and rumble; keyboard; steering wheels with force
+feedback.
 
 ### General
+- **Skip intro** - the movie, logos and warning.
+- **Field of view** - the race camera's, 50 to 200%.
+- **Hide HUD** - for screenshots.
 
 ### Miscellaneous
 - **Boot Splash** - Place a `splash.png` (or `.bmp`) beside the exe to display a splash screen at launch.
