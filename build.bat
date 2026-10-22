@@ -17,9 +17,7 @@ set "OUT=%CD%\out\build\release"
 
 if not exist assets\%GAME_XBE% goto :nogame
 rem the SDK at the commit this checkout records: a git pull alone leaves the submodule behind
-if exist .git (
-    where git >nul 2>nul && git submodule update --init sdk || echo       The SDK could not be updated: run "git submodule update --init" by hand.
-)
+if exist .git where git >nul 2>nul && call :sdkupdate
 
 rem toolchain
 echo [1/3] Toolchain
@@ -72,6 +70,26 @@ if not errorlevel 2 (start "" /d "%OUT%" "%OUT%\%GAME_EXE%.exe") else (pause)
 exit /b 0
 
 rem helpers
+:sdkupdate
+if not exist sdk\.git (
+    git submodule update --init sdk || echo       The SDK could not be fetched: run "git submodule update --init sdk" by hand.
+    exit /b 0
+)
+set "SDK_WANT="
+for /f %%c in ('git rev-parse HEAD:sdk 2^>nul') do set "SDK_WANT=%%c"
+if not defined SDK_WANT exit /b 0
+rem already there, or newer SDK work of your own on top of it: kept
+git -C sdk merge-base --is-ancestor %SDK_WANT% HEAD >nul 2>nul && (
+    git -C sdk diff --quiet %SDK_WANT% HEAD -- >nul 2>nul || echo       Note: building the SDK as checked out in sdk\, newer than the commit this checkout records.
+    exit /b 0
+)
+git -C sdk diff --quiet HEAD -- >nul 2>nul || (
+    echo       Note: sdk\ has uncommitted changes, so it was not moved to the commit this checkout records.
+    exit /b 0
+)
+git submodule update --init sdk || echo       The SDK could not be updated: run "git submodule update --init sdk" by hand.
+exit /b 0
+
 :setuptools
 set TOOLS_OK=
 set MISSING=
