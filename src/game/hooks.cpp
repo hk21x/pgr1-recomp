@@ -15,6 +15,8 @@ extern bool skip_intro;
 
 // skip_intro: startup (0xC9200) plays FMV\Intro.bik (IntroJ/G/F/S/I by language, 0xC9383) through the movie player
 // 0xE9780 (cdecl: the path; its result unused), which loads the Bink sections around the movie (0xDD920 with 1, then 0)
+// The logos and warning after it are front end screens: Frontend.ini's SkipIntroScreens (0x2E92A8, read before the
+// movie; the intro handler 0x56680 tests it at 0x566B1 and skips to 0x55A20) is set here, after the INI is read
 X86_EXTERN_FUNC(__imp__sub_000E9780);
 X86_FUNC(sub_000E9780) {
     if (pgr1::skip_intro) {
@@ -25,7 +27,8 @@ X86_FUNC(sub_000E9780) {
             path += char(std::tolower(static_cast<unsigned char>(c)));
         }
         if (path.find("fmv\\intro") != std::string::npos) {
-            LOGR("pgr1: intro movie %s skipped", path.c_str());
+            kernel::G<uint32_t>(0x2E92A8) = 1;  // SkipIntroScreens
+            LOGR("pgr1: intro movie %s and the intro screens skipped", path.c_str());
             ctx.esp += 4;  // ret
             return;
         }
