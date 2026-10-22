@@ -3,13 +3,26 @@
 Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Status
-- Milestone: 3 (started) - boots headless: intro movie, logos, loading screen, the attract-mode demo race; 4 min without a trap
+- Milestone: 3 - SMOKE OK headless: first boot, profile, arcade race (San Francisco, Mini) driven to the end of the run
 - Repository: local git (main), SDK submodule on the fork's main; GitHub hk21x/pgr1-recomp (private)
 - Push buffers: USED (RunPushBuffer 0xEE0D0 from 0xA96BD/0xA989C, with fixups); the runtime does not replay them yet
 - XDK: 3911-3950 (D3D8 3948); no signatures yet (`sdk/xdk/3948/` to make)
 - Plan: .local/PGR1-plan.md (detailed, not committed) and .local/PGR1-summary.md
 
 ## Log
+
+### 2026-10-22 - a race headless; smoke test
+
+- Input works (the earlier missed press came before the title accepted it). First boot: cache copy to vblank 2940,
+  title at 4200, then load or create new, setup driver, save to, main menu, arcade race, Kudos note, skill, city,
+  car, transmission; GO near 7500. scripts/pad/race.txt presses START every 300 vblanks to 6900, then holds RT;
+  scripts/pad/boot.txt stops at the title.
+- `scripts/smoke.sh`: SMOKE OK, race 2651 draws a frame over the last 300 frames, no traps. SMOKE_MENU is empty:
+  PGR1's menus show 3D cars (600 to 900 draws a frame), so the 2D-menu check does not apply.
+- PGR2's smoke test passes on the same SDK commit (menu 11, race 2007 draws a frame).
+- RunPushBuffer is still not called in the race or menus seen so far (no log line); the next place to look is
+  other modes and cities.
+Next: Windows (Harry's build), push buffer replay once the game calls it, the remaining 3948 behaviours as they show.
 
 ### 2026-10-22 - first headless boot: intro, logos, attract demo race
 

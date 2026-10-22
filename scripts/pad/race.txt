@@ -1,0 +1,19 @@
+# vblank buttons [vblanks held]   (vblanks at 60 a second; see sdk/harness/pad_script.cpp)
+# First boot (no KEEP_HDD): the cache copy ends near 2940, logos and warning to 4100, the title at 4200. START every
+# 300 vblanks takes: title, load or create new, setup driver, save to, main menu (arcade race), Kudos note, skill
+# level, city (San Francisco), car (Mini), transmission (auto); GO near 7500, then accelerate.
+3000 START 20
+3300 START 20
+3600 START 20
+3900 START 20
+4200 START 20
+4500 START 20
+4800 START 20
+5100 START 20
+5400 START 20
+5700 START 20
+6000 START 20
+6300 START 20
+6600 START 20
+6900 START 20
+7400 RT 9000

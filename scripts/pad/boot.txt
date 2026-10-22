@@ -1,0 +1,7 @@
+# vblank buttons [vblanks held]   (see race.txt): first boot to the title screen (4200) and its first menu
+3000 START 20
+3300 START 20
+3600 START 20
+3900 START 20
+4200 START 20
+4500 START 20
