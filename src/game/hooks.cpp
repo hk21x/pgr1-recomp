@@ -12,6 +12,7 @@
 namespace pgr1 {
 extern bool skip_intro;
 extern uint32_t fov_percent;
+extern bool hide_hud;
 }
 
 // skip_intro: startup (0xC9200) plays FMV\Intro.bik (IntroJ/G/F/S/I by language, 0xC9383) through the movie player
@@ -71,4 +72,15 @@ X86_FUNC(sub_000A58E0) {
         if (logged != pct) LOGR("pgr1: race camera field of view %u%%", logged = pct);
     }
     __imp__sub_000A58E0(ctx, base);
+}
+
+// hide_hud: the race HUD (time, targets, Kudos, rev counter, lap) is drawn by the ARCADE_RACER task (the task table's
+// entry 0x15BDB0: setup 0x807C0, drawing 0x820F0, 0x80940); its drawing is skipped, the race goes on
+X86_EXTERN_FUNC(__imp__sub_000820F0);
+X86_FUNC(sub_000820F0) {
+    if (pgr1::hide_hud) {
+        ctx.esp += 4;  // ret
+        return;
+    }
+    __imp__sub_000820F0(ctx, base);
 }
