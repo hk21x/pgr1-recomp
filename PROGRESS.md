@@ -3,13 +3,31 @@
 Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Status
-- Milestone: 1 - inventory done (Ghidra project `pgr1`, push buffers checked, GOTHPOK decoder)
+- Milestone: 3 (started) - boots headless: intro movie, logos, loading screen, the attract-mode demo race; 4 min without a trap
 - Repository: local git (main), SDK submodule on the fork's main; GitHub hk21x/pgr1-recomp (private)
 - Push buffers: USED (RunPushBuffer 0xEE0D0 from 0xA96BD/0xA989C, with fixups); the runtime does not replay them yet
 - XDK: 3911-3950 (D3D8 3948); no signatures yet (`sdk/xdk/3948/` to make)
 - Plan: .local/PGR1-plan.md (detailed, not committed) and .local/PGR1-summary.md
 
 ## Log
+
+### 2026-10-22 - first headless boot: intro, logos, attract demo race
+
+`scripts/harness.sh 240 scripts/pad/none.txt REF=1800`: no trap in 240 s, 11,400 frames, about 2,200 draws a frame
+in the demo race (captures: Bink intro, Bizarre Creations logo, F50 at dusk, a city course with the mirror).
+Fixed on the way (SDK unless noted):
+- XAPI's DbgPrint is `int 2Dh; int3` (0xD55D4): the kernel steps over the int3; the recompiler's analysis now does.
+- Bink's MMX check (0x131360) pushes ds and es: the recompiler pushed 2 bytes, x86 pushes 4 (operand size 32);
+  0x126E10 returned with esi 0 and BinkCopyToBuffer read address 0x21C.
+- The runtime's Bink frame hold skipped the first decode; PGR1's movie loop waits on BinkWait itself
+  (game_info.cpp: `bink_frame_hold = false`, a new GameInfo field).
+- The loading screen reads loading.raw (0x140000 bytes) into a 0x12C000 buffer (0xA75E0 -> 0xCAF80), 80 KB past it;
+  the buffer sat at the very top of RAM. The runtime now keeps the top 128 KB as the console does.
+- IDirectSoundBuffer_SetMode / SetConeOrientation ran library code on host sound objects: now host functions.
+- 3948 entry points: Present, GetBackBuffer, GetDepthStencilSurface, SetVertexShaderConstant (register + 96),
+  RunPushBuffer (logged, not replayed; not called in the first 4 minutes), the present interval (device +0x2B64).
+Next: PGR2's smoke test on this SDK branch; a pad script to the title menu and a race; push buffer replay when the
+game calls RunPushBuffer.
 
 ### 2026-10-22 - phase 2: XDK 3948 signatures, state numbering, layout; push buffers are used after all
 

@@ -22,4 +22,5 @@ const app::GameInfo app::kGame = {
     .rumble = nullptr,                    // changes a rumble before it is set
     // optional, after these: .achievements (conditions on guest memory), .same_code (other releases' xbe SHA-1s with
     // the same code), .wheel (what a steering wheel's force feedback follows)
+    .bink_frame_hold = false,  // the movie player (0xE9780) waits on BinkWait itself (0xE98D0) and counts its frames
 };

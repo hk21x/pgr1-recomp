@@ -8,6 +8,7 @@ includes = ["game.toml"]
 # XPP starts with the device type records and their tables, not code; MU_Init 0x13B24C is its first function
 data_ranges = [[0x13B080, 0x13B24C]]
 
+
 # named functions; also gives --sign a name to anchor data on
 [functions]
 0xFEB58 = "CDirectSoundStream_Constructor"  # stores both stream vtables (0xFEB6A, 0xFEB71); --sign anchors the vtables on it
