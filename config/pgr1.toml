@@ -3,3 +3,12 @@
 # ([[hook]], [[function]], [[switch]], [functions], [xbe] data_ranges / trace). Sign with this file:
 #   build/linux/xbe_symbols --sign config/pgr1.toml --out sdk/xdk/3948/signatures.toml
 includes = ["game.toml"]
+
+[xbe]
+# XPP starts with the device type records and their tables, not code; MU_Init 0x13B24C is its first function
+data_ranges = [[0x13B080, 0x13B24C]]
+
+# named functions; also gives --sign a name to anchor data on
+[functions]
+0xFEB58 = "CDirectSoundStream_Constructor"  # stores both stream vtables (0xFEB6A, 0xFEB71); --sign anchors the vtables on it
+0x13B24C = "MU_Init"                        # the memory unit class init pushes XPP_MemoryUnitType (0x13B2A0)

@@ -5,11 +5,34 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 ## Status
 - Milestone: 1 - inventory done (Ghidra project `pgr1`, push buffers checked, GOTHPOK decoder)
 - Repository: local git (main), SDK submodule on the fork's main; GitHub hk21x/pgr1-recomp (private)
-- Push buffers: none (no D3DPushBuffer objects, no hand-written NV2A commands in game code)
+- Push buffers: USED (RunPushBuffer 0xEE0D0 from 0xA96BD/0xA989C, with fixups); the runtime does not replay them yet
 - XDK: 3911-3950 (D3D8 3948); no signatures yet (`sdk/xdk/3948/` to make)
 - Plan: .local/PGR1-plan.md (detailed, not committed) and .local/PGR1-summary.md
 
 ## Log
+
+### 2026-10-22 - phase 2: XDK 3948 signatures, state numbering, layout; push buffers are used after all
+
+- Signatures: sdk/xdk/3948 seeded from 5659; the first scan found 20 of 250. Hand work (Ghidra dumps of both games'
+  libraries, feature matching against PGR2's named 5659 functions, every match checked on PGR1's code) took it to
+  137 functions and 11 of 13 data; the rescan reproduces game.toml. Not linked (left 0): XNet, sockets, XOnline, the
+  CRT math entry points (PGR1 inlines fsin/fcos/fpatan), BinkGetSummary and about 60 D3D/DSOUND functions the game
+  never calls. Not signable: D3D_PresentInterval (a device field in 3948, +0x2B64) and XPP_MemoryUnitType (MU_Init
+  0x13B24C is not on the linear sweep).
+- Render and texture stage state numbering differ from 5659 (FINDINGS.md); the SDK runtime now translates
+  (state_numbering.h, layout StateNumbering).
+- sdk/xdk/3948/layout.toml from PGR1's code, every value cited. New runtime cases, each a layout key: frame buffer
+  surfaces inside the device (CDevice_FrameSurfaces 0x2150, CDevice_AutoDepthSurface 0x219C), a vertical blank
+  callback that takes the count (VBlankCallback_Count), DSOUND mix bins as a mask (DSound_MixBinMask) and Lock's
+  older flag bits (DSound_LockFlagsSwapped).
+- Correction to phase 1: PGR1 runs recorded push buffers (D3DDevice_RunPushBuffer 0xEE0D0, two call sites, with
+  vertex shader constant fixups). Reported to Harry; the runtime does not replay them yet.
+- 3948 differences still to handle at boot: Present (stdcall 4) instead of Swap; GetBackBuffer / GetDepthStencilSurface
+  (out-pointer forms) instead of the 2 forms; SetVertexShaderConstant (register -96..95) instead of the 1/4/Fast forms;
+  the inline-state helpers 0xEA5C0 / 0xEA640 and immediate-mode SetVertexData*; the present interval (device +0x2B64,
+  set from the present parameters by the library's own CreateDevice); Bink's frame hold (PGR1's movie loop paces
+  itself on BinkWait); DSOUND calls the runtime does not replace (SetConeOrientation, SetMode).
+Next: Harry's call on push buffers; then the runtime's 3948 entry points above, recompile, first headless boot.
 
 ### 2026-10-22 - phase 1: Ghidra project, push buffer check, GOTHPOK decoder
 

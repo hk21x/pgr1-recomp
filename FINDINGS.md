@@ -8,8 +8,12 @@ game's own code and data, with its addresses).
 - **[game]** `default.xbe` sections: .text 0x11000-0xE93F0 (game, XAPI, libc), D3D 0xE9940, XGRPH 0xFC620,
   DSOUND 0xFD340, WMADEC, BINK (several), XPP 0x13B080, .rdata 0x142820, .data 0x1563A0, DOLBY. The D3D section
   holds its own data too (device pointer at 0xFC5F0).
-- **[game]** No push buffers: no D3DPushBuffer objects are made and the game's code writes no NV2A commands
-  (PROGRESS.md, 2026-10-22).
+- **[game]** Recorded push buffers ARE used (corrected 2026-10-22; phase 1 said none): the game calls
+  D3DDevice_RunPushBuffer 0xEE0D0 from 0xA96BD and 0xA989C with a model object's push buffer (+0x34) and builds fixups
+  for it in 0xAB230 (D3DPushBuffer_BeginFixup 0xEE060, D3DPushBuffer_SetVertexShaderConstant 0xEDFA0 three times with
+  the world matrix from GetTransform(6), EndFixup 0xEE090). The game's own code writes no NV2A commands, and nothing
+  stores an immediate 0x20001 Common, which is why the phase 1 scan missed it. Where the push buffers' contents come
+  from (data files or recorded at run time) is not traced yet.
 
 ## Data files
 - **[game]** GOTHPOK container (INIs, areas, cars, shaders, sounds): "GOTHPOK\x1a", u32 unpacked size at +8, u16 at +0xC
