@@ -11,6 +11,7 @@
 
 namespace pgr1 {
 extern bool skip_intro;
+extern uint32_t fov_percent;
 }
 
 // skip_intro: startup (0xC9200) plays FMV\Intro.bik (IntroJ/G/F/S/I by language, 0xC9383) through the movie player
@@ -53,4 +54,21 @@ X86_FUNC(sub_000A57F0) {
         static float logged = 0;
         if (logged != aspect) LOGR("pgr1: 3D views widened to %.3f:1", logged = aspect);
     }
+}
+
+// fov_percent: the race camera's field of view. Cameras set their projection through 0xA58E0 (cdecl: zoom, ...; the
+// horizontal and vertical fov are 1.14 rad over the zoom); the race camera's call is at 0x7863E (zoom 1, 2 in the
+// fly-by before the start), the car's shadow camera 0x284BB (12), the menus 0xA6F39 and 0xAA65C (1.8)
+X86_EXTERN_FUNC(__imp__sub_000A58E0);
+X86_FUNC(sub_000A58E0) {
+    uint32_t pct = std::clamp<uint32_t>(pgr1::fov_percent, 50, 200);
+    if (pct != 100 && kernel::R32(ctx.esp) == 0x78643) {
+        float zoom;
+        std::memcpy(&zoom, &kernel::G<uint32_t>(ctx.esp + 4), 4);
+        zoom = zoom * 100.0f / float(pct);
+        std::memcpy(&kernel::G<uint32_t>(ctx.esp + 4), &zoom, 4);
+        static uint32_t logged = 100;
+        if (logged != pct) LOGR("pgr1: race camera field of view %u%%", logged = pct);
+    }
+    __imp__sub_000A58E0(ctx, base);
 }

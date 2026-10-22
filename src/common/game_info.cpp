@@ -3,13 +3,15 @@
 #include "app/app.h"
 
 namespace pgr1 {
-bool skip_intro = false;  // no intro movie at start (src/game/hooks.cpp)
+bool skip_intro = false;  // no intro movie, logos or warning at start (src/game/hooks.cpp)
+uint32_t fov_percent = 100;  // the race camera's field of view, percent of the console's (src/game/hooks.cpp)
 }
 
 namespace {
-// PGR1_SKIP_INTRO=1 sets the option without a settings file (the headless harness has none)
+// PGR1_SKIP_INTRO=1 and PGR1_FOV=percent set those options without a settings file (the headless harness has none)
 void Init() {
     if (const char* e = std::getenv("PGR1_SKIP_INTRO"); e && *e == '1') pgr1::skip_intro = true;
+    if (const char* e = std::getenv("PGR1_FOV")) pgr1::fov_percent = uint32_t(std::atoi(e));
 }
 }  // namespace
 
@@ -24,7 +26,9 @@ const app::GameInfo app::kGame = {
     .missing = L"Put the game in the assets folder: its disc image (.iso), or default.xbe with its folders beside it.",
     .images = {{"default.xbe", "PGR1"}},  // each recompiled xbe and its exe, for title launches
     // game settings kept in the settings file
-    .options = {{"skip_intro", &pgr1::skip_intro, nullptr, "Skip intro movie", "At the next start."}},
+    .options = {{"skip_intro", &pgr1::skip_intro, nullptr, "Skip intro", "The movie, logos and warning; at the next start."},
+                {"fov_percent", nullptr, &pgr1::fov_percent, "Race camera field of view (%)",
+                 "100 is the console's; 50 to 200, at once."}},
     .load = nullptr,                      // reads more from the settings file's toml::table
     .save = nullptr,                      // writes more into it
     .init = Init,                         // after the settings load, before the window and boot
