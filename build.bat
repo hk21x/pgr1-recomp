@@ -16,6 +16,10 @@ set "VSWHERE=%VSINST%\vswhere.exe"
 set "OUT=%CD%\out\build\release"
 
 if not exist assets\%GAME_XBE% goto :nogame
+rem the SDK at the commit this checkout records: a git pull alone leaves the submodule behind
+if exist .git (
+    where git >nul 2>nul && git submodule update --init sdk || echo       The SDK could not be updated: run "git submodule update --init" by hand.
+)
 
 rem toolchain
 echo [1/3] Toolchain

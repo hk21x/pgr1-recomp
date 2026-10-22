@@ -11,6 +11,18 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-10-22 - Windows: plays; sound overloaded, fixed by the library's mix bin headroom
+
+Harry's first Windows build: plays, sound "completely broken". His capture: 27% of samples at full scale (RMS -2 dB)
+in a race. Headless (WAV=, XBE_DSOUND_LOG=1): about 35 voices play at once in a race, the game's samples are mastered
+hot (engine loops RMS -2 to -8 dBFS) and it sets voice headroom 0 on many (0xB00E8). The library's DirectSoundCreate
+(0x1008A7) sets mix bin headroom 1 (6 dB) on bins 0-30, which the runtime's host DirectSoundCreate never applied.
+SDK: layout key DSound_MixBinHeadroom (3936: 1; 5659 sets none). Race mix now RMS -8 to -10 dB; clipped samples a
+second from about 21,900 to 400-700 in the busiest moments. Both smoke tests pass.
+Also: build.bat now updates the sdk submodule (Harry's checkout had an empty sdk/ and CMake fetched upstream, which
+has no xdk/3948), and the CMake fallback fetches the fork.
+Next: Harry listens again; if collisions still distort, compare with a console recording before adding anything.
+
 ### 2026-10-22 - a race headless; smoke test
 
 - Input works (the earlier missed press came before the title accepted it). First boot: cache copy to vblank 2940,
