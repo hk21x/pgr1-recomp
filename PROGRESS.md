@@ -21,7 +21,8 @@ SDK: layout key DSound_MixBinHeadroom (3936: 1; 5659 sets none). Race mix now RM
 second from about 21,900 to 400-700 in the busiest moments. Both smoke tests pass.
 Also: build.bat now updates the sdk submodule (Harry's checkout had an empty sdk/ and CMake fetched upstream, which
 has no xdk/3948), and the CMake fallback fetches the fork.
-Next: Harry listens again; if collisions still distort, compare with a console recording before adding anything.
+Harry: clean on Windows (2026-10-22).
+Next: Windows parity, then PC features.
 
 ### 2026-10-22 - a race headless; smoke test
 
