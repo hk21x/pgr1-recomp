@@ -3,13 +3,34 @@
 Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Status
-- Milestone: 3 - SMOKE OK headless: first boot, profile, arcade race (San Francisco, Mini) driven to the end of the run
-- Repository: local git (main), SDK submodule on the fork's main; GitHub hk21x/pgr1-recomp (private)
-- Push buffers: USED (RunPushBuffer 0xEE0D0 from 0xA96BD/0xA989C, with fixups); the runtime does not replay them yet
-- XDK: 3911-3950 (D3D8 3948); no signatures yet (`sdk/xdk/3948/` to make)
+- Milestone: plays on Windows (Harry): races, sound, shadows, widescreen and ultrawide, skip intro, FOV, hide HUD
+  checked; SMOKE OK headless (first boot, profile, arcade race)
+- Achievements: 31 (ACHIEVEMENTS.md), conditions in src/game/achievement_set.cpp, tested headless with pokes
+- Repository: GitHub hk21x/pgr1-recomp (private); SDK submodule on the fork's main (hk21x/XboxXBERecomp)
+- XDK 3948: layout and signatures in sdk/xdk/3948
+- Push buffers: USED (RunPushBuffer 0xEE0D0 from 0xA96BD/0xA989C, with fixups); the runtime logs them, no replay yet
+- Open: the D3D12 render scale with MSAA fix to confirm on Windows; wheel untested (Harry has none to hand); draw
+  distance; a PC Settings entry in the game's menus; system link and split screen untried
 - Plan: .local/PGR1-plan.md (detailed, not committed) and .local/PGR1-summary.md
 
 ## Log
+
+### 2026-10-23 - SDK review fixes, 31 achievements, the README
+
+- SDK review (everything since the shared scripts): fixed an unplugged force feedback wheel never being removed, any
+  rumble pad being taken for a wheel (half throttle and brake), wheel settings unclamped, XBE_DSOUND_LOG read on every
+  call, duplicate placeholder addresses, 3948's second CreateDevice leaking 5 MB, an uncapped constant count, the
+  RunPushBuffer log reading unchecked memory; build.bat and launcher.bat no longer move sdk/ back past newer or
+  uncommitted SDK work. The PGR2 session fixed what the review found in its work (the depth-as-colour lookup never
+  ran on the GPU renderers). Smoke OK for both games.
+- Achievements: three agents mapped the profile (0x2C68E0, 0x7540 bytes), the Kudos Challenge levels, cars, Kudos and
+  the race state (FINDINGS.md). The 13 levels are the seasons, cities and tours; World Champion does not exist (its
+  files are never loaded), so Quick Race and Arcade Race completion replace it. The saved Kudos total 0x2C6900 changes
+  only on a load or leaving results, so "unchanged this frame" keeps loads from awarding. Tested headless by poking
+  the values as the game writes them: each fires at once, nothing on a load-like change or a normal race.
+- README in PGR2's layout with Harry's screenshot (docs/images/pgr1-pc-port.webp): launcher, building, controls,
+  features, status, troubleshooting.
+- Next: Harry tries the achievements on Windows; the repo going public and a release are his call.
 
 ### 2026-10-22 - render scale with MSAA froze D3D12 (device removed)
 

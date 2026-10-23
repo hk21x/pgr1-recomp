@@ -65,3 +65,32 @@ game's own code and data, with its addresses).
   COMMON_LOAD (0x94280) are not the HUD.
 - **[game]** Draw distance: location.ini's IngameDrawDistance / PresentationDrawDistance per city, read into the
   location records (0x2D160A + city * 0x26E, +0x1C and +0x20); their reader not found yet.
+
+## Achievements (memory map)
+- **[game]** The driver profile is one block, 0x2C68E0 to 0x2CDE20 (0x7540 bytes), the "driver" save: read whole by
+  0xD0210 (from 0xD0530), written by 0xD0350 (from 0xD0745), reset by 0x53A70. A load rewrites it in one frame.
+- **[game]** Saved Kudos total: int 0x2C6900, stored by 0x57B00 (the sum 0x57420 of the race records, arcade arrays and
+  the bonus int 0x2CDD4D) only on leaving a results screen (0x6B837, autosave 0xD1180) and on a load (0x8C420). The
+  live total is the float 0x2C8FFF (0x573A0).
+- **[game]** Kudos Challenge: 13 levels from frontend\chap01-13.ini (loader 0x53F00; table 0x2E4D20 + level x 0x18:
+  name, first race +0xC, race count +0x10; count 0x2E5AC4): introduction, amateur season, san francisco, london, tokyo,
+  new york, professional season, world tour, challenge tour, endurance season, world class season, invitational
+  season, bonus level. Race records 0x2C90E1 + race x 0x19; medals are computed from Kudos against the race's targets
+  (0x57300, race definitions 0x2DA460 + race x 0x48). At a level race's end (mode 1) 0x6A1A7 stores 0x46110's summary
+  into 0x2C6C2C + level: bit 0 every race a medal (complete; 0x6A06B opens the next), bit 1 all silver, bit 2 all gold.
+  Bonus level opens when 1-12 are all silver (0x2C90D1 bit 0); 0x2CA053 all gold.
+- **[game]** Quick Race (mode 2) and Arcade Race (mode 3): 4 levels each, bit 0 of 0x2C6C39 + 4 (mode 3) + level
+  (0x425A0).
+- **[game]** Cars: 26 groups (29 cars, frontend cars.ini; table 0x2E4E58), unlocked when bit 0 of 0x2CD765 + 4 x group is
+  set. MINI, MR2 and SLK from the start; One on One wins (0x6AAF0), Quick/Arcade levels (0x425A0) and the Kudos totals
+  of extras.ini, 1,000 to 200,000 (0x6BB10), unlock the rest.
+- **[game]** Race state: 0x2E71C8 = 1 while a recording plays (attract demo, replays; 0x69160). Mode 0x2C6F80 (1 Kudos
+  Challenge, 2 Quick Race, 3 Kudos Race, 4 Time Attack, 6 multiplayer, 7 Medal Pursuit); race type 0x2C6982 (0 hot lap,
+  1 timed run, 2 time attack, 3 one on one, 5 street race, 6 challenge, 8 car challenge, 9 multiplayer, 10 quick race,
+  11 kudos race; names 0x2E593C); human players 0x2C695E. At the last lap 0x887A0 sets, in one frame, player 1's race
+  over 0x2E5D49, position 0x2E5D51 (1 first) and finished properly 0x2E5D4D (a timed-out challenge only the first).
+- **[game]** Player 1's race Kudos 0x2C6CD9 (int16s, reset by 0x69060, inside the profile): contacts +6 (0x45760), each
+  Kudos type's count from +8 (two wheels 0x2C6CE9, cone gates 0x2C6CF5), combo +0x2E. Gearbox 0x2C694E (0 manual;
+  player 1's race copy 0x2C6E52), night 0x2E71BC (0x68190 from the hour 0x2E7208 and the city's daylight). Medal
+  Pursuit counts new medals in 0x2C6CC1 (0x696A0).
+

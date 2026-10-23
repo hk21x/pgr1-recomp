@@ -9,9 +9,7 @@ echo.
 echo   %GAME_SHORT% launcher - build
 echo   ================================================
 echo.
-if exist .git (
-    where git >nul 2>nul && git submodule update --init sdk
-)
+if exist .git where git >nul 2>nul && call :sdkupdate
 set "VSWHERE=%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe"
 for /f "usebackq tokens=*" %%i in (`"%VSWHERE%" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VSDIR=%%i"
 if not defined VSDIR (
@@ -30,6 +28,27 @@ echo   Built: %CD%\%GAME_SHORT%Launcher.exe
 echo   Copy it into an empty folder anywhere (it works beside itself, in a %GAME_SHORT% folder) and run it.
 echo.
 pause
+exit /b 0
+
+rem the SDK at the commit this checkout records, newer or uncommitted SDK work kept (as build.bat)
+:sdkupdate
+if not exist sdk\.git (
+    git submodule update --init sdk || echo       The SDK could not be fetched: run "git submodule update --init sdk" by hand.
+    exit /b 0
+)
+set "SDK_WANT="
+for /f %%c in ('git rev-parse HEAD:sdk 2^>nul') do set "SDK_WANT=%%c"
+if not defined SDK_WANT exit /b 0
+rem already there, or newer SDK work of your own on top of it: kept
+git -C sdk merge-base --is-ancestor %SDK_WANT% HEAD >nul 2>nul && (
+    git -C sdk diff --quiet %SDK_WANT% HEAD -- >nul 2>nul || echo       Note: building the SDK as checked out in sdk\, newer than the commit this checkout records.
+    exit /b 0
+)
+git -C sdk diff --quiet HEAD -- >nul 2>nul || (
+    echo       Note: sdk\ has uncommitted changes, so it was not moved to the commit this checkout records.
+    exit /b 0
+)
+git submodule update --init sdk || echo       The SDK could not be updated: run "git submodule update --init sdk" by hand.
 exit /b 0
 
 :fail
