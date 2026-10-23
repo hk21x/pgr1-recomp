@@ -4,6 +4,7 @@
 #include <chrono>
 #include <cmath>
 #include <cctype>
+#include <cstdlib>
 #include <cstring>
 #include <string>
 
@@ -109,3 +110,24 @@ void WheelFeel(input::WheelFeel& feel) {
     feel.speed = feel.racing && std::isfinite(speed) ? speed : 0;
 }
 }  // namespace pgr1
+
+// PGR1_DEBUG_LOG=1: the game's own debug messages in the log. 0x378A0 formats one (vsprintf 0xDDE80) and hands the text
+// to 0x37490 (cdecl: the text), which keeps it off screen. The radio's (WMAPlayer, CDataStreamer) need its debug level
+// 0x2E94AC at 5 as well.
+X86_EXTERN_FUNC(__imp__sub_00037490);
+X86_FUNC(sub_00037490) {
+    static const bool on = [] {
+        const char* e = std::getenv("PGR1_DEBUG_LOG");
+        return e && *e == '1';
+    }();
+    if (on) {
+        std::string text;
+        for (uint32_t p = kernel::R32(ctx.esp + 4); p && text.size() < 400; p++) {
+            char c = char(kernel::G<uint8_t>(p));
+            if (!c) break;
+            if (c != '\n' && c != '\r') text += c;
+        }
+        LOGI("pgr1 debug: %s", text.c_str());
+    }
+    __imp__sub_00037490(ctx, base);
+}

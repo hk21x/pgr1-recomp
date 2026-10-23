@@ -63,4 +63,6 @@ Keyboard (controller 1 while the game window has the focus; remap in F1 > Contro
   Press **F3** when it looks wrong; the log says `d3d12: frame captured to C:\pgr1cap\<time>`. Copy that folder
   and the log into the VM's `.local/win/`.
 - Sound: `set XBE_DSOUND_LOG=1` before starting lists every sound made and, every 5 seconds, the loudest playing.
+  `XBE_DSOUND_LOG=2` also lists every stream playing (the radio's music and DJ among them) with its volume.
+  `set PGR1_DEBUG_LOG=1` puts the game's own debug messages in the log (the files it loads, its sound set-up).
 - Stutter: `set XBE_PERF=1` before starting adds timing lines to the log.

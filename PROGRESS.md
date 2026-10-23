@@ -15,6 +15,23 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-10-23 - the radio reviewed (Harry: it may be broken, as PGR2's was)
+
+Headless, each part of the radio recorded alone (new XBE_DSOUND_SOLO / XBE_DSOUND_SOLO_TAG) and compared with the
+files decoded by ffmpeg:
+- The music: the WMA player (0xBF070, two PCM streams from 0xBF2E6) plays each track whole, at the right speed and
+  without gaps (its envelope follows the track at a constant offset; the waveform matches at 0.99).
+- The DJ: L_*.wav (Xbox ADPCM, 44.1 kHz stereo) streamed through the ADPCM stream set (0xAB650); the runtime's decode
+  matches ffmpeg's to rounding; it drops the 65th sample of each block, which is padding (64 samples a block, as the
+  file's header says).
+- PGR2's fault (a voice routed only to effect sends) does not apply: the radio's voices use the default speaker bins.
+- Levels as the game sets them: music at volume 0.689, the DJ at 0.294; in a race the music sits about 9 dB under the
+  engine and effects.
+- PGR1_DEBUG_LOG=1 (src/game/hooks.cpp) puts the game's own debug messages in the log (0x37490); with the radio's
+  debug level 0x2E94AC at 5 it narrates WMAPlayer and the radio's choices.
+Next: Harry says what is wrong with it (silent, quiet, distorted, stuttering), with a clip, XBE_DSOUND_LOG=2 and
+PGR1_DEBUG_LOG=1.
+
 ### 2026-10-23 - SDK review fixes, 31 achievements, the README
 
 - SDK review (everything since the shared scripts): fixed an unplugged force feedback wheel never being removed, any
