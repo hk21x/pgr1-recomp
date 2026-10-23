@@ -29,8 +29,7 @@ files decoded by ffmpeg:
   engine and effects.
 - PGR1_DEBUG_LOG=1 (src/game/hooks.cpp) puts the game's own debug messages in the log (0x37490); with the radio's
   debug level 0x2E94AC at 5 it narrates WMAPlayer and the radio's choices.
-Next: Harry says what is wrong with it (silent, quiet, distorted, stuttering), with a clip, XBE_DSOUND_LOG=2 and
-PGR1_DEBUG_LOG=1.
+Harry, on Windows: the radio's audio works fine. Closed.
 
 ### 2026-10-23 - SDK review fixes, 31 achievements, the README
 
