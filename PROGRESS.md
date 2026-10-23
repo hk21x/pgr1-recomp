@@ -6,7 +6,7 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 - Milestone: plays on Windows (Harry): races, sound, shadows, widescreen and ultrawide, skip intro, FOV, hide HUD
   checked; SMOKE OK headless (first boot, profile, arcade race)
 - Achievements: 31 (ACHIEVEMENTS.md), conditions in src/game/achievement_set.cpp, tested headless with pokes
-- Repository: GitHub hk21x/pgr1-recomp (private); SDK submodule on the fork's main (hk21x/XboxXBERecomp)
+- Repository: GitHub hk21x/pgr1-recomp (made public by Harry for 1.0); MIT, copyright hk21x; SDK submodule on the fork's main (hk21x/XboxXBERecomp)
 - XDK 3948: layout and signatures in sdk/xdk/3948
 - Push buffers: USED (RunPushBuffer 0xEE0D0 from 0xA96BD/0xA989C, with fixups); the runtime logs them, no replay yet
 - Open: the D3D12 render scale with MSAA fix to confirm on Windows; wheel untested (Harry has none to hand); draw
@@ -14,6 +14,12 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 - Plan: .local/PGR1-plan.md (detailed, not committed) and .local/PGR1-summary.md
 
 ## Log
+
+### 2026-10-23 - release 1.0
+
+Harry tested the launcher end to end (build and play from his disc). MIT license (copyright hk21x), release notes
+(docs/releases/v1.0.md), tag v1.0 on 11daa6c: the release workflow builds PGR1Launcher.exe and publishes the
+release with those notes.
 
 ### 2026-10-23 - the radio reviewed (Harry: it may be broken, as PGR2's was)
 
