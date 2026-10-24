@@ -15,6 +15,15 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-10-24 - first bug after release: the Music Manager crashed to desktop
+
+Harry's log: options > music manager trapped on an indirect call to 0x5C410 (from 0xC2406). The screen's setup pushes
+it as a callback (0x5D324), but a gap fill guess had decoded bytes of its body first, so the recompiler's immediate
+scan refused it. Fixed by naming it in config/pgr1.toml [functions]. The recompiler now lists every refused immediate
+(SDK); PGR1's other 12 are data (the XPP range, .rdata's edge, a constant) and the movie section's 0xE9400, which
+works. Checked headless: the Music Manager opens, tracks add to the Gotham Virtual CD, and options, driver manager,
+arcade, Kudos Challenge and Time Attack screens open without a trap. Smoke OK.
+
 ### 2026-10-23 - release 1.0
 
 Harry tested the launcher end to end (build and play from his disc). MIT license (copyright hk21x), release notes

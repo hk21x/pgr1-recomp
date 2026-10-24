@@ -13,3 +13,5 @@ data_ranges = [[0x13B080, 0x13B24C]]
 [functions]
 0xFEB58 = "CDirectSoundStream_Constructor"  # stores both stream vtables (0xFEB6A, 0xFEB71); --sign anchors the vtables on it
 0x13B24C = "MU_Init"                        # the memory unit class init pushes XPP_MemoryUnitType (0x13B2A0)
+0x5C410 = "MusicManager_Callback"     # pushed as a callback at 0x5D324 (the Music Manager screen), called at 0xC2406; a gap fill guess
+                                    # decoded its body first, so the immediate scan refused it (the indirect call trapped)
