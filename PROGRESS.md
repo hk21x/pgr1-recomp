@@ -15,6 +15,12 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-10-25 - release 1.0.1
+
+Harry confirmed the car select fix on Windows. Release notes docs/releases/v1.0.1.md (the Music Manager crash, the
+frozen car select screen, the vertex range safeguard, push buffer replay, the new sound and debug log switches); tag
+v1.0.1 publishes it with PGR1Launcher.exe.
+
 ### 2026-10-25 - frozen screen at car select (two player reports): a regression from the SDK update
 
 The Music Manager fix moved PGR1 to the fork's newest SDK, which reads frame buffers a title supplies in
