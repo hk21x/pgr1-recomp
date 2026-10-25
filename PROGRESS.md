@@ -15,6 +15,17 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-10-25 - sharp text and HUD (Sharpen2D) on for PGR1
+
+Harry asked (through the PGR2 session) for the SDK's 2D upscaler, as PGR2 has it: GameInfo::sharpen_2d = true
+(F1 > Graphics, Sharp text and HUD, on by default). Headless with REF and XBE_SHARPEN_DUMP through the menus into a race:
+42 textures enlarged, all 2D (PGR1's 2D is pretransformed, so the 3948 path needs nothing more): the fonts, the
+speedometer, car maker logos, medals, number plates, the city maps and menu backdrops. Close-ups: the HUD font and the
+speedometer's red band lose their pixel steps without blurring; soft glows stay soft. Whole frames: menus identical at
+640x480 (the gain is at higher resolutions); race frames differ no more than two identical runs do. Noted: 82B64000 is
+a menu picture (A8R8G8B8 256x256) and later race textures (DXT 64x512); a replacement is keyed by address only, but
+its content check drops it once the memory is rewritten. Smoke OK.
+
 ### 2026-10-25 - release 1.0.1
 
 Harry confirmed the car select fix on Windows. Release notes docs/releases/v1.0.1.md (the Music Manager crash, the

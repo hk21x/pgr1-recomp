@@ -124,6 +124,7 @@ mapped to any controller input in Controls.
 - **Anisotropic Filtering** - Up to 16x.
 - **Antialiasing** - MSAA 2x, 4x or 8x on the 3D scene, or FXAA on the finished frame; render scale above 100% supersamples.
 - **Field of View** - Widens or narrows the race camera, 50% to 200% of the console's.
+- **Sharp Text and HUD** - The menus', HUD's and text's textures are enlarged with sharp edges, so lettering and gauges stay crisp at high resolutions (on by default).
 
 ### Controller
 Supports Xbox, PlayStation and Switch controllers, with hot plugging and rumble. Any console input can be mapped to any controller input.

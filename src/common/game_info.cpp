@@ -51,4 +51,5 @@ const app::GameInfo app::kGame = {
     .wheel = pgr1::WheelFeel,   // a steering wheel's force feedback follows the player's car (src/game/hooks.cpp)
     .bink_frame_hold = false,  // the movie player (0xE9780) waits on BinkWait itself (0xE98D0) and counts its frames
     .hud_aspect = 4.0f / 3.0f,  // no widescreen mode: menus and HUD are laid out 4:3, the 3D widens (src/game/hooks.cpp)
+    .sharpen_2d = true,         // the menus', HUD's and text's textures enlarged with sharp edges (Sharp text and HUD)
 };
