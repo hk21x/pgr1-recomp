@@ -8,12 +8,25 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 - Achievements: 31 (ACHIEVEMENTS.md), conditions in src/game/achievement_set.cpp, tested headless with pokes
 - Repository: GitHub hk21x/pgr1-recomp (made public by Harry for 1.0); MIT, copyright hk21x; SDK submodule on the fork's main (hk21x/XboxXBERecomp)
 - XDK 3948: layout and signatures in sdk/xdk/3948
-- Push buffers: USED (RunPushBuffer 0xEE0D0 from 0xA96BD/0xA989C, with fixups); the runtime logs them, no replay yet
+- Push buffers: USED (RunPushBuffer 0xEE0D0 from 0xA96BD/0xA989C, with fixups); the SDK draws them since 6bded69
 - Open: the D3D12 render scale with MSAA fix to confirm on Windows; wheel untested (Harry has none to hand); draw
   distance; a PC Settings entry in the game's menus; system link and split screen untried
 - Plan: .local/PGR1-plan.md (detailed, not committed) and .local/PGR1-summary.md
 
 ## Log
+
+### 2026-10-25 - frozen screen at car select (two player reports): a regression from the SDK update
+
+The Music Manager fix moved PGR1 to the fork's newest SDK, which reads frame buffers a title supplies in
+D3DPRESENT_PARAMETERS (BufferSurfaces, DepthStencilSurface at +0x34..+0x40; added for Forza, XDK 5849). XDK 3948's
+parameters end at +0x34, so the runtime read the caller's stack there: at CreateDevice it named game code (0xA56E0) the
+back buffer, and from the race-loading PersistDisplay/Reset on, the screen kept showing an old frame (the city select
+with the loading K) while the game drew and ran on: the players' freeze with sound, and flicker. Reproduced headless
+(.local/mm/repro.sh: city select, A presses, START; the frame shown stayed old while draws climbed). Fixed in the SDK
+with a layout key, PresentParams_BufferSurfaces (0x34 by default, unknown for 3948). After: car select and the race
+draw. Smoke OK for PGR1 and PGR2; the smoke test only counts draws, so it cannot see a stale screen.
+Lesson: an SDK update brings every game's work; for PGR1 check the shown frame at car select and in a race, not only
+the smoke test.
 
 ### 2026-10-24 - first bug after release: the Music Manager crashed to desktop
 
