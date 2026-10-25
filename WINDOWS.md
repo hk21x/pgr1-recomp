@@ -69,3 +69,5 @@ Keyboard (controller 1 while the game window has the focus; remap in F1 > Contro
   `XBE_DSOUND_LOG=2` also lists every stream playing (the radio's music and DJ among them) with its volume.
   `set PGR1_DEBUG_LOG=1` puts the game's own debug messages in the log (the files it loads, its sound set-up).
 - Stutter: `set XBE_PERF=1` before starting adds timing lines to the log.
+- A crash with "contiguous allocation ... failed" in the log: `set XBE_MEM_LOG=1` before starting lists the game's large
+  memory blocks as races load and end.

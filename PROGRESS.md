@@ -15,6 +15,16 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-10-25 - crash loading a New York race (Harry): open
+
+Harry's log: "contiguous allocation of 1529000 bytes failed ... 12920 KB in use" (hex: 22.2 MB, Times Square's day area
+TimeSqua.DyV, New York's areas are the largest at up to 23 MB) on the second race of a session, then a write through the
+null result. 13 MB in use of about 63 means the free space was split, not used up. Not reproduced headless: arcade San
+Francisco then New York, and Quick Race San Francisco then New York (Wall Street, 23 MB), all load. The runtime's own
+contiguous allocations are not mid-session (sound buffers point at the game's memory, stacks have their own region).
+Added: the failure lists the largest free ranges, XBE_MEM_LOG=1 logs blocks of 1 MB or more. Next: Harry's exact
+sequence of races (mode, city) and a log with XBE_MEM_LOG=1.
+
 ### 2026-10-25 - ultrawide: the race HUD laid out at 16:9
 
 Harry: on ultrawide the HUD sat in the 4:3 centre (hud_aspect 4:3, since the first widescreen work) where PGR2's is at
