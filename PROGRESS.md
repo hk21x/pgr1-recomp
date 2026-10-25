@@ -15,6 +15,20 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-10-25 - ultrawide: the race HUD laid out at 16:9
+
+Harry: on ultrawide the HUD sat in the 4:3 centre (hud_aspect 4:3, since the first widescreen work) where PGR2's is at
+16:9. Stretching it to 16:9 widens every letter and the speedometer by a third (rendered to compare), so the HUD's
+panels are moved instead, each whole and at its true shape. The game's layout (0x7D270: anchors from the safe area,
+FINDINGS.md) cannot move: letters are separate draws, and the game drops its medals and big digits left of x 0 and the
+Kudos panel right of 640 (both seen). So the renderer moves each element as it squeezes it (SDK: gpu::State::
+squeeze_beyond and squeeze_shift, off unless a hook sets them; no corner kept on an edge while set, since letters' edges
+fall on it), and PGR1's hooks give every element the HUD task calls its side: text by its anchor slot (0x7D4E0), the
+elements that read anchors themselves (0x7F040, 0x7F510, 0x7E8F0 left; 0x7EEF0, 0x813F0 right), the Kudos panel
+(0x7FEC0, found by tracing which code drew it), else none; an element with a side keeps it for what it calls. One player
+only; 4:3 screens unchanged. Checked headless at 21:9 and 16:9 (REF frames), car select and the race shown, smoke OK for
+PGR1 and PGR2.
+
 ### 2026-10-25 - sharp text and HUD (Sharpen2D) on for PGR1
 
 Harry asked (through the PGR2 session) for the SDK's 2D upscaler, as PGR2 has it: GameInfo::sharpen_2d = true

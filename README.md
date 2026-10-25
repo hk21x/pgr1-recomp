@@ -110,8 +110,8 @@ mapped to any controller input in Controls.
 ### Display
 - **Display Modes** - Fullscreen, borderless window or window, at any resolution the monitor offers, applied at once.
 - **Widescreen and Ultrawide** - The console game is 4:3 only. Here the 3D views widen to the screen's shape (16:9
-  from the screen's shape, 21:9 and wider with "Fill the screen") at full sharpness, and the menus and HUD stay 4:3 in
-  the centre.
+  from the screen's shape, 21:9 and wider with "Fill the screen") at full sharpness. The race HUD is laid out at 16:9
+  (its panels out towards the sides, each at its true shape) and the menus stay 4:3 in the centre.
 - **Frame Pacing** - Runs at the game's own rate, 60 frames a second in menus and races as on the console, with vsync
   and a frame rate cap.
 - **Monitor** - Chooses which display the game uses.

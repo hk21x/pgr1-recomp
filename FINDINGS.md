@@ -48,6 +48,13 @@ game's own code and data, with its addresses).
   0xA57F0 (cdecl: out, height/width (0x2BBB64, 0.75 from 0xC8158), near, far, horizontal and vertical fov; the only
   fptan in the game), x scale cot(hfov / aspect / 2) at out[0]. Widescreen is Hor+: out[0] times 4:3 over the frame's
   shape. No culling gaps seen at 2.39:1.
+- **[game]** Race HUD layout: 0x7D270 (called first by the HUD task 0x820F0) sets the anchors from the safe area
+  percentage 0x159B40: x,y pairs from 0x192484, 8 bytes apart (top left, bottom left, top right, bottom right, top and
+  bottom centre, centre). Text takes its place from an anchor slot through 0x7D4E0 (fastcall, the slot in ecx); some
+  elements read anchors themselves (0x7F040, 0x7F510 top left; 0x7E8F0 bottom left: Lap; 0x7EEF0, 0x813F0 bottom right:
+  the speedometer); the Kudos panel and its pop-ups are 0x7FEC0 (through 0x7F8E0), the targets 0x81170. The game does not
+  draw its medals and big digits left of x 0 nor the Kudos panel right of 640, so a wider layout cannot move the game's
+  coordinates: the renderer moves each element (gpu::State::squeeze_shift, src/game/hooks.cpp).
 - **[game]** The HUD and menus are pretransformed (FVF 0x144) with depth on and the comparison ALWAYS (0x207); the SDK's
   2D squeeze now counts only real depth tests, and squeezes PGR1's 2D into the centred 4:3 (GameInfo::hud_aspect).
 - **[game]** The car shadow: the car drawn from above into a 256x256 R5G6B5 target (cleared white, no depth, FVF
