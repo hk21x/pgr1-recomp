@@ -15,7 +15,17 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
-### 2026-10-25 - crash loading a New York race (Harry): open
+### 2026-10-25 - crash loading a New York race: best fit allocation
+
+Harry's sequence: a Quick Race in San Francisco, then Kudos Challenge > Introduction > Style Challenge (New York, Times
+Square). Run headless with the memory log it loads every time: the failure depends on load timing (the radio and
+loading threads allocate as a race loads), which Harry also saw (no crash on later tries). The contiguous pool put every
+block at the highest free range that took it, so a small block arriving at the wrong moment split the big range a 22 MB
+area needs. It now allocates best fit (the smallest range that takes a block, high first, ranges wholly in the first
+16 MB last unless the request is limited to them). The sequence loads and races; smoke OK for PGR1 and PGR2. Harry's
+latest log came from an older build (XBE_MEM_LOG printed nothing); the build should be at 083db8f / SDK 61b0059 or later.
+
+### 2026-10-25 - crash loading a New York race (Harry): first look
 
 Harry's log: "contiguous allocation of 1529000 bytes failed ... 12920 KB in use" (hex: 22.2 MB, Times Square's day area
 TimeSqua.DyV, New York's areas are the largest at up to 23 MB) on the second race of a session, then a write through the
