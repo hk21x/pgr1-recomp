@@ -15,6 +15,11 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-10-26 - release 1.1
+
+Harry: consider the New York crash fixed; release. docs/releases/v1.1.md: the New York crash (best fit allocation),
+the race HUD at 16:9 on wide screens, sharp text and HUD, XBE_MEM_LOG; tag v1.1.
+
 ### 2026-10-25 - crash loading a New York race: best fit allocation
 
 Harry's sequence: a Quick Race in San Francisco, then Kudos Challenge > Introduction > Style Challenge (New York, Times
