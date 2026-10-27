@@ -156,6 +156,11 @@ the settings window in. Open: system link and split screen have not been tried, 
 uses for some models are not replayed yet, and there is no draw distance setting. Progress is in
 [PROGRESS.md](PROGRESS.md), and technical findings in [FINDINGS.md](FINDINGS.md).
 
+## Community and Support
+
+Join the [Discord server](https://discord.gg/PQjkKsdtc) for help getting the game running, to report problems,
+and to talk about the port with other players.
+
 ## Troubleshooting
 
 - Something wrong: the first lines of `logs\pgr1.log` list the settings, the GPU and any `XBE_*` or `PGR1_*`
@@ -166,6 +171,7 @@ uses for some models are not replayed yet, and there is no draw distance setting
 - "Another release" in the log, or the game not starting: the `default.xbe` is not the supported release.
 - A first boot again (the cache, the intro movie): delete the `hdd` folder beside `PGR1.exe` (`PGR1\play\hdd` with
   the launcher, `out\build\release\hdd` when built from source).
+- Still stuck: ask on the [Discord server](https://discord.gg/PQjkKsdtc), with `logs\pgr1.log`.
 
 ## Credits
 

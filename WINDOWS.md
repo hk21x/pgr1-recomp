@@ -57,6 +57,8 @@ Keyboard (controller 1 while the game window has the focus; remap in F1 > Contro
 
 ## Reporting a problem
 
+Help and reports: the [Discord server](https://discord.gg/PQjkKsdtc). The files below help with any report.
+
 - Send `out\build\release\logs\pgr1.log` and a short clip or screenshot.
 - Wrong pictures: a frame capture. From a command prompt in the repository folder:
   ```
