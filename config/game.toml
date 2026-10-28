@@ -251,6 +251,7 @@ XapiVerifyMediaInDrive                               = 0x0D84C3
 XAudioDownloadEffectsImage                           = 0
 XInitDevices                                         = 0x13BE98
 XInputClose                                          = 0x13BFA1
+XInputGetCapabilities                                = 0x13BFAD
 XInputGetState                                       = 0x13C19F
 XInputOpen                                           = 0x13BF2C
 XInputSetState                                       = 0x13C210

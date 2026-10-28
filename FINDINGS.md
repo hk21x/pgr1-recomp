@@ -70,6 +70,11 @@ game's own code and data, with its addresses).
 - **[game]** The game's task table (0x15B9F0 to 0x15BEB8, 24 bytes each: name, flags, four handlers; slot 2 draws,
   0x119E0 is an empty function): ARCADE_RACER (0x15BDB0) draws the race HUD at 0x820F0. OVERLAYS (0xC4CA0) and
   COMMON_LOAD (0x94280) are not the HUD.
+- **[game]** Wheels: the controller init 0xCFD00 and poll 0xCFF10 read each port's XInputGetCapabilities (0x13BFAD, XPP;
+  the record at 0x29ACFC + port x 0x8C, its SubType first) when they open it. The poll's only subtype test,
+  `CMP CL,0x10` at 0xD0113 (XINPUT_DEVSUBTYPE_GC_WHEEL), skips 0xCFE10 for the four stick axes: the gamepad dead zone
+  and response curve. **[console]** The runtime now answers XInputGetCapabilities (wheel for a port a bound steering
+  device steers), so a wheel gets its raw axis as on the console.
 - **[game]** Draw distance: location.ini's IngameDrawDistance / PresentationDrawDistance per city, read into the
   location records (0x2D160A + city * 0x26E, +0x1C and +0x20); their reader not found yet.
 

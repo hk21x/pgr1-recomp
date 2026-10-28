@@ -15,6 +15,17 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-10-28 - steering wheels get the raw axis (PGR2's wheel fix, PGR1's half)
+
+Harry asked (through the PGR2 session) for PGR2's wheel fix here. PGR1's controller poll 0xCFF10 tests the port's
+XInputGetCapabilities subtype once (`CMP CL,0x10` at 0xD0113) and for anything but a wheel runs the four stick axes
+through 0xCFE10, the gamepad dead zone and curve; the runtime never answered XInputGetCapabilities, so a wheel got the
+pad's dead zone and bend. The SDK now answers it (a wheel for a port a bound steering device steers); PGR1's
+XInputGetCapabilities is 0x13BFAD (XPP), named in game.toml and signed into sdk/xdk/3948 (the rescan reproduces
+game.toml). Headless with PAD_WHEEL=7600: the game reopens the port mid-race and reads "steering wheel", the race
+carries on. On the new SDK (physical memory to 128 MB for the host's buffers, NightFire's fixes): smoke OK for PGR1 and
+PGR2, car select and race frames shown, the New York sequence loads. Next: Harry with a wheel.
+
 ### 2026-10-26 - release 1.1
 
 Harry: consider the New York crash fixed; release. docs/releases/v1.1.md: the New York crash (best fit allocation),
