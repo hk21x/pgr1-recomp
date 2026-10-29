@@ -50,7 +50,9 @@ and no admin rights needed.
 5. **Play:** press **Play**. The first start formats the emulated hard disk and copies the game's cache (about 90
    seconds of black screen and a short movie); later starts are quick.
 
-When this project is updated the launcher shows **Update**: press it, then Play. **Remove the build files** frees
+When a new release comes out the launcher offers it at start (**Update the launcher**, **What's new**, **Later**):
+it downloads the new launcher, checks it and restarts, then offers to build the new version of the game (saves and
+settings are kept). Launchers before 1.2 cannot do this: download 1.2's by hand once. **Remove the build files** frees
 about 10 GB once the game is built (an update then builds everything again).
 
 Files, all under the `PGR1` folder beside the launcher:

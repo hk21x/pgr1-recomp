@@ -15,6 +15,16 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-10-29 - release 1.2 prepared: the launcher updates itself
+
+Harry asked every game (through the EoN session) to take the shared launcher's update prompts and release. SDK at
+0b5ff49 (fork main: launcher-update, NightFire's runtime fixes): smoke OK for PGR1 and PGR2, car select and race
+frames live; launcher_cli latest against PGR1's repository answers v1.1 with its launcher and SHA-256. A release
+launcher now offers newer releases at start and builds the game from its own tag. docs/releases/v1.2.md: the wheel fix,
+the launcher updates (players download 1.2's launcher by hand once), the Discord server; README's update paragraph.
+The tag v1.2 waits for Harry's go-ahead. Noted: the fixed-delay repro scripts (.local/mm) drift on this SDK (screens
+come at slightly different times); the frames they caught were live, not stale.
+
 ### 2026-10-28 - steering wheels get the raw axis (PGR2's wheel fix, PGR1's half)
 
 Harry asked (through the PGR2 session) for PGR2's wheel fix here. PGR1's controller poll 0xCFF10 tests the port's
