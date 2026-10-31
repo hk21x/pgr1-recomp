@@ -18,8 +18,7 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 ### 2026-11 - README: install sizes
 
 Harry asked every game to correct them (PGR2's measured install: play 7.3 GB with a 5.6 GB game, tools 1.83, source 0.33;
-Remove the build files frees only source\\out, 231 MB). PGR1's about 6 GB is an estimate from those and its 2.4 GB game,
-not measured on Windows; 15 GB for the first build is unchanged and unmeasured.
+Remove the build files frees only source\\out, 231 MB). Then Harry's figure for every game: about 3 GB free, plus room for the game's copy (README, WINDOWS.md).
 
 ### 2026-11 - the launcher's Git: MinGit's busybox edition
 

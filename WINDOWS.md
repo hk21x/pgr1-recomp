@@ -11,7 +11,7 @@ Everything below runs on your PC; nothing here touches the Linux VM. FINDINGS.md
 - Git for Windows: https://git-scm.com/download/win
 - Your PGR1 disc's files: `default.xbe` with the folders beside it (Async, FMV, FrontEnd, Game, Images, media,
   Shaders, XDemos, ...), exactly as they are in the VM's `assets` folder. An .iso of the disc also works.
-- About 15 GB free.
+- About 3 GB free, plus room for your copy of the game.
 
 ## Steps
 
