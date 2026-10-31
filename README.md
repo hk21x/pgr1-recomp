@@ -111,9 +111,9 @@ mapped to any controller input in Controls.
 
 ### Display
 - **Display Modes** - Fullscreen, borderless window or window, at any resolution the monitor offers, applied at once.
-- **Widescreen and Ultrawide** - The console game is 4:3 only. Here the 3D views widen to the screen's shape (16:9
-  from the screen's shape, 21:9 and wider with "Fill the screen") at full sharpness. The race HUD is laid out at 16:9
-  (its panels out towards the sides, each at its true shape) and the menus stay 4:3 in the centre.
+- **Widescreen and Ultrawide** - The console game is 4:3 only. Here the 3D views widen to the screen's shape, 21:9 and
+  wider included, at full sharpness. The race HUD is laid out at 16:9 (its panels out towards the sides, each at its true
+  shape), the race intro's black bars fit the screen, and the menus stay 4:3 in the centre with black at the sides.
 - **Frame Pacing** - Runs at the game's own rate, 60 frames a second in menus and races as on the console, with vsync
   and a frame rate cap.
 - **Monitor** - Chooses which display the game uses.
@@ -124,7 +124,7 @@ mapped to any controller input in Controls.
 - **Renderer** - Direct3D 12 (default) or Direct3D 11, at the next start; 11 for GPUs or drivers where 12 runs badly.
   Without Direct3D 12 the game starts on 11 by itself.
 - **Anisotropic Filtering** - Up to 16x.
-- **Antialiasing** - MSAA 2x, 4x or 8x on the 3D scene, or FXAA on the finished frame; render scale above 100% supersamples.
+- **Antialiasing** - MSAA 2x, 4x or 8x on the 3D scene and FXAA on the finished frame, separately or together; render scale above 100% supersamples.
 - **Field of View** - Widens or narrows the race camera, 50% to 200% of the console's.
 - **Sharp Text and HUD** - The menus', HUD's and text's textures are enlarged with sharp edges, so lettering and gauges stay crisp at high resolutions (on by default).
 
@@ -143,6 +143,7 @@ Plays as controller 1, with two keys for each console input, remappable in the s
 - **Settings Window** - Press F1, or Back + Start on a controller, for display, graphics, game options, the wheel and controls. Changes are saved to `pgr1.toml`.
 - **Skip Intro** - Skips the intro movie, the logos and the warning, straight to the title screen.
 - **Hide HUD** - Clears the race HUD for screenshots.
+- **Radio Music Volume** - The radio's music against the engine and effects (150% by default; 100% is the game's own balance).
 - **Pause On Focus Loss** - The game and its sound stop while another window is in front.
 - **Saves** - Profiles, options and Kudos Challenge progress are kept on an emulated hard disk beside the exe.
 - **Achievements** - 31 achievements (every Kudos Challenge level, golds, Quick and Arcade Race, Kudos totals, cars, combos, clean and night wins, split screen) with pop-ups and a list in the settings window, written in RetroAchievements' condition format; the set is in [ACHIEVEMENTS.md](ACHIEVEMENTS.md).

@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cstdlib>
 
 #include "app/app.h"
@@ -10,6 +11,7 @@ void WheelFeel(input::WheelFeel& feel);  // src/game/hooks.cpp
 bool skip_intro = false;  // no intro movie, logos or warning at start (src/game/hooks.cpp)
 bool hide_hud = false;  // no race HUD, for screenshots (src/game/hooks.cpp)
 uint32_t fov_percent = 100;  // the race camera's field of view, percent of the console's (src/game/hooks.cpp)
+uint32_t radio_percent = 150;  // the radio's music against engine and effects, percent of the game's own balance
 }
 
 namespace {
@@ -20,6 +22,11 @@ void Init() {
     if (const char* e = std::getenv("PGR1_FOV")) pgr1::fov_percent = uint32_t(std::atoi(e));
 }
 }  // namespace
+
+// The radio's music (the WMA player's PCM streams) against everything else: a race's mix already reaches full scale, so
+// above 100% the other sounds come down rather than the music going up; below it the music does
+static float MusicLevel() { return std::min(float(pgr1::radio_percent) / 100.0f, 1.0f); }
+static float OtherLevel() { return std::min(100.0f / float(std::clamp<uint32_t>(pgr1::radio_percent, 1, 400)), 1.0f); }
 
 // what the runtime asks of the game; strings must be set, hooks may stay null
 const app::GameInfo app::kGame = {
@@ -35,7 +42,9 @@ const app::GameInfo app::kGame = {
     .options = {{"skip_intro", &pgr1::skip_intro, nullptr, "Skip intro", "The movie, logos and warning; at the next start."},
                 {"hide_hud", &pgr1::hide_hud, nullptr, "Hide the race HUD", "For screenshots; at once."},
                 {"fov_percent", nullptr, &pgr1::fov_percent, "Race camera field of view (%)",
-                 "100 is the console's; 50 to 200, at once."}},
+                 "100 is the console's; 50 to 200, at once."},
+                {"radio_percent", nullptr, &pgr1::radio_percent, "Radio music volume (%)",
+                 "Against engine and effects. 100 is the game's own mix, where they drown it out; 0 to 400, at once."}},
     .load = nullptr,                      // reads more from the settings file's toml::table
     .save = nullptr,                      // writes more into it
     .init = Init,                         // after the settings load, before the window and boot
@@ -52,4 +61,7 @@ const app::GameInfo app::kGame = {
     .bink_frame_hold = false,  // the movie player (0xE9780) waits on BinkWait itself (0xE98D0) and counts its frames
     .hud_aspect = 4.0f / 3.0f,  // no widescreen mode: menus and HUD are laid out 4:3, the 3D widens (src/game/hooks.cpp)
     .sharpen_2d = true,         // the menus', HUD's and text's textures enlarged with sharp edges (Sharp text and HUD)
+    .auto_fills_screen = true,  // "from the screen's shape" follows an ultrawide: the 3D widens, HUD at 16:9 (src/game/hooks.cpp)
+    .pcm_stream_level = MusicLevel,
+    .other_voice_level = OtherLevel,
 };

@@ -240,3 +240,30 @@ PGR1_HUD_ELEMENT(00080AB0, 0)
 PGR1_HUD_ELEMENT(00081170, 0)
 PGR1_HUD_ELEMENT(000812C0, 0)
 PGR1_HUD_ELEMENT(00081FB0, 0)
+
+// The race intro's letterbox: GAMESTUFF_2's draw 0x74660 draws black quads above y 100 and below y 380 and a fade between
+// them through 0xEDE60 (register, x, y, z, w), leaving 640x280, about 2.29:1, on the console's 4:3 screen. On a wide
+// screen they would leave a thin strip: the bars take what that shape needs (100 at 4:3, 53 at 16:9, none at 2.29:1 and
+// wider).
+namespace {
+bool g_in_letterbox = false;
+}
+X86_EXTERN_FUNC(__imp__sub_00074660);
+X86_FUNC(sub_00074660) {
+    g_in_letterbox = true;
+    __imp__sub_00074660(ctx, base);
+    g_in_letterbox = false;
+}
+X86_EXTERN_FUNC(__imp__sub_000EDE60);
+X86_FUNC(sub_000EDE60) {
+    if (g_in_letterbox) {
+        uint32_t& y = kernel::G<uint32_t>(ctx.esp + 12);
+        constexpr uint32_t k100 = 0x42C80000, k380 = 0x43BE0000;  // floats
+        if (y == k100 || y == k380) {
+            float bar = std::max(240.0f * (1.0f - app::FrameAspect() / (640.0f / 280.0f)), 0.0f);
+            float to = y == k100 ? bar : 480.0f - bar;
+            std::memcpy(&y, &to, 4);
+        }
+    }
+    __imp__sub_000EDE60(ctx, base);
+}

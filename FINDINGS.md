@@ -67,6 +67,12 @@ game's own code and data, with its addresses).
 - **[game]** Car select draws its car into a 1024x1024 target (the projection from 0xA592D, with that target bound) and
   shows it through a 2D quad, so that camera is not widened (0xA57F0's override tests the target's shape). The 256x256
   reflection targets still use a projection built while the 640x480 target was bound, so they stay narrowed.
+- **[game]** The race intro's letterbox: GAMESTUFF_2's draw 0x74660 draws untextured quads above y 100 and below y 380, and
+  a fade between, through 0xEDE60 (register, x, y, z, w). 640x280 is about 2.29:1, so the override sizes the bars to that
+  shape on the frame (100 at 4:3, 53 at 16:9, none from 2.29:1).
+- **[game]** The race's mix reaches full scale with the game's own volumes (over 13,000 clipped samples in 100 s of
+  race, music at 0.17, effects at 0.25, the DSP effects not modelled). The radio is the WMA player's PCM streams;
+  the DJ clips are ADPCM streams, with the ambience.
 - **[game]** Race camera: every camera's projection goes through 0xA58E0 (cdecl: zoom, ...; fov 1.14 rad over the
   zoom, horizontal negated); the race camera calls it at 0x7863E (zoom 1; 2 in the fly-by), the car shadow camera at
   0x284BB (12), menus at 0xA6F39 and 0xAA65C (1.8); the rear mirror builds its own at 0xA59CA.

@@ -39,14 +39,15 @@ Files the exe writes beside itself, in `out\build\release`:
 
 **Settings window: F1**, or **Back + Start** on a controller. Tabs:
 - Display: monitor, display mode, resolution, vsync, aspect ratio. PGR1 has no widescreen mode of its own: on a
-  wide display the 3D widens to the window's shape (16:9 with "auto", the whole screen with "screen"), the race HUD
-  is laid out at 16:9 (its panels moved out, each at its own shape; one player) and the menus stay 4:3 in the middle.
+  wide display the 3D widens to the window's shape, ultrawide included, the race HUD is laid out at 16:9 (its panels
+  moved out, each at its own shape; one player) and the menus stay 4:3 in the middle.
 - Graphics: render scale, anisotropic filtering, frame rate cap, antialiasing, frames-a-second counter, renderer.
   Sharp text and HUD (on by default: the menus', HUD's and text's textures are enlarged two or four times with sharp
   edges on a background thread, so lettering and gauges stay crisp at high resolutions; a texture shows at its
   original size for a moment the first time it appears).
 - Game: skip intro (the movie, logos and warning; next start), hide the race HUD (at once), race camera field of
   view in % (50 to 200, at once).
+  Radio music volume in % (0 to 400, at once): the music against engine and effects; 100 is the game's own balance.
 - General: pause when the window is not in front.
 - Wheel: steering wheels, pedals and shifters; force feedback follows the player's car in races.
 - Controls: keys and controller remapping.

@@ -15,6 +15,17 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-10-31 - issue 4: the ultrawide items and the music
+
+"From the screen's shape" follows an ultrawide (SDK GameInfo::auto_fills_screen, on for PGR1). The race intro's bars fit
+the frame (0x74660, 0xEDE60 override): none at 21:9, 53 at 16:9, 100 at 4:3. The stretched menu backdrop went with the
+SDK's per-draw squeeze (a tile past one edge squeezed whole, its clip with it): true shape, black sides, no off-screen
+panels in the margins; no PGR1 change (a crop was not possible, the swoosh layer lines up with the menu text). Music:
+the race mix already clips on the old SDK too (13,132 samples in 100 s, with the music at its lower level), so other voices come down
+(SDK pcm_stream_level, other_voice_level; PGR1's Radio music volume, 150% by default): 52 clipped samples. The reference
+renderer's clip now follows squeeze_shift as the GPU renderers' does. Checked headless at 21:9 and 16:9. MSAA and FXAA are
+separate settings now (SDK). Left: an unlocked frame rate, the 256x256 reflection targets. Tag v1.2 waits for Harry.
+
 ### 2026-10-31 - issue 4 reviewed; squashed car at car select fixed
 
 Issue 4 (ultrawide feedback). The car select car was narrowed by 4:3 over the frame's shape (0.56 at 21:9): it is drawn
