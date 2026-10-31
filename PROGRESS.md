@@ -15,6 +15,15 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-10-31 - issue 4 reviewed; squashed car at car select fixed
+
+Issue 4 (ultrawide feedback). The car select car was narrowed by 4:3 over the frame's shape (0.56 at 21:9): it is drawn
+into a 1024x1024 target shown through a 2D quad, and the Hor+ override of 0xA57F0 widened that camera too. Now only a
+target wider than tall is widened: m00 = m11 = 3.05 at 21:9, the car's shape right in REF frames, race cameras unchanged;
+smoke OK. Open from the issue, for later: "from the screen's shape" stops at 16:9 (SDK), the race intro's letterbox bars,
+the stretched menu backdrop, the radio about 9 dB under the engine, MSAA with FXAA, an unlocked frame rate. Tag v1.2
+still waits for Harry.
+
 ### 2026-10-29 - release 1.2 prepared: the launcher updates itself
 
 Harry asked every game (through the EoN session) to take the shared launcher's update prompts and release. SDK at

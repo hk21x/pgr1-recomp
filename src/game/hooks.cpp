@@ -12,6 +12,7 @@
 #include "core/input.h"
 #include "core/log.h"
 #include "kernel/kernel.h"
+#include "gpu/texture.h"
 #include "xdk/d3d8.h"
 #include "xdk/hle.h"
 
@@ -51,9 +52,13 @@ X86_FUNC(sub_000E9780) {
 X86_EXTERN_FUNC(__imp__sub_000A57F0);
 X86_FUNC(sub_000A57F0) {
     uint32_t out = kernel::R32(ctx.esp + 4);
+    // the car select's car is drawn into a square target (1024x1024) and shown through a 2D quad: not widened, or it
+    // comes out squashed by the same factor
+    uint32_t target_w = 0, target_h = 0;
+    gpu::SurfaceSize(d3d::State().rt, target_w, target_h);
     __imp__sub_000A57F0(ctx, base);
     float aspect = app::FrameAspect(), k = 4.0f / 3.0f / aspect;
-    if (out && k < 0.999f) {
+    if (out && k < 0.999f && target_w > target_h) {
         float m00;
         std::memcpy(&m00, &kernel::G<uint32_t>(out), 4);
         m00 *= k;

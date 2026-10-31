@@ -64,6 +64,9 @@ game's own code and data, with its addresses).
   Bizarre Creations logo and the warning (about 21 s). Frontend.ini's own SkipIntroScreens (0x2E92A8; read into it
   by the INI loader 0x4DAB4, tested by the movie start 0xC9379 and the intro handler 0x566B1) skips them all.
   SkipPresentation (0x2E92A0, copied to 0x2C85C4 at 0x53C2C) is something else; left alone.
+- **[game]** Car select draws its car into a 1024x1024 target (the projection from 0xA592D, with that target bound) and
+  shows it through a 2D quad, so that camera is not widened (0xA57F0's override tests the target's shape). The 256x256
+  reflection targets still use a projection built while the 640x480 target was bound, so they stay narrowed.
 - **[game]** Race camera: every camera's projection goes through 0xA58E0 (cdecl: zoom, ...; fov 1.14 rad over the
   zoom, horizontal negated); the race camera calls it at 0x7863E (zoom 1; 2 in the fly-by), the car shadow camera at
   0x284BB (12), menus at 0xA6F39 and 0xAA65C (1.8); the rear mirror builds its own at 0xA59CA.
