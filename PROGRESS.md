@@ -15,6 +15,12 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-11 - the launcher's Git: MinGit's busybox edition
+
+A PGR2 player's builds stopped at `git submodule` (MSYS2 sh forks dying, 0xC0000142; Harry confirmed the busybox edition
+fixes it there). launcher/toolchain.json now has it (download checked against its SHA-256 and size). Launchers read the
+file from main at each build, so no release; each reinstalls Git once. No report of this on PGR1 yet.
+
 ### 2026-10-31 - release 1.2
 
 Harry: release. docs/releases/v1.2.md: the wheel fix, the squashed car, issue 4's ultrawide items, the music balance, the
