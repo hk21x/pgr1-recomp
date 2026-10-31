@@ -333,3 +333,15 @@ X86_FUNC(sub_000A39A0) {
     g_margin_fill = false;
     std::memcpy(&kernel::G<uint8_t>(kQuad), saved, sizeof saved);
 }
+
+// The loading screen's picture: 0xA75E0 (loading.raw) unpacks it into the back buffer (0x2997D8, locked) and copies
+// it to the front buffer (0x2997D4, GetBackBuffer(-1)) with a plain memory copy, then presents. The renderers keep their
+// own picture of each buffer and only hear of a CPU write through a lock, so the front's stayed without the picture: the
+// text was drawn over it, the spinner's next lock (0xA7700) wrote that back to memory, and the two buffers alternated
+// with and without the picture while a race loaded. Both are marked as written.
+X86_EXTERN_FUNC(__imp__sub_000A75E0);
+X86_FUNC(sub_000A75E0) {
+    __imp__sub_000A75E0(ctx, base);
+    gpu::MarkDirty(kernel::G<uint32_t>(0x2997D4));
+    gpu::MarkDirty(kernel::G<uint32_t>(0x2997D8));
+}

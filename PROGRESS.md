@@ -15,6 +15,13 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-10-31 - flicker on the loading screen
+
+Harry's clip (D3D11 and D3D12, any render scale or MSAA, since 1.0): stepping through it, the loading picture alternates
+on and off each game frame with the text and K steady. Not visible headless (the reference renderer draws in guest
+memory). Cause and fix in FINDINGS.md (Loading screen): the front buffer's unlocked copy; 0xA75E0 now marks both buffers.
+Smoke OK; needs Harry's check on Windows, the only place it shows.
+
 ### 2026-10-31 - menus fill an ultrawide screen
 
 Harry: since the backdrop fix the menus sit centred with black sides. The backdrop cannot be widened (its round cut-out

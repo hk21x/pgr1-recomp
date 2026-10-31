@@ -73,6 +73,10 @@ game's own code and data, with its addresses).
 - **[game]** The race's mix reaches full scale with the game's own volumes (over 13,000 clipped samples in 100 s of
   race, music at 0.17, effects at 0.25, the DSP effects not modelled). The radio is the WMA player's PCM streams;
   the DJ clips are ADPCM streams, with the ambience.
+- **[game]** Loading screen: 0xC4A30 calls 0xA75E0 (loading.raw into the back buffer 0x2997D8, a plain copy into the front
+  0x2997D4, Present), draws the text into each buffer (two presents), and the spinner 0xA7700 writes its K into both
+  every 50 ms. **[console]** A CPU write without a lock is invisible to the GPU renderers' targets (headless draws in guest
+  memory, so it cannot show there); the override marks both buffers after 0xA75E0.
 - **[game]** Race camera: every camera's projection goes through 0xA58E0 (cdecl: zoom, ...; fov 1.14 rad over the
   zoom, horizontal negated); the race camera calls it at 0x7863E (zoom 1; 2 in the fly-by), the car shadow camera at
   0x284BB (12), menus at 0xA6F39 and 0xAA65C (1.8); the rear mirror builds its own at 0xA59CA.
