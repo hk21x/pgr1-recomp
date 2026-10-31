@@ -15,6 +15,13 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-10-31 - README: graphics settings comparison
+
+Harry asked (through the PGR2 session) for a section like PGR2's, from his eight 3440x1440 shots in .local/win: a wipe
+(all off and best) and close-ups of the car's edges, wires and a brick wall, committed as crops in docs/images. The shots
+are one spot at different moments (the race timer differs), so crops avoid the timer. Which settings "best" used is not
+recorded, so the README names none.
+
 ### 2026-10-31 - issue 4: the ultrawide items and the music
 
 "From the screen's shape" follows an ultrawide (SDK GameInfo::auto_fills_screen, on for PGR1). The race intro's bars fit

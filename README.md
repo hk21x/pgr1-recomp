@@ -107,6 +107,40 @@ General, Wheel and Controls. Changes are saved at once.
 **Controllers:** Xbox, PlayStation and Switch controllers, with hot plugging and rumble; any console input can be
 mapped to any controller input in Controls.
 
+## Graphics settings
+
+In the settings window (F1); they apply at once. All of these are the same spot at 3440x1440.
+
+<p align="center">
+  <img src="docs/images/pgr1-settings-wipe.webp" alt="A wipe between all settings off and the best settings" width="800">
+  <br>
+  <i>All off vs. the best settings.</i>
+</p>
+
+<p align="center">
+  <img src="docs/images/pgr1-settings-car.webp" alt="Close-up of the car's roof, window and mirror with all off, MSAA 4x, FXAA and render scale 200%" width="800">
+  <br>
+  <i>Edges around the car, enlarged three times.</i>
+</p>
+
+<p align="center">
+  <img src="docs/images/pgr1-settings-edges.webp" alt="Overhead wires crossing a clock tower with all off, MSAA 4x, FXAA and render scale 200%" width="800">
+  <br>
+  <i>Fine detail, enlarged twice.</i>
+</p>
+
+- **MSAA** smooths the edges of the 3D scene and keeps textures sharp. The more samples, the slower; 8x shows little over 4x here.
+- **FXAA** smooths the finished frame, softens it a little, and can smudge thin lines such as these wires.
+- **Render scale** draws the picture larger than the screen: the smoothest edges, and the slowest.
+
+<p align="center">
+  <img src="docs/images/pgr1-settings-sharpness.webp" alt="A brick building with all off, sharpening 50%, sharpening 100% and the best settings" width="800">
+  <br>
+  <i>Sharpening, enlarged twice.</i>
+</p>
+
+- **Sharpening** makes the picture crisper. Around 50% is a good start; 100% turns brickwork and window frames gritty.
+
 ## Features
 
 ### Display
