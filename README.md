@@ -35,7 +35,8 @@ and no admin rights needed.
 **You need:**
 - Windows 10 or 11, 64 bit, and a GPU with Direct3D 12 or 11.
 - Your own copy of the game (PAL): an `.iso` image of your disc, or a folder with the disc's files.
-- About 15 GB free, and an internet connection for about 1.4 GB of build tools.
+- About 15 GB free for the first build (about 6 GB stays installed, including your copy of the game), and an internet
+  connection for about 1.4 GB of build tools.
 
 **Steps:**
 1. Download `PGR1Launcher.exe` from the [latest release](https://github.com/hk21x/pgr1-recomp/releases/latest).
@@ -53,7 +54,7 @@ and no admin rights needed.
 When a new release comes out the launcher offers it at start (**Update the launcher**, **What's new**, **Later**):
 it downloads the new launcher, checks it and restarts, then offers to build the new version of the game (saves and
 settings are kept). Launchers before 1.2 cannot do this: download 1.2's by hand once. **Remove the build files** frees
-about 10 GB once the game is built (an update then builds everything again).
+a few hundred MB once the game is built (the button shows how much; an update then builds everything again).
 
 Files, all under the `PGR1` folder beside the launcher:
 - `play\` the game: `PGR1.exe`, `pgr1.toml` (settings), `hdd\` (profiles, saves and caches), `logs\pgr1.log` (the game's

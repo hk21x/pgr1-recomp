@@ -15,6 +15,12 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-11 - README: install sizes
+
+Harry asked every game to correct them (PGR2's measured install: play 7.3 GB with a 5.6 GB game, tools 1.83, source 0.33;
+Remove the build files frees only source\\out, 231 MB). PGR1's about 6 GB is an estimate from those and its 2.4 GB game,
+not measured on Windows; 15 GB for the first build is unchanged and unmeasured.
+
 ### 2026-11 - the launcher's Git: MinGit's busybox edition
 
 A PGR2 player's builds stopped at `git submodule` (MSYS2 sh forks dying, 0xC0000142; Harry confirmed the busybox edition
