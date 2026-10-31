@@ -267,3 +267,69 @@ X86_FUNC(sub_000EDE60) {
     }
     __imp__sub_000EDE60(ctx, base);
 }
+
+// Menus on a wide screen: they stay 4:3 in the centre, and the margins are filled with the backdrop's leather, nothing
+// stretched. 0xA39A0 draws one quad from the record at 0x2BAA80 (four vertices, 0x1C bytes each: x, y, z, rhw, colour, u,
+// v). The backdrop's top layer (rhw over 0.5; the layer below it is black) is tiles clamped to their edges (texture stage
+// 0's AddressU, slot 10 of the deferred states at 0xF9400, is 5; text and pictures wrap), with a round cut-out the menu
+// shows through; its rightmost tiles end on x 640 and their last 80 pixels are plain leather on every menu. That strip is
+// drawn again across both margins, each copy mirroring the last so the joins do not show. A quad wholly off the frame
+// is dropped by the vertex test 0xA3240, which answers 0 (inside) for these.
+namespace {
+bool g_margin_fill = false;
+}
+X86_EXTERN_FUNC(__imp__sub_000A3240);
+X86_FUNC(sub_000A3240) {
+    if (g_margin_fill) {
+        ctx.eax = 0;
+        ctx.esp += 4;  // ret
+        return;
+    }
+    __imp__sub_000A3240(ctx, base);
+}
+X86_EXTERN_FUNC(__imp__sub_000A39A0);
+X86_FUNC(sub_000A39A0) {
+    const uint32_t esp = ctx.esp;
+    __imp__sub_000A39A0(ctx, base);
+    constexpr uint32_t kQuad = 0x2BAA80, kStride = 0x1C;
+    constexpr float kStripStart = 560, kStrip = 80;
+    const float aspect = app::FrameAspect();
+    gpu::State& state = d3d::State();
+    if (aspect <= 4.0f / 3.0f + 0.001f || state.squeeze_beyond || kernel::G<uint32_t>(0xF9400 + 10 * 4) != 5) return;
+    uint32_t tw = 0, th = 0;
+    gpu::SurfaceSize(state.rt, tw, th);
+    if (tw != 640 || th != 480) return;
+    uint8_t saved[kStride * 4];
+    std::memcpy(saved, &kernel::G<uint8_t>(kQuad), sizeof saved);
+    float x[4], u[4], rhw, lo = 1e9f, hi = -1e9f, u_lo = 0, u_hi = 0;
+    std::memcpy(&rhw, saved + 12, 4);
+    for (int i = 0; i < 4; i++) {
+        std::memcpy(&x[i], saved + i * kStride, 4);
+        std::memcpy(&u[i], saved + i * kStride + 0x14, 4);
+        if (x[i] < lo) lo = x[i], u_lo = u[i];
+        if (x[i] > hi) hi = x[i], u_hi = u[i];
+    }
+    if (rhw <= 0.5f || hi < 639.5f || hi > 640.5f || lo < 500 || lo > kStripStart) return;
+    const float u_start = u_lo + (u_hi - u_lo) * (kStripStart - lo) / (hi - lo);  // the strip's left end in the texture
+    const float margin = 320.0f * (aspect / (4.0f / 3.0f) - 1);  // guest pixels past each edge the squeezed frame leaves
+    g_margin_fill = true;
+    for (int side : {-1, 1}) {
+        state.squeeze_margin = side;
+        for (int copy = 0; float(copy) * kStrip < margin && copy < 32; copy++) {
+            const float left = side < 0 ? -kStrip * float(copy + 1) : 640 + kStrip * float(copy);
+            // the join at the frame's edge and every other: the strip's right end meets the next copy's right end
+            const bool flipped = (copy & 1) == (side < 0 ? 1 : 0);
+            for (int i = 0; i < 4; i++) {
+                const bool right = x[i] > (lo + hi) / 2;
+                const float moved = left + (right ? kStrip : 0), tex = right != flipped ? u_hi : u_start;
+                std::memcpy(&kernel::G<uint8_t>(kQuad + uint32_t(i) * kStride), &moved, 4);
+                std::memcpy(&kernel::G<uint8_t>(kQuad + uint32_t(i) * kStride + 0x14), &tex, 4);
+            }
+            ctx.esp = esp;
+            __imp__sub_000A39A0(ctx, base);
+        }
+    }
+    state.squeeze_margin = 0;
+    g_margin_fill = false;
+    std::memcpy(&kernel::G<uint8_t>(kQuad), saved, sizeof saved);
+}

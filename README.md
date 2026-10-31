@@ -112,9 +112,9 @@ mapped to any controller input in Controls.
 In the settings window (F1); they apply at once. All of these are the same spot at 3440x1440.
 
 <p align="center">
-  <img src="docs/images/pgr1-settings-wipe.webp" alt="A wipe between all settings off and the best settings" width="800">
+  <img src="docs/images/pgr1-settings-wipe.webp" alt="A wipe between all settings off and render scale 200%, MSAA 4x and sharpening 50%" width="800">
   <br>
-  <i>All off vs. the best settings.</i>
+  <i>All off vs. the recommended start for a capable PC: render scale 200%, MSAA 4x, sharpening 50%.</i>
 </p>
 
 <p align="center">
@@ -134,7 +134,7 @@ In the settings window (F1); they apply at once. All of these are the same spot 
 - **Render scale** draws the picture larger than the screen: the smoothest edges, and the slowest.
 
 <p align="center">
-  <img src="docs/images/pgr1-settings-sharpness.webp" alt="A brick building with all off, sharpening 50%, sharpening 100% and the best settings" width="800">
+  <img src="docs/images/pgr1-settings-sharpness.webp" alt="A brick building with all off, sharpening 50%, sharpening 100% and all three settings together" width="800">
   <br>
   <i>Sharpening, enlarged twice.</i>
 </p>
@@ -147,7 +147,7 @@ In the settings window (F1); they apply at once. All of these are the same spot 
 - **Display Modes** - Fullscreen, borderless window or window, at any resolution the monitor offers, applied at once.
 - **Widescreen and Ultrawide** - The console game is 4:3 only. Here the 3D views widen to the screen's shape, 21:9 and
   wider included, at full sharpness. The race HUD is laid out at 16:9 (its panels out towards the sides, each at its true
-  shape), the race intro's black bars fit the screen, and the menus stay 4:3 in the centre with black at the sides.
+  shape), the race intro's black bars fit the screen, and the menus stay 4:3 in the centre with the backdrop's leather filling the sides.
 - **Frame Pacing** - Runs at the game's own rate, 60 frames a second in menus and races as on the console, with vsync
   and a frame rate cap.
 - **Monitor** - Chooses which display the game uses.

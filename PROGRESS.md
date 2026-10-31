@@ -15,6 +15,14 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-10-31 - menus fill an ultrawide screen
+
+Harry: since the backdrop fix the menus sit centred with black sides. The backdrop cannot be widened (its round cut-out
+lines up with the menu) and mirroring the top layer brought black discs into the margins, so the override of 0xA39A0
+draws the top layer's last 80 pixels of plain leather across both margins, mirrored copy by copy, with 0xA3240's
+off-frame test bypassed and SDK State::squeeze_margin clipping each to its margin. Checked in REF frames at 21:9: main
+menu, city select, car select. README's wipe caption now names the settings (Harry: as PGR2's).
+
 ### 2026-10-31 - README: graphics settings comparison
 
 Harry asked (through the PGR2 session) for a section like PGR2's, from his eight 3440x1440 shots in .local/win: a wipe
