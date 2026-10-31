@@ -15,6 +15,11 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-10-31 - release 1.2
+
+Harry: release. docs/releases/v1.2.md: the wheel fix, the squashed car, issue 4's ultrawide items, the music balance, the
+loading screen flicker, the launcher's updates (one download by hand), the Discord server; tag v1.2.
+
 ### 2026-10-31 - flicker on the loading screen
 
 Harry's clip (D3D11 and D3D12, any render scale or MSAA, since 1.0): stepping through it, the loading picture alternates
