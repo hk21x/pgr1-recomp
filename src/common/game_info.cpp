@@ -6,6 +6,7 @@
 #include "core/input.h"
 
 namespace pgr1 {
+void SettingsLoaded();  // src/game/settings_entry.cpp
 std::vector<achievements::Def> AchievementSet();  // src/game/achievement_set.cpp
 void WheelFeel(input::WheelFeel& feel);  // src/game/hooks.cpp
 bool skip_intro = false;  // no intro movie, logos or warning at start (src/game/hooks.cpp)
@@ -48,7 +49,7 @@ const app::GameInfo app::kGame = {
     .load = nullptr,                      // reads more from the settings file's toml::table
     .save = nullptr,                      // writes more into it
     .init = Init,                         // after the settings load, before the window and boot
-    .loaded = nullptr,                    // image in memory, before its entry point runs
+    .loaded = pgr1::SettingsLoaded,       // image in memory, before its entry point runs
     .window = nullptr,                    // the game window is up
     .message = nullptr,                   // window messages first; true takes one
     .ui = nullptr,                        // ImGui drawing each frame

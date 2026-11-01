@@ -16,6 +16,17 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-11-01 - RECOMP in the game's menus
+
+Harry: F1's settings in the menus, as PGR2, in the main menu and in a race, titled RECOMP. src/game/settings_entry.cpp:
+an item at the end of Options with the game's own pages and spinners, and an item above quit race with the pause menu's
+own submenus, left and right stepping a row. Bindings and more opens F1. How both menus work: FINDINGS, "Menus". No help
+lines: neither menu has a place for them. SDK at the fork's main (ListModes, SMAA and the other new options, which get rows).
+Evidence, headless on all three releases: Options > RECOMP > picture > msaa changed from off to 2x (logged), B back through
+each page; in a race RECOMP opens, msaa steps, back to the race, reset ghost car and screen split still hidden. Smoke OK.
+All USA sections fit after lifting the lists (its pause text is larger). Not tested: Windows, the settings' effects from
+these rows beyond the logged change, F1 opening from the row (the harness has no window).
+
 ### 2026-11-01 - release 1.3
 
 Harry asked for it with the three discs as they are. Notes in docs/releases/v1.3.md; they say the two new discs are not yet

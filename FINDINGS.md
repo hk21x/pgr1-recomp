@@ -127,3 +127,18 @@ USA 1.0 is a build with XDK 3925's D3D8 and DSOUND: data moves in steps (pgr1::V
 105 data files differ from Europe's (cars.ini only in DemoCar; the chapter files are the same). The Bink section moved whole.
 Asia's xbe (c14b35767fddc5a7af4b3aa13b53e374be23fe57) has USA's sections with another version number; Japan's
 (4c38cf630f7dc92a845d2141020157e78e682e3d) is another build. Neither is supported yet.
+
+## Menus
+
+- **[game]** Front end pages (Options 0x5CE80, Game Settings 0x5B320): a builder calls 0xC0760 (the byte remembering the
+  focus), makes items, links them 0x64CC0 (items, count, 0), then per item 0xC0CC0 and 0xC0B90 (item, event, handler;
+  5 A, 7 B), focuses one 0xC0E60 and titles the page 0x62A30. An item 0x62880: place in the list, label pointer, icon
+  sprite (the int16s 0x2E8D80..., not a string id: a bad one crashes the draw), A's handler. A row 0x64C70 adds a table
+  and its int: A opens a spinner (0x64810), each choice 0x18 bytes from +0x18 (text id, value, handler when chosen, the
+  row's shower 0x5B720). 0x618F0 on A is for items that leave the page: on a row it freezes the spinner. Strings:
+  a char pointer per StringList.ini id at 0x2E7400; ids 1361 to 1499 are unused.
+- **[game]** Pause menu: a menu (0x2C bytes, root 0x159D3C) points to entries (0x34 bytes, id -1 ends them): text id,
+  handler (menu, entry, action: 1 measure, 2 draw, 3 A, 4 left, 5 right), submenu, value data, +0x10 bit 0 hidden. 0x83BE0
+  is the plain item; 0x192664 the menu open; a menu's +0x24 the item that opened it, whose +0x20 is its height. Text goes
+  through a format ("%%"). USA draws it larger, and clips at about x 560. The root's table is static, so
+  src/game/settings_entry.cpp copies it to insert RECOMP and copies its hidden flags each frame (0x85D20).
