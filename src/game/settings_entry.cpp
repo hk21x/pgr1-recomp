@@ -615,7 +615,7 @@ X86_FUNC(PGR1_FN(00083BE0, 00083C00, 000828C0)) {
     }
     if (it == g_pause_rows.end() && int(id) > kLastId - 1 - int(kSections.size()) - 1 && int(id) <= kLastId) {
         int i = kLastId - 1 - int(id);
-        const char* text = id == uint32_t(kLastId) ? "RECOMP"
+        const char* text = id == uint32_t(kLastId) ? "recomp"
                            : i < int(kSections.size()) ? kSections[i].label : kWindowLabel;
         kernel::G<uint32_t>(Strings() + id * 4) = Guest(text);
     }

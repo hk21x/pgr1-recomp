@@ -16,6 +16,11 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-11-01 - recomp in lowercase in the pause menu
+
+Harry confirmed on Windows that the settings work when changed, and asked for the pause menu's item in lowercase to match
+its neighbours. Options keeps RECOMP.
+
 ### 2026-11-01 - RECOMP in the game's menus
 
 Harry: F1's settings in the menus, as PGR2, in the main menu and in a race, titled RECOMP. src/game/settings_entry.cpp:
