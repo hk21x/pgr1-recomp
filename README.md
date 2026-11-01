@@ -13,14 +13,17 @@ reimplemented for Windows (Direct3D 12 or 11, XAudio2, SDL). It is not an emulat
 
 ## Supported Version
 
-The European (PAL) Xbox release of Project Gotham Racing (title id 4D530003):
+Three Xbox releases of Project Gotham Racing (title id 4D530003). Each disc is its own compile of the game, so the build
+recompiles the one you give it:
 
-| Release | `default.xbe` SHA-1 |
-| --- | --- |
-| Europe (PAL), version 5 | `4878c3bdbd44663b64ce64986b313e8c6b7f8917` |
+| Release | Disc image SHA-1 | `default.xbe` SHA-1 |
+| --- | --- | --- |
+| Europe 1.1 | `4608350bc01c9544da8bd46860ecdfb16cc2d6eb` | `4878c3bdbd44663b64ce64986b313e8c6b7f8917` |
+| Europe and Australia 1.0 | `28bbf6c115f096eeb5785752e1bee34dc2cd7764` | `ba7763e6e946ab40aed6706f2c9bc1df3a990fa0` |
+| USA 1.0 | `c20a9d1d0ee04daf6e9723767b1b9d1a8007445d` | `0d55fff29ceb34ab4dfcfc4820e823d967ca1469` |
 
-The log (`logs\pgr1.log`) names the SHA-1 of the `default.xbe` it found. Other releases (North American, Japanese,
-Platinum Hits) have not been checked yet, and the game asks before starting one.
+The log (`logs\pgr1.log`) names the SHA-1 of the `default.xbe` it found. Other releases (Japanese, Asian) have not been
+added, and the launcher will not build them. To change disc, choose the other one in the launcher and build again.
 
 ## Getting Started
 
@@ -34,7 +37,7 @@ and no admin rights needed.
 
 **You need:**
 - Windows 10 or 11, 64 bit, and a GPU with Direct3D 12 or 11.
-- Your own copy of the game (PAL): an `.iso` image of your disc, or a folder with the disc's files.
+- Your own copy of the game (a [supported release](#supported-version)): an `.iso` image of your disc, or a folder with the disc's files.
 - About 3 GB free, plus room for your copy of the game, and an internet connection for about 1.4 GB of build tools.
 
 **Steps:**
@@ -79,7 +82,7 @@ tools for Windows**), about 3 GB free plus room for your copy of the game, and y
 2. Put your game files in the `assets` folder: `assets\default.xbe` with the game's folders beside it. With an `.iso`,
    put the `.iso` in `assets` and also copy `default.xbe` out of it into `assets` (the build recompiles from that file).
 3. Run `build.bat` from Explorer or a command prompt. The first build takes 30 to 90 minutes; later builds are quicker.
-   Do not run `xbe_symbols` or edit `config\game.toml`: the committed configuration is the one for the supported release.
+   Do not run `xbe_symbols` or edit `config\game.toml`: the committed configurations are the ones for the supported releases, and the build picks yours by its SHA-1.
 4. Answer Y to "Play now?", or run `out\build\release\PGR1.exe`. It finds the `assets` folder beside itself or in any
    folder above it.
 
@@ -205,7 +208,7 @@ and to talk about the port with other players.
   the diagnostic switches (frame captures with F3, `XBE_DSOUND_LOG` for sound, `XBE_PERF` timings).
 - The launcher's build failing: send `PGR1\launcher.log` (its Details section shows the same). Press Build again
   after a network problem: it carries on where it stopped.
-- "Another release" in the log, or the game not starting: the `default.xbe` is not the supported release.
+- "Another release" in the log, or the game not starting: the `default.xbe` is not the release this build was made from.
 - A first boot again (the cache, the intro movie): delete the `hdd` folder beside `PGR1.exe` (`PGR1\play\hdd` with
   the launcher, `out\build\release\hdd` when built from source).
 - Still stuck: ask on the [Discord server](https://discord.gg/PQjkKsdtc), with `logs\pgr1.log`.

@@ -1,0 +1,15 @@
+# USA: config/pgr1.toml's hand entries with this release's addresses (sdk/tools/symbols/xbe_port.py). config/usa_game.toml
+# is xbe_symbols output for this xbe (XDK 3925, sdk/xdk/3925).
+includes = ["usa_game.toml"]
+
+[xbe]
+data_ranges = [[0x137DA0, 0x137F6C]]
+
+[functions]
+0xFB878 = "CDirectSoundStream_Constructor"
+0x137F6C = "MU_Init"
+0x5B8D0 = "MusicManager_Callback"
+0x2D8B0 = "Callback_2D8B0"  # an immediate the scan refused
+
+[symbols]
+BinkDoFrame = 0x11FFF0  # the Bink section moved whole; xbe_symbols finds no unique match here

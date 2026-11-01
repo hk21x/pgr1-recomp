@@ -26,10 +26,27 @@ include(${SDK}/cmake/XbeRecomp.cmake)
 file(GLOB XBE_HOST_SOURCES CONFIGURE_DEPENDS src/*/*.cpp)
 list(FILTER XBE_HOST_SOURCES EXCLUDE REGEX "/src/game/")
 
+# the release, by assets/default.xbe: each disc is another compile (config/<prefix>*.toml, every address ported;
+# PGR1_RELEASE picks the hooks' addresses, src/common/release.h). None of these: Europe 1.1, config/pgr1.toml
+set(PGR1_PREFIX "")
+set(PGR1_RELEASE 0)
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/assets/default.xbe)
+    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS assets/default.xbe)  # another disc: another config
+    file(SHA1 ${CMAKE_CURRENT_SOURCE_DIR}/assets/default.xbe PGR1_XBE_SHA1)
+    if(PGR1_XBE_SHA1 STREQUAL "ba7763e6e946ab40aed6706f2c9bc1df3a990fa0")  # Europe and Australia 1.0
+        set(PGR1_PREFIX "e10_")
+        set(PGR1_RELEASE 1)
+    elseif(PGR1_XBE_SHA1 STREQUAL "0d55fff29ceb34ab4dfcfc4820e823d967ca1469")  # USA
+        set(PGR1_PREFIX "usa_")
+        set(PGR1_RELEASE 2)
+    endif()
+endif()
+message(STATUS "PGR1 release: ${PGR1_RELEASE}")
+
 # partitions as xbe_symbols wrote them into config/game.toml
-set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS config/game.toml)
-if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/config/game.toml)
-    file(STRINGS config/game.toml GAME_PARTITIONS REGEX "^partitions *=")
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS config/${PGR1_PREFIX}game.toml)
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/config/${PGR1_PREFIX}game.toml)
+    file(STRINGS config/${PGR1_PREFIX}game.toml GAME_PARTITIONS REGEX "^partitions *=")
     string(REGEX MATCH "[0-9]+" GAME_PARTITIONS "${GAME_PARTITIONS}")
 endif()
 # no config yet: build.bat writes it with xbe_symbols, the change reconfigures
@@ -39,7 +56,8 @@ endif()
 
 # target name = GAME_EXE in build.bat, xbe = GAME_XBE
 # config/pgr1.toml holds the hand-kept entries and includes the generated config/game.toml
-add_xbe_image(PGR1 default.xbe pgr1.toml ${GAME_PARTITIONS} game)
+add_xbe_image(PGR1 default.xbe ${PGR1_PREFIX}pgr1.toml ${GAME_PARTITIONS} game)
+target_compile_definitions(PGR1 PRIVATE PGR1_RELEASE=${PGR1_RELEASE})
 
 # launcher/icon.ico, when there is one: the game's icon too (resource 1, which the window class loads)
 if(WIN32 AND EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/launcher/icon.ico)

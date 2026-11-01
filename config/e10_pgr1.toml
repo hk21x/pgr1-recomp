@@ -1,0 +1,14 @@
+# Europe and Australia 1.0: config/pgr1.toml's hand entries with this release's addresses (sdk/tools/symbols/xbe_port.py).
+# config/e10_game.toml is xbe_symbols output for this xbe.
+includes = ["e10_game.toml"]
+
+[xbe]
+data_ranges = [[0x13AFA0, 0x13B16C]]
+
+[functions]
+0xFEA78 = "CDirectSoundStream_Constructor"
+0x13B16C = "MU_Init"
+0x46860 = "Callback_46860"  # immediates the scan refused: real entries, after padding
+0xC0180 = "Callback_C0180"
+0xC0160 = "Callback_C0160"
+0x5C430 = "MusicManager_Callback"

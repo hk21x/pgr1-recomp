@@ -9,6 +9,7 @@
 #include <string>
 
 #include "app/app.h"
+#include "common/release.h"
 #include "core/input.h"
 #include "core/log.h"
 #include "kernel/kernel.h"
@@ -26,8 +27,8 @@ extern bool hide_hud;
 // 0xE9780 (cdecl: the path; its result unused), which loads the Bink sections around the movie (0xDD920 with 1, then 0)
 // The logos and warning after it are front end screens: Frontend.ini's SkipIntroScreens (0x2E92A8, read before the
 // movie; the intro handler 0x56680 tests it at 0x566B1 and skips to 0x55A20) is set here, after the INI is read
-X86_EXTERN_FUNC(__imp__sub_000E9780);
-X86_FUNC(sub_000E9780) {
+X86_EXTERN_FUNC(PGR1_ORIG(000E9780, 000E96A0, 000E66C0));
+X86_FUNC(PGR1_FN(000E9780, 000E96A0, 000E66C0)) {
     if (pgr1::skip_intro) {
         std::string path;
         for (uint32_t p = kernel::R32(ctx.esp + 4); p && path.size() < 260; p++) {
@@ -36,27 +37,27 @@ X86_FUNC(sub_000E9780) {
             path += char(std::tolower(static_cast<unsigned char>(c)));
         }
         if (path.find("fmv\\intro") != std::string::npos) {
-            kernel::G<uint32_t>(0x2E92A8) = 1;  // SkipIntroScreens
+            kernel::G<uint32_t>(pgr1::Va(0x2E92A8)) = 1;  // SkipIntroScreens
             LOGR("pgr1: intro movie %s and the intro screens skipped", path.c_str());
             ctx.esp += 4;  // ret
             return;
         }
     }
-    __imp__sub_000E9780(ctx, base);
+    PGR1_ORIG(000E9780, 000E96A0, 000E66C0)(ctx, base);
 }
 
 // Widescreen: PGR1 renders 4:3 only (it never asks XGetVideoFlags). Every 3D projection is built by 0xA57F0 (cdecl:
 // out, the view's height/width, near, far, horizontal fov, vertical fov; the only fptan in the game), shown at the
 // frame's shape it would stretch, so its x scale (out[0]) narrows by 4:3 over that shape: the same height, a wider
 // view. The 2D stays 4:3 in the middle (GameInfo::hud_aspect).
-X86_EXTERN_FUNC(__imp__sub_000A57F0);
-X86_FUNC(sub_000A57F0) {
+X86_EXTERN_FUNC(PGR1_ORIG(000A57F0, 000A5810, 000A3070));
+X86_FUNC(PGR1_FN(000A57F0, 000A5810, 000A3070)) {
     uint32_t out = kernel::R32(ctx.esp + 4);
     // the car select's car is drawn into a square target (1024x1024) and shown through a 2D quad: not widened, or it
     // comes out squashed by the same factor
     uint32_t target_w = 0, target_h = 0;
     gpu::SurfaceSize(d3d::State().rt, target_w, target_h);
-    __imp__sub_000A57F0(ctx, base);
+    PGR1_ORIG(000A57F0, 000A5810, 000A3070)(ctx, base);
     float aspect = app::FrameAspect(), k = 4.0f / 3.0f / aspect;
     if (out && k < 0.999f && target_w > target_h) {
         float m00;
@@ -71,10 +72,10 @@ X86_FUNC(sub_000A57F0) {
 // fov_percent: the race camera's field of view. Cameras set their projection through 0xA58E0 (cdecl: zoom, ...; the
 // horizontal and vertical fov are 1.14 rad over the zoom); the race camera's call is at 0x7863E (zoom 1, 2 in the
 // fly-by before the start), the car's shadow camera 0x284BB (12), the menus 0xA6F39 and 0xAA65C (1.8)
-X86_EXTERN_FUNC(__imp__sub_000A58E0);
-X86_FUNC(sub_000A58E0) {
+X86_EXTERN_FUNC(PGR1_ORIG(000A58E0, 000A5900, 000A3160));
+X86_FUNC(PGR1_FN(000A58E0, 000A5900, 000A3160)) {
     uint32_t pct = std::clamp<uint32_t>(pgr1::fov_percent, 50, 200);
-    if (pct != 100 && kernel::R32(ctx.esp) == 0x78643) {
+    if (pct != 100 && kernel::R32(ctx.esp) == PGR1_VA(0x78643, 0x78663, 0x77623)) {
         float zoom;
         std::memcpy(&zoom, &kernel::G<uint32_t>(ctx.esp + 4), 4);
         zoom = zoom * 100.0f / float(pct);
@@ -82,7 +83,7 @@ X86_FUNC(sub_000A58E0) {
         static uint32_t logged = 100;
         if (logged != pct) LOGR("pgr1: race camera field of view %u%%", logged = pct);
     }
-    __imp__sub_000A58E0(ctx, base);
+    PGR1_ORIG(000A58E0, 000A5900, 000A3160)(ctx, base);
 }
 
 // hide_hud: the race HUD (time, targets, Kudos, rev counter, lap) is drawn by the ARCADE_RACER task (the task table's
@@ -107,18 +108,18 @@ void HudSide(int side) {
 // the 16:9 frame's width over the 4:3 one (at most) on a wide screen with one player, else 0
 float SpreadRatio() {
     float r = std::min(app::FrameAspect(), 16.0f / 9.0f) / (4.0f / 3.0f);
-    return r > 1.001f && kernel::G<int32_t>(0x2C695E) <= 1 ? r : 0.0f;
+    return r > 1.001f && kernel::G<int32_t>(pgr1::Va(0x2C695E)) <= 1 ? r : 0.0f;
 }
 }  // namespace
 
-X86_EXTERN_FUNC(__imp__sub_000820F0);
-X86_FUNC(sub_000820F0) {
+X86_EXTERN_FUNC(PGR1_ORIG(000820F0, 00082110, 00080DD0));
+X86_FUNC(PGR1_FN(000820F0, 00082110, 00080DD0)) {
     g_hud_drawn = NowMs();
     if (pgr1::hide_hud) {
         ctx.esp += 4;  // ret
         return;
     }
-    __imp__sub_000820F0(ctx, base);
+    PGR1_ORIG(000820F0, 00082110, 00080DD0)(ctx, base);
     d3d::State().squeeze_beyond = false;  // set by the layout below (sub_0007D270) while the HUD is spread out
     d3d::State().squeeze_shift = 0;
 }
@@ -130,7 +131,7 @@ namespace pgr1 {
 void WheelFeel(input::WheelFeel& feel) {
     feel.racing = NowMs() - g_hud_drawn.load() < 200;
     float speed;
-    std::memcpy(&speed, &kernel::G<uint32_t>(0x2EC9D8), 4);
+    std::memcpy(&speed, &kernel::G<uint32_t>(pgr1::Va(0x2EC9D8)), 4);
     feel.speed = feel.racing && std::isfinite(speed) ? speed : 0;
 }
 }  // namespace pgr1
@@ -138,8 +139,8 @@ void WheelFeel(input::WheelFeel& feel) {
 // PGR1_DEBUG_LOG=1: the game's own debug messages in the log. 0x378A0 formats one (vsprintf 0xDDE80) and hands the text
 // to 0x37490 (cdecl: the text), which keeps it off screen. The radio's (WMAPlayer, CDataStreamer) need its debug level
 // 0x2E94AC at 5 as well.
-X86_EXTERN_FUNC(__imp__sub_00037490);
-X86_FUNC(sub_00037490) {
+X86_EXTERN_FUNC(PGR1_ORIG(00037490, 000374B0, 00037520));
+X86_FUNC(PGR1_FN(00037490, 000374B0, 00037520)) {
     static const bool on = [] {
         const char* e = std::getenv("PGR1_DEBUG_LOG");
         return e && *e == '1';
@@ -153,7 +154,7 @@ X86_FUNC(sub_00037490) {
         }
         LOGI("pgr1 debug: %s", text.c_str());
     }
-    __imp__sub_00037490(ctx, base);
+    PGR1_ORIG(00037490, 000374B0, 00037520)(ctx, base);
 }
 
 // Ultrawide HUD: the race HUD keeps its 4:3 shape (GameInfo::hud_aspect squeezes 2D into the centre) but is laid out at
@@ -165,14 +166,14 @@ X86_FUNC(sub_00037490) {
 // The side: the anchor slot text is placed from (0x7D4E0), the anchor an element reads itself, else none. One player
 // only: split screen lays out per view.
 
-X86_EXTERN_FUNC(__imp__sub_0007D270);
-X86_FUNC(sub_0007D270) {
-    __imp__sub_0007D270(ctx, base);
+X86_EXTERN_FUNC(PGR1_ORIG(0007D270, 0007D290, 0007C000));
+X86_FUNC(PGR1_FN(0007D270, 0007D290, 0007C000)) {
+    PGR1_ORIG(0007D270, 0007D290, 0007C000)(ctx, base);
     float r = SpreadRatio();
     g_spread = r != 0;
     if (!g_spread) return;
-    g_shift_left = (float(kernel::G<int32_t>(0x192484)) - 320.0f) * (r - 1);
-    g_shift_right = (float(kernel::G<int32_t>(0x192494)) - 320.0f) * (r - 1);
+    g_shift_left = (float(kernel::G<int32_t>(pgr1::Va(0x192484))) - 320.0f) * (r - 1);
+    g_shift_right = (float(kernel::G<int32_t>(pgr1::Va(0x192494))) - 320.0f) * (r - 1);
     gpu::State& state = d3d::State();
     state.squeeze_beyond = true;  // until the HUD is drawn (sub_000820F0)
     state.squeeze_shift = 0;
@@ -183,63 +184,63 @@ X86_FUNC(sub_0007D270) {
 }
 
 // text: the anchor slot in ecx (0 and 1 left, 2 and 3 right, 4 to 6 centred)
-X86_EXTERN_FUNC(__imp__sub_0007D4E0);
-X86_FUNC(sub_0007D4E0) {
+X86_EXTERN_FUNC(PGR1_ORIG(0007D4E0, 0007D500, 0007C240));
+X86_FUNC(PGR1_FN(0007D4E0, 0007D500, 0007C240)) {
     uint32_t slot = ctx.ecx;
     HudSide(slot < 2 ? -1 : slot < 4 ? 1 : 0);
-    __imp__sub_0007D4E0(ctx, base);
+    PGR1_ORIG(0007D4E0, 0007D500, 0007C240)(ctx, base);
 }
 
 // every element the HUD task (0x820F0) calls: its side, from the anchor it reads (0x7F040 and 0x7F510 top left, 0x7E8F0
 // bottom left, 0x7EEF0 and 0x813F0 bottom right: the speedometer) or what it is (the Kudos panel, top right, places
 // itself), else none until its text says
-#define PGR1_HUD_ELEMENT(addr, side)            \
-    X86_EXTERN_FUNC(__imp__sub_##addr);         \
-    X86_FUNC(sub_##addr) {                      \
-        HudSide(side);                          \
-        g_side_owner += (side) != 0;            \
-        __imp__sub_##addr(ctx, base);           \
-        g_side_owner -= (side) != 0;            \
+#define PGR1_HUD_ELEMENT(e11, e10, usa, side)   \
+    X86_EXTERN_FUNC(PGR1_ORIG(e11, e10, usa)); \
+    X86_FUNC(PGR1_FN(e11, e10, usa)) {         \
+        HudSide(side);                         \
+        g_side_owner += (side) != 0;           \
+        PGR1_ORIG(e11, e10, usa)(ctx, base);   \
+        g_side_owner -= (side) != 0;           \
     }
-PGR1_HUD_ELEMENT(0007F040, -1)
-PGR1_HUD_ELEMENT(0007F510, -1)
-PGR1_HUD_ELEMENT(0007E8F0, -1)
-PGR1_HUD_ELEMENT(0007EEF0, 1)
-PGR1_HUD_ELEMENT(000813F0, 1)
-PGR1_HUD_ELEMENT(0007FEC0, 1)  // the Kudos panel and its pop-ups, top right (drawn through 0x7F8E0)
-PGR1_HUD_ELEMENT(0007D590, 0)
-PGR1_HUD_ELEMENT(0007DCB0, 0)
-PGR1_HUD_ELEMENT(0007DE50, 0)
-PGR1_HUD_ELEMENT(0007DF40, 0)
-PGR1_HUD_ELEMENT(0007DFC0, 0)
-PGR1_HUD_ELEMENT(0007E010, 0)
-PGR1_HUD_ELEMENT(0007E0B0, 0)
-PGR1_HUD_ELEMENT(0007E110, 0)
-PGR1_HUD_ELEMENT(0007E160, 0)
-PGR1_HUD_ELEMENT(0007E230, 0)
-PGR1_HUD_ELEMENT(0007E310, 0)
-PGR1_HUD_ELEMENT(0007E3D0, 0)
-PGR1_HUD_ELEMENT(0007E4B0, 0)
-PGR1_HUD_ELEMENT(0007E980, 0)
-PGR1_HUD_ELEMENT(0007EA30, 0)
-PGR1_HUD_ELEMENT(0007EAE0, 0)
-PGR1_HUD_ELEMENT(0007EF70, 0)
-PGR1_HUD_ELEMENT(0007ECE0, 0)
-PGR1_HUD_ELEMENT(0007F000, 0)
-PGR1_HUD_ELEMENT(0007F130, 0)
-PGR1_HUD_ELEMENT(0007F180, 0)
-PGR1_HUD_ELEMENT(0007F230, 0)
-PGR1_HUD_ELEMENT(0007F290, 0)
-PGR1_HUD_ELEMENT(0007F350, 0)
-PGR1_HUD_ELEMENT(0007F3B0, 0)
-PGR1_HUD_ELEMENT(0007F410, 0)
-PGR1_HUD_ELEMENT(0007F470, 0)
-PGR1_HUD_ELEMENT(0007F610, 0)
-PGR1_HUD_ELEMENT(000808C0, 0)
-PGR1_HUD_ELEMENT(00080AB0, 0)
-PGR1_HUD_ELEMENT(00081170, 0)
-PGR1_HUD_ELEMENT(000812C0, 0)
-PGR1_HUD_ELEMENT(00081FB0, 0)
+PGR1_HUD_ELEMENT(0007F040, 0007F060, 0007DDA0, -1)
+PGR1_HUD_ELEMENT(0007F510, 0007F530, 0007E270, -1)
+PGR1_HUD_ELEMENT(0007E8F0, 0007E910, 0007D650, -1)
+PGR1_HUD_ELEMENT(0007EEF0, 0007EF10, 0007DC50, 1)
+PGR1_HUD_ELEMENT(000813F0, 00081410, 00080100, 1)
+PGR1_HUD_ELEMENT(0007FEC0, 0007FEE0, 0007EC20, 1)  // the Kudos panel and its pop-ups, top right (drawn through 0x7F8E0)
+PGR1_HUD_ELEMENT(0007D590, 0007D5B0, 0007C2F0, 0)
+PGR1_HUD_ELEMENT(0007DCB0, 0007DCD0, 0007CA10, 0)
+PGR1_HUD_ELEMENT(0007DE50, 0007DE70, 0007CBB0, 0)
+PGR1_HUD_ELEMENT(0007DF40, 0007DF60, 0007CCA0, 0)
+PGR1_HUD_ELEMENT(0007DFC0, 0007DFE0, 0007CD20, 0)
+PGR1_HUD_ELEMENT(0007E010, 0007E030, 0007CD70, 0)
+PGR1_HUD_ELEMENT(0007E0B0, 0007E0D0, 0007CE10, 0)
+PGR1_HUD_ELEMENT(0007E110, 0007E130, 0007CE70, 0)
+PGR1_HUD_ELEMENT(0007E160, 0007E180, 0007CEC0, 0)
+PGR1_HUD_ELEMENT(0007E230, 0007E250, 0007CF90, 0)
+PGR1_HUD_ELEMENT(0007E310, 0007E330, 0007D070, 0)
+PGR1_HUD_ELEMENT(0007E3D0, 0007E3F0, 0007D130, 0)
+PGR1_HUD_ELEMENT(0007E4B0, 0007E4D0, 0007D210, 0)
+PGR1_HUD_ELEMENT(0007E980, 0007E9A0, 0007D6E0, 0)
+PGR1_HUD_ELEMENT(0007EA30, 0007EA50, 0007D790, 0)
+PGR1_HUD_ELEMENT(0007EAE0, 0007EB00, 0007D840, 0)
+PGR1_HUD_ELEMENT(0007EF70, 0007EF90, 0007DCD0, 0)
+PGR1_HUD_ELEMENT(0007ECE0, 0007ED00, 0007DA40, 0)
+PGR1_HUD_ELEMENT(0007F000, 0007F020, 0007DD60, 0)
+PGR1_HUD_ELEMENT(0007F130, 0007F150, 0007DE90, 0)
+PGR1_HUD_ELEMENT(0007F180, 0007F1A0, 0007DEE0, 0)
+PGR1_HUD_ELEMENT(0007F230, 0007F250, 0007DF90, 0)
+PGR1_HUD_ELEMENT(0007F290, 0007F2B0, 0007DFF0, 0)
+PGR1_HUD_ELEMENT(0007F350, 0007F370, 0007E0B0, 0)
+PGR1_HUD_ELEMENT(0007F3B0, 0007F3D0, 0007E110, 0)
+PGR1_HUD_ELEMENT(0007F410, 0007F430, 0007E170, 0)
+PGR1_HUD_ELEMENT(0007F470, 0007F490, 0007E1D0, 0)
+PGR1_HUD_ELEMENT(0007F610, 0007F630, 0007E370, 0)
+PGR1_HUD_ELEMENT(000808C0, 000808E0, 0007F5D0, 0)
+PGR1_HUD_ELEMENT(00080AB0, 00080AD0, 0007F7C0, 0)
+PGR1_HUD_ELEMENT(00081170, 00081190, 0007FE80, 0)
+PGR1_HUD_ELEMENT(000812C0, 000812E0, 0007FFD0, 0)
+PGR1_HUD_ELEMENT(00081FB0, 00081FD0, 00080C90, 0)
 
 // The race intro's letterbox: GAMESTUFF_2's draw 0x74660 draws black quads above y 100 and below y 380 and a fade between
 // them through 0xEDE60 (register, x, y, z, w), leaving 640x280, about 2.29:1, on the console's 4:3 screen. On a wide
@@ -248,14 +249,14 @@ PGR1_HUD_ELEMENT(00081FB0, 0)
 namespace {
 bool g_in_letterbox = false;
 }
-X86_EXTERN_FUNC(__imp__sub_00074660);
-X86_FUNC(sub_00074660) {
+X86_EXTERN_FUNC(PGR1_ORIG(00074660, 00074680, 00073640));
+X86_FUNC(PGR1_FN(00074660, 00074680, 00073640)) {
     g_in_letterbox = true;
-    __imp__sub_00074660(ctx, base);
+    PGR1_ORIG(00074660, 00074680, 00073640)(ctx, base);
     g_in_letterbox = false;
 }
-X86_EXTERN_FUNC(__imp__sub_000EDE60);
-X86_FUNC(sub_000EDE60) {
+X86_EXTERN_FUNC(PGR1_ORIG(000EDE60, 000EDD80, 000EAC60));
+X86_FUNC(PGR1_FN(000EDE60, 000EDD80, 000EAC60)) {
     if (g_in_letterbox) {
         uint32_t& y = kernel::G<uint32_t>(ctx.esp + 12);
         constexpr uint32_t k100 = 0x42C80000, k380 = 0x43BE0000;  // floats
@@ -265,7 +266,7 @@ X86_FUNC(sub_000EDE60) {
             std::memcpy(&y, &to, 4);
         }
     }
-    __imp__sub_000EDE60(ctx, base);
+    PGR1_ORIG(000EDE60, 000EDD80, 000EAC60)(ctx, base);
 }
 
 // Menus on a wide screen: they stay 4:3 in the centre, and the margins are filled with the backdrop's leather, nothing
@@ -278,24 +279,24 @@ X86_FUNC(sub_000EDE60) {
 namespace {
 bool g_margin_fill = false;
 }
-X86_EXTERN_FUNC(__imp__sub_000A3240);
-X86_FUNC(sub_000A3240) {
+X86_EXTERN_FUNC(PGR1_ORIG(000A3240, 000A3260, 000A0AB0));
+X86_FUNC(PGR1_FN(000A3240, 000A3260, 000A0AB0)) {
     if (g_margin_fill) {
         ctx.eax = 0;
         ctx.esp += 4;  // ret
         return;
     }
-    __imp__sub_000A3240(ctx, base);
+    PGR1_ORIG(000A3240, 000A3260, 000A0AB0)(ctx, base);
 }
-X86_EXTERN_FUNC(__imp__sub_000A39A0);
-X86_FUNC(sub_000A39A0) {
+X86_EXTERN_FUNC(PGR1_ORIG(000A39A0, 000A39C0, 000A1210));
+X86_FUNC(PGR1_FN(000A39A0, 000A39C0, 000A1210)) {
     const uint32_t esp = ctx.esp;
-    __imp__sub_000A39A0(ctx, base);
-    constexpr uint32_t kQuad = 0x2BAA80, kStride = 0x1C;
+    PGR1_ORIG(000A39A0, 000A39C0, 000A1210)(ctx, base);
+    constexpr uint32_t kQuad = pgr1::Va(0x2BAA80), kStride = 0x1C;
     constexpr float kStripStart = 560, kStrip = 80;
     const float aspect = app::FrameAspect();
     gpu::State& state = d3d::State();
-    if (aspect <= 4.0f / 3.0f + 0.001f || state.squeeze_beyond || kernel::G<uint32_t>(0xF9400 + 10 * 4) != 5) return;
+    if (aspect <= 4.0f / 3.0f + 0.001f || state.squeeze_beyond || kernel::G<uint32_t>(pgr1::Va(0xF9400 + 10 * 4)) != 5) return;
     uint32_t tw = 0, th = 0;
     gpu::SurfaceSize(state.rt, tw, th);
     if (tw != 640 || th != 480) return;
@@ -326,7 +327,7 @@ X86_FUNC(sub_000A39A0) {
                 std::memcpy(&kernel::G<uint8_t>(kQuad + uint32_t(i) * kStride + 0x14), &tex, 4);
             }
             ctx.esp = esp;
-            __imp__sub_000A39A0(ctx, base);
+            PGR1_ORIG(000A39A0, 000A39C0, 000A1210)(ctx, base);
         }
     }
     state.squeeze_margin = 0;
@@ -339,9 +340,9 @@ X86_FUNC(sub_000A39A0) {
 // own picture of each buffer and only hear of a CPU write through a lock, so the front's stayed without the picture: the
 // text was drawn over it, the spinner's next lock (0xA7700) wrote that back to memory, and the two buffers alternated
 // with and without the picture while a race loaded. Both are marked as written.
-X86_EXTERN_FUNC(__imp__sub_000A75E0);
-X86_FUNC(sub_000A75E0) {
-    __imp__sub_000A75E0(ctx, base);
-    gpu::MarkDirty(kernel::G<uint32_t>(0x2997D4));
-    gpu::MarkDirty(kernel::G<uint32_t>(0x2997D8));
+X86_EXTERN_FUNC(PGR1_ORIG(000A75E0, 000A7600, 000A4E60));
+X86_FUNC(PGR1_FN(000A75E0, 000A7600, 000A4E60)) {
+    PGR1_ORIG(000A75E0, 000A7600, 000A4E60)(ctx, base);
+    gpu::MarkDirty(kernel::G<uint32_t>(pgr1::Va(0x2997D4)));
+    gpu::MarkDirty(kernel::G<uint32_t>(pgr1::Va(0x2997D8)));
 }

@@ -7,13 +7,26 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
   checked; SMOKE OK headless (first boot, profile, arcade race)
 - Achievements: 31 (ACHIEVEMENTS.md), conditions in src/game/achievement_set.cpp, tested headless with pokes
 - Repository: GitHub hk21x/pgr1-recomp (made public by Harry for 1.0); MIT, copyright hk21x; SDK submodule on the fork's main (hk21x/XboxXBERecomp)
-- XDK 3948: layout and signatures in sdk/xdk/3948
+- Releases: Europe 1.1 (config/pgr1.toml), Europe and Australia 1.0 (config/e10_*), USA 1.0 (config/usa_*); hooks by src/common/release.h
+- XDK 3948: layout and signatures in sdk/xdk/3948; USA is 3925 (sdk/xdk/3925)
 - Push buffers: USED (RunPushBuffer 0xEE0D0 from 0xA96BD/0xA989C, with fixups); the SDK draws them since 6bded69
 - Open: the D3D12 render scale with MSAA fix to confirm on Windows; wheel untested (Harry has none to hand); draw
   distance; a PC Settings entry in the game's menus; system link and split screen untried
 - Plan: .local/PGR1-plan.md (detailed, not committed) and .local/PGR1-summary.md
 
 ## Log
+
+### 2026-11-01 - Europe and Australia 1.0, USA 1.0
+
+Harry's three discs: all match the SHA-1s asked for. Europe 1.1 is the release already supported. The other two are other
+compiles: CMake picks config/<prefix>pgr1.toml and PGR1_RELEASE by assets/default.xbe's SHA-1, src/common/release.h gives
+each hook's address per release, and data addresses (hooks and achievement conditions) go through pgr1::Va. USA is XDK
+3925: new sdk/xdk/3925, its layout a copy of 3948 with each cited instruction found in USA's code; 143 functions signed.
+BinkDoFrame has no unique signature match on USA, so it is named by hand in usa_pgr1.toml [symbols].
+Evidence: SMOKE OK on all three (headless, race reached); USA and Europe 1.0 frames right at 21:9, race HUD moved; the
+achievement addresses' references in the code compared in all three xbes (same instructions, USA merges one store and
+splits another). Not tested: these two on Windows, and the achievements actually unlocking on them.
+Next: Harry on Windows. Asia (same sections as USA) and Japan (another build) were not asked for.
 
 ### 2026-11 - README: install sizes
 

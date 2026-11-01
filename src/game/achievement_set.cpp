@@ -1,10 +1,12 @@
 // PGR1's achievements (FINDINGS.md, "Achievements", has the memory map). Conditions are in RetroAchievements' syntax so
 // the set can go there as it is.
+#include <cctype>
 #include <cstdio>
 #include <deque>
 #include <string>
 #include <vector>
 
+#include "common/release.h"
 #include "core/achievements.h"
 
 namespace pgr1 {
@@ -172,6 +174,19 @@ std::vector<achievements::Def> AchievementSet() {
         // multiplayer (mode 6) with two or more players at the console (0x2C695E)
         {"split_screen", "Split Decision", "Finish a split screen race", 3, PGR1_FINISHED "0xX2c6f80=6_0xX2c695e>=2"},
     });
+    // the addresses above are Europe 1.1's: the others' come from them (common/release.h)
+    static std::deque<std::string> ported;
+    for (achievements::Def& d : set) {
+        std::string out(d.condition);
+        for (size_t i = out.find("0x"); i != std::string::npos; i = out.find("0x", i + 1)) {
+            size_t at = i + 2 + (std::string("XHMO ").find(out[i + 2]) != std::string::npos ? 1 : 0), n = 0;
+            while (std::isxdigit(static_cast<unsigned char>(out[at + n]))) n++;
+            char b[16];
+            std::snprintf(b, sizeof b, "%x", pgr1::Va(uint32_t(std::stoul(out.substr(at, n), nullptr, 16))));
+            out.replace(at, n, b);
+        }
+        d.condition = ported.emplace_back(std::move(out)).c_str();
+    }
     return set;
 }
 
