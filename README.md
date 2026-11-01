@@ -149,7 +149,7 @@ In the settings window (F1); they apply at once. All of these are the same spot 
 ### Display
 - **Display Modes** - Fullscreen, borderless window or window, at any resolution the monitor offers, applied at once.
 - **RECOMP Menu** - The PC settings inside the game: Options > RECOMP in the menus, and recomp in a race's pause menu.
-  Sections for picture, performance, display, game, controls and wheel; **bindings and more** opens the F1 window.
+  Sections for picture, performance, display, game, controls and wheel; **bindings and more** opens the F1 window. **quit game** leaves. Not offered in a pause during multiplayer or a replay.
 - **Widescreen and Ultrawide** - The console game is 4:3 only. Here the 3D views widen to the screen's shape, 21:9 and
   wider included, at full sharpness. The race HUD is laid out at 16:9 (its panels out towards the sides, each at its true
   shape), the race intro's black bars fit the screen, and the menus stay 4:3 in the centre with the backdrop's leather filling the sides.

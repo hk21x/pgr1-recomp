@@ -142,3 +142,4 @@ Asia's xbe (c14b35767fddc5a7af4b3aa13b53e374be23fe57) has USA's sections with an
   is the plain item; 0x192664 the menu open; a menu's +0x24 the item that opened it, whose +0x20 is its height. Text goes
   through a format ("%%"). USA draws it larger, and clips at about x 560. The root's table is static, so
   src/game/settings_entry.cpp copies it to insert RECOMP and copies its hidden flags each frame (0x85D20).
+  The code that sets those flags was not found: nothing names the table's addresses directly.

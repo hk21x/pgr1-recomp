@@ -16,6 +16,15 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-11-01 - from PGR2's 1.5.0: SDK, Quit Game, where recomp shows
+
+Harry chose these from the review of PGR2's release. SDK at the fork's main: F12 screenshots, no pointer over the game,
+world textures loading a share a frame (the hitches PGR2 measured; not measured on PGR1, or the fix on Windows). Quit Game in
+RECOMP: the spinner's yes in Options, a second press within 3 s in the pause menu. recomp is hidden in the pause menu during a
+recording's playback (0x2E71C8) and multiplayer (mode 0x2C6F80 = 6), neither tested with it; the rule itself was tested
+headless by forcing it (the item goes, the cursor still lands right). Real replays and multiplayer not run. Quit tested
+headless from both menus. Next: README graphics section and the release notes' world textures warning (Harry's call).
+
 ### 2026-11-01 - recomp in lowercase in the pause menu
 
 Harry confirmed on Windows that the settings work when changed, and asked for the pause menu's item in lowercase to match

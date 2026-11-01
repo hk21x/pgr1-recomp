@@ -3,6 +3,7 @@
 // readouts) stays in the settings window (F1), which a row opens. FINDINGS.md, "Menus", has how both menus work.
 #include <algorithm>
 #include <array>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -339,6 +340,21 @@ const std::array<Section, kSectionCount> kSections = {{
 }};
 const char* const kWindowLabel = "bindings and more";
 
+// In the menus the spinner's own A confirms it. In the pause menu a row acts at once, so there a second press within
+// three seconds leaves (QuitPress)
+const Row kQuit = {"quit game", [] { return Choices{"no", "yes"}; }, [] { return uint32_t(0); },
+                   [](uint32_t i) {
+                       if (i) app::Quit();
+                   }};
+std::chrono::steady_clock::time_point g_quit_armed{};
+
+bool QuitArmed() { return std::chrono::steady_clock::now() < g_quit_armed; }
+
+void QuitPress() {
+    if (QuitArmed()) app::Quit();
+    else g_quit_armed = std::chrono::steady_clock::now() + std::chrono::seconds(3);
+}
+
 void Changed(const Row& row, uint32_t choice) {
     row.set(choice);
     app::Save();
@@ -392,14 +408,15 @@ uint32_t FocusByte(int page) {
     return bytes[page];
 }
 
-void Finish(X86Context& ctx, std::vector<uint32_t>& items, int page, const char* title, uint32_t back, bool leaves) {
+void Finish(X86Context& ctx, std::vector<uint32_t>& items, int page, const char* title, uint32_t back, size_t leaving) {
     static uint32_t list = mem::AllocSystem(4 * 16);
     for (size_t i = 0; i < items.size(); i++) kernel::G<uint32_t>(list + uint32_t(i) * 4) = items[i];
     kernel::CallGuest(ctx, kLink, {list, uint32_t(items.size()), 0});
-    for (uint32_t item : items) {
-        kernel::CallGuest(ctx, kOn, {item, 7, back});
-        if (leaves) kernel::CallGuest(ctx, kAlso, {item, 5, kLeavePage});  // not a row: its spinner stays on the page
-        kernel::CallGuest(ctx, kAlso, {item, 7, kBackPage});
+    for (size_t i = 0; i < items.size(); i++) {
+        kernel::CallGuest(ctx, kOn, {items[i], 7, back});
+        // the first items leave the page; on a row this would freeze its spinner, which stays on it
+        if (i < leaving) kernel::CallGuest(ctx, kAlso, {items[i], 5, kLeavePage});
+        kernel::CallGuest(ctx, kAlso, {items[i], 7, kBackPage});
     }
     uint32_t focus = kernel::G<uint8_t>(FocusByte(page));
     kernel::CallGuest(ctx, kFocus, {items[focus < items.size() ? focus : 0]});
@@ -416,7 +433,10 @@ void BuildLanding(X86Context& ctx) {
         kernel::G<uint32_t>(item + 0x58) = kTag | (window ? kOpenWindow : i);
         items.push_back(item);
     }
-    Finish(ctx, items, 0, "RECOMP", PGR1_VA(0x5CE80, 0x5CEA0, 0x5C340), true);
+    uint32_t t = Table(kQuit);
+    items.push_back(kernel::CallGuest(ctx, kRow, {n, Guest(kQuit.label), Icon(n), t, kernel::G<uint32_t>(t + 4), g_tables[t].value}));
+    kernel::G<uint32_t>(items.back() + 0x58) = 0;
+    Finish(ctx, items, 0, "RECOMP", PGR1_VA(0x5CE80, 0x5CEA0, 0x5C340), n);
 }
 
 void BuildSection(X86Context& ctx, uint32_t section) {
@@ -429,7 +449,7 @@ void BuildSection(X86Context& ctx, uint32_t section) {
                                                       kernel::G<uint32_t>(t + 4), g_tables[t].value}));
         kernel::G<uint32_t>(items.back() + 0x58) = 0;  // the row's own: its current choice
     }
-    Finish(ctx, items, int(section) + 1, kSections[section].label, kBButton, false);
+    Finish(ctx, items, int(section) + 1, kSections[section].label, kBButton, 0);
     for (uint32_t item : items) kernel::G<uint32_t>(item + 0x6C) = kTag;  // B from here: to the landing page
 }
 
@@ -445,6 +465,7 @@ struct PauseRow {
 };
 std::map<uint32_t, PauseRow> g_pause_rows;
 std::map<uint32_t, int> g_pause_window;
+uint32_t g_pause_quit = 0;
 uint32_t g_top = 0;  // RECOMP's own menu
 uint32_t g_root_static = 0, g_root_copy = 0, g_root_count = 0;
 
@@ -477,6 +498,7 @@ void SetEntry(uint32_t e, uint32_t id, uint32_t submenu) {
 void PauseLine(const PauseRow& r) {
     uint32_t get = r.row->get();
     std::string line = std::string(r.row->label) + "  < " + (get < r.choices.size() ? r.choices[get] : "") + " >";
+    if (r.row == &kQuit) line = QuitArmed() ? "quit game  < press again >" : "quit game";
     if (line.size() > 40) line.resize(40);
     // the menu prints its text through a format
     std::string escaped;
@@ -503,7 +525,7 @@ void SettingsLoaded() {
         if (i == count - 1) to++;  // quit race stays last
         std::memcpy(kernel::HostPtr(copy + to * kEntrySize), kernel::HostPtr(from), kEntrySize);
     }
-    uint32_t top_entries = NewEntries(uint32_t(kSections.size()) + 1);
+    uint32_t top_entries = NewEntries(uint32_t(kSections.size()) + 2);
     uint32_t top = NewMenu(top_entries, root);
     g_top = top;
     SetEntry(copy + (count - 1) * kEntrySize, kLastId, top);
@@ -520,6 +542,9 @@ void SettingsLoaded() {
     uint32_t window = top_entries + uint32_t(kSections.size()) * kEntrySize;
     SetEntry(window, kLastId - 1 - uint32_t(kSections.size()), 0);
     g_pause_window[window] = 1;
+    g_pause_quit = window + kEntrySize;
+    SetEntry(g_pause_quit, kFirstTextId - 1, 0);
+    g_pause_rows[g_pause_quit] = {&kQuit, mem::AllocSystem(64), kFirstTextId - 1, {}};
     kernel::G<uint32_t>(root) = copy;
     g_root_static = entries;
     g_root_copy = copy;
@@ -592,6 +617,16 @@ X86_FUNC(PGR1_FN(00083BE0, 00083C00, 000828C0)) {
     if (it != g_pause_rows.end()) {
         PauseRow& r = it->second;
         if (r.choices.empty()) r.choices = r.row->choices();
+        if (entry == g_pause_quit && action >= 3 && action <= 5) {
+            QuitPress();
+            ctx.esp += 4;  // ret
+            return;
+        }
+        // like the section list, not under a section's rows
+        if (entry == g_pause_quit && action == 2 && kernel::R32(Va(0x192664)) != g_top) {
+            ctx.esp += 4;  // ret
+            return;
+        }
         if (action >= 3 && action <= 5) {
             uint32_t n = uint32_t(r.choices.size()), now = r.row->get();
             Changed(*r.row, action == 4 ? (now + n - 1) % n : (now + 1) % n);
@@ -630,6 +665,9 @@ X86_FUNC(PGR1_FN(00085D20, 00085D40, 000849F0)) {
         if (i == g_root_count - 1) to++;
         kernel::G<uint32_t>(g_root_copy + to * kEntrySize + 0x10) = kernel::R32(g_root_static + i * kEntrySize + 0x10);
     }
+    // recomp only in a race of one's own: not in a recording played back (0x2E71C8) or multiplayer (mode 0x2C6F80, 6)
+    bool hide = kernel::R32(Va(0x2E71C8)) != 0 || kernel::R32(Va(0x2C6F80)) == 6;
+    kernel::G<uint32_t>(g_root_copy + (g_root_count - 1) * kEntrySize + 0x10) = hide;
     PGR1_ORIG(00085D20, 00085D40, 000849F0)(ctx, base);
 }
 
