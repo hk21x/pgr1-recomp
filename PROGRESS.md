@@ -16,6 +16,11 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-11-01 - release 1.3
+
+Harry asked for it with the three discs as they are. Notes in docs/releases/v1.3.md; they say the two new discs are not yet
+checked on Windows.
+
 ### 2026-11-01 - Europe and Australia 1.0, USA 1.0
 
 Harry's three discs: all match the SHA-1s asked for. Europe 1.1 is the release already supported. The other two are other
