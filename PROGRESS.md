@@ -12,6 +12,8 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 - Push buffers: USED (RunPushBuffer 0xEE0D0 from 0xA96BD/0xA989C, with fixups); the SDK draws them since 6bded69
 - Open: the D3D12 render scale with MSAA fix to confirm on Windows; wheel untested (Harry has none to hand); draw
   distance; a PC Settings entry in the game's menus; system link and split screen untried
+- Parked until above 60 is done (Harry, 2026-11-03): post each published release to Discord with the GitHub Action
+  "GitHub Releases to Discord" (a webhook in a repository secret, the action pinned to a commit)
 - Plan: .local/PGR1-plan.md (detailed, not committed) and .local/PGR1-summary.md
 
 ## Log
