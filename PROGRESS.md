@@ -16,6 +16,15 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-11-03 - above 60: in-between frames off for 1.4
+
+Harry at 120 and 144: a lot of flickering. His XBE_PERF log in a race: 3600 draws, render thread about 13 ms a frame
+(binding textures 4.4), the game's own code 2.3 ms; 60 holds (576 steps in 568 frames). The in-between frames replay every
+draw (another 13 ms each), so few fit and they land unevenly. Draw merging cannot help much: in a captured race frame
+89% of 1798 draws are vertex programs and triangle fans, which it leaves alone, and a quarter at most share state. Harry:
+ship 1.4 with them off (PGR1_INTERP=1 turns them on), then above 60. Next: the SDK's D3D12 replay of a step reusing each
+draw's resolved bindings, so a blended frame costs a fraction of a real one.
+
 ### 2026-11-03 - game time following the clock confirmed on Windows (Harry, 772b2b7)
 
 Harry's report of slow motion at a 30 cap came from a build before the fix (no "game time" line in its log). On a

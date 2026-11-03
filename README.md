@@ -159,8 +159,6 @@ In the settings window (F1); they apply at once. All of these are the same spot 
   and a frame rate cap.
 - **Monitor** - Chooses which display the game uses.
 - **Steady Speed** - The game keeps real time when the frame rate dips: on the console a late frame slowed the whole game.
-- **Above 60 FPS** - With a frame rate cap above 60 (or none), races are drawn at the cap with blended frames in between;
-  the game itself still runs 60 steps a second.
 - **FPS Counter** - Shows the frame rate in a corner.
 
 ### Graphics

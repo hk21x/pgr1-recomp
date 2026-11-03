@@ -7,8 +7,10 @@
 // as 1/60 s steps have passed since the last, at least once and at most four times (the replay's fast forward runs four);
 // a gap over 0.15 s (a load) is not caught up. PGR1_FIXED_TIME=1 goes back to one a frame; PGR1_TICK_LOG=1 logs the count.
 //
-// Above 60: the game still draws one frame a tick, 60 a second, and in a race the runtime draws frames in between up to
-// the frame rate cap (GameInfo::step_interpolation, gpu/interp.cpp).
+// Above 60: the game still draws one frame a tick, 60 a second. PGR1_INTERP=1: in a race the runtime draws frames in
+// between up to the frame rate cap (GameInfo::step_interpolation, gpu/interp.cpp). Off by default: on Harry's PC a race
+// frame takes the render thread about 13 ms (3600 draws), and each blended frame draws them all again, so few fit and
+// those land unevenly, which flickers.
 #include <algorithm>
 #include <chrono>
 #include <cstdlib>
@@ -22,6 +24,11 @@ namespace pgr1 {
 bool Racing();  // src/game/hooks.cpp
 
 bool StepInterpolation() {
+    static const bool on = [] {
+        const char* e = std::getenv("PGR1_INTERP");
+        return e && *e == '1';
+    }();
+    if (!on) return false;
     uint32_t cap = app::Get().fps_cap;
     return (cap == 0 || cap > 60) && Racing();
 }
