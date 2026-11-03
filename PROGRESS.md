@@ -16,6 +16,12 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-11-03 - game time following the clock confirmed on Windows (Harry, 772b2b7)
+
+Harry's report of slow motion at a 30 cap came from a build before the fix (no "game time" line in its log). On a
+package built from 772b2b7 (the log has "pgr1: game time follows the clock", Europe 1.1, cap 30): "Feels much better".
+Not yet tried: caps above 60 (the in-between frames), Europe 1.0 and USA with the fix.
+
 ### 2026-11-03 - prebuilt on Windows (Harry, branch prebuilt 0f37539)
 
 All three discs (Europe 1.1, Europe and Australia 1.0, USA 1.0) built, installed from their package beside the launcher,
