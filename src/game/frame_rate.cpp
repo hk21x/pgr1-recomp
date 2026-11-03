@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <chrono>
 #include <cstdlib>
+#include <cstring>
 
 #include "app/app.h"
 #include "common/release.h"
@@ -36,7 +37,45 @@ bool StepInterpolation() {
 
 namespace {
 using Clock = std::chrono::steady_clock;
-constexpr double kStep = 1.0 / 60.0, kLongestGap = 0.15;
+constexpr double kLongestGap = 0.15;
+
+// PGR1_HZ=N (61 to 240), an experiment: the game told the display runs at N, as its 30 a second split screen mode is
+// told 30 (0xC5400 copies the rate 0x2BA9F4 into 0x2BA9F0, floats, read by 79 places), with its step 0x15AA84 (1.1 x 1/60 at
+// 60 Hz) scaled to match, and paced at N
+uint32_t Hz() {
+    static const uint32_t hz = [] {
+        const char* e = std::getenv("PGR1_HZ");
+        uint32_t v = e ? uint32_t(std::atoi(e)) : 0;
+        v = v > 60 && v <= 240 ? v : 0;
+        if (v) {
+            LOGR("pgr1: experiment, the game told the display runs at %u", v);
+            app::g_pace_hz = v;
+        }
+        return v;
+    }();
+    return hz;
+}
+
+// the step's factor: USA keeps it in its data, the European discs set it at boot
+constexpr uint32_t kStepAt = PGR1_VA(0x15AA84, 0x15A9A4, 0x158284);
+
+void ApplyHz() {
+    const uint32_t hz = Hz();
+    if (!hz) return;
+    static float base = 0;
+    float step;
+    std::memcpy(&step, &kernel::G<uint32_t>(kStepAt), 4);
+    if (!base && step > 1.0f && step < 1.5f) base = step;  // 1.1 at 60 Hz, 1.32 at 50, set at boot by 0xC9200
+    if (!base) return;
+    const float want = base * 60.0f / float(hz);
+    if (step != want) std::memcpy(&kernel::G<uint32_t>(kStepAt), &want, 4);
+    // floats: 60.0 at 60 Hz
+    const float rate = float(hz);
+    std::memcpy(&kernel::G<uint32_t>(pgr1::Va(0x2BA9F4)), &rate, 4);
+    float now;
+    std::memcpy(&now, &kernel::G<uint32_t>(pgr1::Va(0x2BA9F0)), 4);
+    if (now == 60.0f) std::memcpy(&kernel::G<uint32_t>(pgr1::Va(0x2BA9F0)), &rate, 4);
+}
 constexpr int kMostTicks = 4;
 
 bool FollowClock() {
@@ -57,6 +96,8 @@ X86_FUNC(PGR1_FN(000C5480, 000C54A0, 000C2A80)) {
         PGR1_ORIG(000C5480, 000C54A0, 000C2A80)(ctx, base);
         return;
     }
+    ApplyHz();
+    const double kStep = 1.0 / (Hz() ? Hz() : 60);
     static Clock::time_point last{};
     static double owed = 0;  // seconds of game time not yet run
     Clock::time_point now = Clock::now();
@@ -75,8 +116,11 @@ X86_FUNC(PGR1_FN(000C5480, 000C54A0, 000C2A80)) {
         static int frames = 0, run = 0;
         frames++;
         run += ticks;
-        if (now - since >= std::chrono::seconds(10)) {
-            LOGR("pgr1: %d ticks in %d frames, %.1f s", run, frames, std::chrono::duration<double>(now - since).count());
+        if (now - since >= std::chrono::seconds(1)) {
+            float speed;
+            std::memcpy(&speed, &kernel::G<uint32_t>(pgr1::Va(0x2EC9D8)), 4);
+            LOGR("pgr1: %d ticks in %d frames, %.1f s, speed %.1f m/s", run, frames, std::chrono::duration<double>(now - since).count(),
+                 speed);
             since = now, frames = 0, run = 0;
         }
     }
