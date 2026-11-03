@@ -16,6 +16,13 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-11-03 - release 1.4
+
+Tag v1.4 on fabc51a (prebuilt merged into main). Harry built the three packages from the tag in his build clones
+(C:\Games\PGR1E11, PGR1E10, PGR1Usa: git checkouts, each assets holding only its disc's default.xbe) and published:
+PGR1Launcher.exe and PGR1-E11/E10/USA-package.zip (about 73 MB each) with their .json. Next: above 60 (the D3D12 replay
+of a step for in-between frames, on an SDK branch).
+
 ### 2026-11-03 - above 60: in-between frames off for 1.4
 
 Harry at 120 and 144: a lot of flickering. His XBE_PERF log in a race: 3600 draws, render thread about 13 ms a frame
