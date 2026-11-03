@@ -38,7 +38,8 @@ and no admin rights needed.
 **You need:**
 - Windows 10 or 11, 64 bit, and a GPU with Direct3D 12 or 11.
 - Your own copy of the game (a [supported release](#supported-version)): an `.iso` image of your disc, or a folder with the disc's files.
-- Room for the game's package and its build, plus your copy of the game, and an internet connection for the package.
+- Room for the game's package (about 72 MB) and its build, plus your copy of the game, and an internet connection for the
+  package.
 
 **Steps:**
 1. Download `PGR1Launcher.exe` from the [latest release](https://github.com/hk21x/pgr1-recomp/releases/latest).
@@ -47,7 +48,8 @@ and no admin rights needed.
 3. **Your game:** choose your disc image or the folder with the disc's files. The launcher checks that it is a
    supported release.
 4. **Get the game ready:** the launcher downloads your disc's package (every supported disc has one: the program and a compiler, no game code), then
-   your PC builds the game's code from your disc. You can stop at any time; it carries on where it left off.
+   your PC builds the game's code from your disc (about 12 seconds on a fast 16 thread PC). You can stop at any time; it
+   carries on where it left off.
 5. **Play:** press **Play**. The first start formats the emulated hard disk and copies the game's cache (about 90
    seconds of black screen and a short movie); later starts are quick.
 
@@ -156,6 +158,9 @@ In the settings window (F1); they apply at once. All of these are the same spot 
 - **Frame Pacing** - Runs at the game's own rate, 60 frames a second in menus and races as on the console, with vsync
   and a frame rate cap.
 - **Monitor** - Chooses which display the game uses.
+- **Steady Speed** - The game keeps real time when the frame rate dips: on the console a late frame slowed the whole game.
+- **Above 60 FPS** - With a frame rate cap above 60 (or none), races are drawn at the cap with blended frames in between;
+  the game itself still runs 60 steps a second.
 - **FPS Counter** - Shows the frame rate in a corner.
 
 ### Graphics

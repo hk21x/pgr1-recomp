@@ -134,6 +134,9 @@ void WheelFeel(input::WheelFeel& feel) {
     std::memcpy(&speed, &kernel::G<uint32_t>(pgr1::Va(0x2EC9D8)), 4);
     feel.speed = feel.racing && std::isfinite(speed) ? speed : 0;
 }
+
+// the player's race is on: its HUD's drawing ran in the last 200 ms
+bool Racing() { return NowMs() - g_hud_drawn.load() < 200; }
 }  // namespace pgr1
 
 // PGR1_DEBUG_LOG=1: the game's own debug messages in the log. 0x378A0 formats one (vsprintf 0xDDE80) and hands the text

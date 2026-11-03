@@ -143,3 +143,15 @@ Asia's xbe (c14b35767fddc5a7af4b3aa13b53e374be23fe57) has USA's sections with an
   through a format ("%%"). USA draws it larger, and clips at about x 560. The root's table is static, so
   src/game/settings_entry.cpp copies it to insert RECOMP and copies its hidden flags each frame (0x85D20).
   The code that sets those flags was not found: nothing names the table's addresses directly.
+
+## Frame rate
+
+- **[game]** One fixed tick a frame: the main loop 0xC9710 calls 0xC5480 (every task's update once, adding to the counter
+  0x299434), then draws (0xC4F20, which presents through 0xA5130), with no accumulator. The step is 0x15AA84 x 1/60
+  (0x143784); 0xC9200 sets 0x15AA84 to 1.1 at 60 Hz, 1.32 at 50 Hz, so game time runs at 1.1x by design (read at 0x9420F
+  by the world and cars update 0x941D0; 14 more places hardcode 1/60, and the rate 0x2BA9F0 has 79 readers). A late frame
+  was slow motion. Replay fast forward (0x15A61C == 3) calls 0xC5480 four times (0xC9769-0xC9786). The FRAME_RATE task's
+  init 0xC5400 sets interval 1 and the rate 60; with more than two players (0x2C695E) 0xC4650 sets 30 and interval 2.
+  0xC8BD0 measures the frame time and lowers detail (0x15ABD0, 0x15ABD4, 0x159ADC) and an update budget (0x2B1DC0) past
+  15 to 22 ms. Pads are polled once a tick (0xC64B0, XInputGetState at 0xD001B). src/game/frame_rate.cpp runs the
+  main loop's tick as often as 1/60 s steps have passed (1 to 4).

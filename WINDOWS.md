@@ -72,7 +72,9 @@ Help and reports: the [Discord server](https://discord.gg/PQjkKsdtc). The files 
 - Sound: `set XBE_DSOUND_LOG=1` before starting lists every sound made and, every 5 seconds, the loudest playing.
   `XBE_DSOUND_LOG=2` also lists every stream playing (the radio's music and DJ among them) with its volume.
   `set PGR1_DEBUG_LOG=1` puts the game's own debug messages in the log (the files it loads, its sound set-up).
-- Stutter: `set XBE_PERF=1` before starting adds timing lines to the log.
+- Stutter: `set XBE_PERF=1` before starting adds timing lines to the log. `set PGR1_TICK_LOG=1` logs the game's steps
+  and frames every 10 seconds (60 steps a second is real time); `set PGR1_FIXED_TIME=1` goes back to one step a frame, as
+  on the console.
 - A crash with "contiguous allocation ... failed" in the log: `set XBE_MEM_LOG=1` before starting lists the game's large
   memory blocks as races load and end.
 

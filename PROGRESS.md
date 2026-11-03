@@ -16,6 +16,24 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-11-03 - prebuilt on Windows (Harry, branch prebuilt 0f37539)
+
+All three discs (Europe 1.1, Europe and Australia 1.0, USA 1.0) built, installed from their package beside the launcher,
+booted; RECOMP, the HUD fixes and saving work ("Yes to all"). An update from a copy of his old full-build install: "A
+faster way to play", saves kept. Packages 72 MB each. Europe 1.1's install 11.5 s on his 16 thread PC (unpack 1.1 s, 33
+files compiled in 10.4 s, no download); no times for the other two. The frame rate work goes on top, so all three
+packages are built again from the final commit.
+
+### 2026-11-03 - game time follows the clock; above 60 in races (branch prebuilt)
+
+Harry: unlock the frame rate, as PGR2 and Agent Under Fire, and a report of sluggish play. Cause (FINDINGS, "Frame
+rate"): one fixed tick a frame, nothing caught up, so any frame under 60 slowed the game. src/game/frame_rate.cpp runs the
+main loop's tick as often as 1/60 s steps passed (1 to 4, a gap over 0.15 s dropped; PGR1_FIXED_TIME=1 off). Above 60:
+GameInfo::step_interpolation in a race when the cap is above 60 or none, the SDK's in-between frames as Agent Under Fire's
+driving (the game stays at 60 ticks). Headless, held at 40 fps: 600 ticks in 10 s (real time), against one a frame
+before. Not tested: the in-between frames (the harness has no renderer for them), anything on Windows, replays and split
+screen with catch-up ticks. Not changed: the detail controller 0xC8BD0, which lowers detail on slow frames.
+
 ### 2026-11-01 - from PGR2's 1.5.0: SDK, Quit Game, where recomp shows
 
 Harry chose these from the review of PGR2's release. SDK at the fork's main: F12 screenshots, no pointer over the game,

@@ -7,6 +7,7 @@
 
 namespace pgr1 {
 void SettingsLoaded();  // src/game/settings_entry.cpp
+bool StepInterpolation();  // src/game/frame_rate.cpp
 std::vector<achievements::Def> AchievementSet();  // src/game/achievement_set.cpp
 void WheelFeel(input::WheelFeel& feel);  // src/game/hooks.cpp
 bool skip_intro = false;  // no intro movie, logos or warning at start (src/game/hooks.cpp)
@@ -62,6 +63,7 @@ const app::GameInfo app::kGame = {
     .bink_frame_hold = false,  // the movie player (0xE9780) waits on BinkWait itself (0xE98D0) and counts its frames
     .hud_aspect = 4.0f / 3.0f,  // no widescreen mode: menus and HUD are laid out 4:3, the 3D widens (src/game/hooks.cpp)
     .sharpen_2d = true,         // the menus', HUD's and text's textures enlarged with sharp edges (Sharp text and HUD)
+    .step_interpolation = pgr1::StepInterpolation,  // above 60, frames in between in a race (src/game/frame_rate.cpp)
     .auto_fills_screen = true,  // "from the screen's shape" follows an ultrawide: the 3D widens, HUD at 16:9 (src/game/hooks.cpp)
     .pcm_stream_level = MusicLevel,
     .other_voice_level = OtherLevel,
