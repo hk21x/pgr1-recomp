@@ -6,6 +6,31 @@ project(game LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# the release, by assets/default.xbe: each disc is another compile (config/<prefix>*.toml, every address ported;
+# PGR1_RELEASE picks the hooks' addresses, src/common/release.h). None of these: Europe 1.1, config/pgr1.toml
+set(PGR1_PREFIX "")
+set(PGR1_RELEASE 0)
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/assets/default.xbe)
+    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS assets/default.xbe)  # another disc: another config
+    file(SHA1 ${CMAKE_CURRENT_SOURCE_DIR}/assets/default.xbe PGR1_XBE_SHA1)
+    if(PGR1_XBE_SHA1 STREQUAL "ba7763e6e946ab40aed6706f2c9bc1df3a990fa0")  # Europe and Australia 1.0
+        set(PGR1_PREFIX "e10_")
+        set(PGR1_RELEASE 1)
+    elseif(PGR1_XBE_SHA1 STREQUAL "0d55fff29ceb34ab4dfcfc4820e823d967ca1469")  # USA
+        set(PGR1_PREFIX "usa_")
+        set(PGR1_RELEASE 2)
+    endif()
+endif()
+message(STATUS "PGR1 release: ${PGR1_RELEASE}")
+
+# on Windows the game's code is a DLL built on the player's PC (sdk's cmake/XbeRecomp.cmake, XBE_GAME_DLL); the harness
+# links it in. The package carries this disc's two configs
+if(WIN32)
+    set(XBE_GAME_DLL ON)
+    set(XBE_GAME_CONFIGS ${CMAKE_CURRENT_SOURCE_DIR}/config/${PGR1_PREFIX}game.toml
+                         ${CMAKE_CURRENT_SOURCE_DIR}/config/${PGR1_PREFIX}pgr1.toml)
+endif()
+
 # the SDK: sdk/ here, two folders up inside the SDK's templates, a checkout beside this repository, else downloaded
 if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/sdk/cmake/XbeRecomp.cmake)
     set(SDK ${CMAKE_CURRENT_SOURCE_DIR}/sdk)
@@ -26,22 +51,6 @@ include(${SDK}/cmake/XbeRecomp.cmake)
 file(GLOB XBE_HOST_SOURCES CONFIGURE_DEPENDS src/*/*.cpp)
 list(FILTER XBE_HOST_SOURCES EXCLUDE REGEX "/src/game/")
 
-# the release, by assets/default.xbe: each disc is another compile (config/<prefix>*.toml, every address ported;
-# PGR1_RELEASE picks the hooks' addresses, src/common/release.h). None of these: Europe 1.1, config/pgr1.toml
-set(PGR1_PREFIX "")
-set(PGR1_RELEASE 0)
-if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/assets/default.xbe)
-    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS assets/default.xbe)  # another disc: another config
-    file(SHA1 ${CMAKE_CURRENT_SOURCE_DIR}/assets/default.xbe PGR1_XBE_SHA1)
-    if(PGR1_XBE_SHA1 STREQUAL "ba7763e6e946ab40aed6706f2c9bc1df3a990fa0")  # Europe and Australia 1.0
-        set(PGR1_PREFIX "e10_")
-        set(PGR1_RELEASE 1)
-    elseif(PGR1_XBE_SHA1 STREQUAL "0d55fff29ceb34ab4dfcfc4820e823d967ca1469")  # USA
-        set(PGR1_PREFIX "usa_")
-        set(PGR1_RELEASE 2)
-    endif()
-endif()
-message(STATUS "PGR1 release: ${PGR1_RELEASE}")
 
 # partitions as xbe_symbols wrote them into config/game.toml
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS config/${PGR1_PREFIX}game.toml)

@@ -27,8 +27,8 @@ added, and the launcher will not build them. To change disc, choose the other on
 
 ## Getting Started
 
-There are two ways to get the game running. Both build it on your own PC from your own disc: the game's code is
-never downloaded, only the tools and this project's source.
+There are two ways to get the game running. Both build the game's code on your own PC from your own disc: the game's
+code is never downloaded.
 
 ### The launcher (recommended)
 
@@ -38,31 +38,31 @@ and no admin rights needed.
 **You need:**
 - Windows 10 or 11, 64 bit, and a GPU with Direct3D 12 or 11.
 - Your own copy of the game (a [supported release](#supported-version)): an `.iso` image of your disc, or a folder with the disc's files.
-- About 3 GB free, plus room for your copy of the game, and an internet connection for about 1.4 GB of build tools.
+- Room for the game's package and its build, plus your copy of the game, and an internet connection for the package.
 
 **Steps:**
 1. Download `PGR1Launcher.exe` from the [latest release](https://github.com/hk21x/pgr1-recomp/releases/latest).
-2. Put it in a folder of its own (for example `C:\Games\PGR1`) and run it. Everything it makes goes in a `PGR1`
-   folder beside it. Windows may warn about an unrecognised app: choose **More info**, then **Run anyway**.
+2. Put it in a folder of its own with a short path (for example `C:\Games\PGR1`) and run it. Everything it makes goes in
+   a `PGR1` folder beside it. Windows may warn about an unrecognised app: choose **More info**, then **Run anyway**.
 3. **Your game:** choose your disc image or the folder with the disc's files. The launcher checks that it is a
    supported release.
-4. **Build:** accept the license terms for Microsoft's C++ libraries and Windows SDK (the build uses them), then press
-   **Build**. It downloads portable build tools (Clang, CMake, Ninja, Git and Microsoft's libraries), this project's
-   source, and builds the game. The first build takes 30 to 90 minutes. You can stop it at any time; it carries on
-   where it left off.
+4. **Get the game ready:** the launcher downloads your disc's package (every supported disc has one: the program and a compiler, no game code), then
+   your PC builds the game's code from your disc. You can stop at any time; it carries on where it left off.
 5. **Play:** press **Play**. The first start formats the emulated hard disk and copies the game's cache (about 90
    seconds of black screen and a short movie); later starts are quick.
 
-When a new release comes out the launcher offers it at start (**Update the launcher**, **What's new**, **Later**):
-it downloads the new launcher, checks it and restarts, then offers to build the new version of the game (saves and
-settings are kept). Launchers before 1.2 cannot do this: download 1.2's by hand once. **Remove the build files** frees
-a few hundred MB once the game is built (the button shows how much; an update then builds everything again).
+When a new release is out, the launcher offers it at the top of its window: **Update the launcher** downloads it,
+checks it and restarts, then **Update** puts the new version in place, keeping your saves and settings. The new version
+is built beside the game and only replaces it once it is ready, so a failed or stopped update leaves the game as it was.
+
+**Coming from 1.3 or earlier:** those versions built everything from source with about 1.4 GB of tools. The new
+launcher shows **A faster way to play**: press **Update**. Your game keeps playing until the new one is ready, and your
+saves and settings are kept. Afterwards, **Manage > Remove the old build tools** frees the old tools and source.
 
 Files, all under the `PGR1` folder beside the launcher:
-- `play\` the game: `PGR1.exe`, `pgr1.toml` (settings), `hdd\` (profiles, saves and caches), `logs\pgr1.log` (the game's
-  log), `achievements.toml`
-- `launcher.log` the launcher's log (send it with any problem building)
-- `tools\` and `source\` the build tools and the source
+- `play\` the game: `PGR1.exe`, `PGR1.dll` (the game's code, built on your PC), `pgr1.toml` (settings), `hdd\` (profiles,
+  saves and caches), `logs\pgr1.log` (the game's log), `achievements.toml`, `compiler\` (what builds the code)
+- `launcher.log` the launcher's log (send it with any problem)
 
 To remove everything, delete the launcher and its `PGR1` folder (keep `play\hdd` if you want your saves).
 
@@ -178,7 +178,8 @@ follows the player's car.
 Plays as controller 1, with two keys for each console input, remappable in the settings window.
 
 ### General
-- **Launcher** - `PGR1Launcher.exe`: choose your disc, Build, Play, Update; portable build tools, nothing installed.
+- **Launcher** - `PGR1Launcher.exe`: choose your disc, Get the game ready, Play, Update; a package for your disc and your PC
+  build the game, nothing installed.
 - **Settings Window** - Press F1, or Back + Start on a controller, for display, graphics, game options, the wheel and controls. Changes are saved to `pgr1.toml`.
 - **Skip Intro** - Skips the intro movie, the logos and the warning, straight to the title screen.
 - **Hide HUD** - Clears the race HUD for screenshots.

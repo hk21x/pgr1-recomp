@@ -3,6 +3,7 @@
 includes = ["usa_game.toml"]
 
 [xbe]
+library = "PGR1.dll"  # the game code DLL on Windows (XBE_GAME_DLL)
 data_ranges = [[0x137DA0, 0x137F6C]]
 
 [functions]

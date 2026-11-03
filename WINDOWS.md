@@ -25,7 +25,8 @@ Everything below runs on your PC; nothing here touches the Linux VM. FINDINGS.md
    `git submodule update --init sdk` and `git -C sdk log --oneline -1`.
 2. Put the game in `assets\`: `assets\default.xbe` and its folders, or one `.iso` (then also copy `default.xbe`
    from the disc into `assets\`).
-3. Run `build.bat`. It recompiles default.xbe (seconds) and compiles everything (30 to 90 minutes the first time).
+3. Run `build.bat`. It recompiles default.xbe (seconds) and compiles everything (a few minutes the first time on a
+   fast PC; the game's code goes into `PGR1.dll`).
    Answer Y to "Play now?", or run `out\build\release\PGR1.exe`.
 4. The first start formats the emulated cache partition and copies the game's files to it (about 90 seconds of
    black screen and a short movie), then the logos. Later starts reuse it. To repeat the first start, delete
@@ -74,3 +75,23 @@ Help and reports: the [Discord server](https://discord.gg/PQjkKsdtc). The files 
 - Stutter: `set XBE_PERF=1` before starting adds timing lines to the log.
 - A crash with "contiguous allocation ... failed" in the log: `set XBE_MEM_LOG=1` before starting lists the game's large
   memory blocks as races load and end.
+
+## The launcher and releases
+
+`PGR1Launcher.exe` installs and plays the game for someone with no tools: choose the disc image or folder, press **Get
+the game ready**, then Play. It downloads the release's package for that disc (`PGR1-E11-package.zip`,
+`PGR1-E10-package.zip` or `PGR1-USA-package.zip`, by the disc's `default.xbe` SHA-1 in `launcher/game.json`: the exe, its
+runtime DLLs and the compiler, no game code) into a `PGR1` folder beside itself and runs `PGR1.exe --prepare-code`, which
+builds `PGR1.dll` from the disc. The new version is unpacked and built in `play\.next` and only then replaces the game.
+An install from 1.3 or earlier (built from source) is updated in place, keeping `hdd` and the settings; **Manage > Remove
+the old build tools** then deletes the old tools and source.
+
+Make it: run `launcher.bat` (it needs what build.bat needs); it leaves `PGR1Launcher.exe` here. To try a package without
+a release, run `build.bat`, then `release-package.bat`, and put the zip beside the launcher in an empty folder: a zip
+beside the launcher is used before any download. Send `PGR1\launcher.log` with any report.
+
+**Releasing:** a `v*` tag builds the launcher and makes a **draft** release with `docs/releases/<tag>.md` as its notes
+(the build stops if that file is missing). Each disc is its own compile, so each needs its own package: for every disc
+there is one of, in a clean checkout of the tag with that disc in `assets`, run `build.bat` then `release-package.bat`
+(it names the zip from `default.xbe`'s SHA-1), and attach the zip and its `.json` (size and SHA-256, which the launcher
+checks) to the draft. Then publish. A disc with no package cannot be installed with that release's launcher.

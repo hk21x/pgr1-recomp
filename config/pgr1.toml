@@ -5,6 +5,7 @@
 includes = ["game.toml"]
 
 [xbe]
+library = "PGR1.dll"  # the game code DLL on Windows (XBE_GAME_DLL)
 # XPP starts with the device type records and their tables, not code; MU_Init 0x13B24C is its first function
 data_ranges = [[0x13B080, 0x13B24C]]
 
