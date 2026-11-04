@@ -18,6 +18,11 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-11-04 - game frame rate on the other two discs (Harry)
+
+Europe and Australia 1.0 and USA 1.0, built from main ba1599f in his build clones (assets holding only the ISO to play:
+an extracted default.xbe beside it is taken for the disc's files and the game boots without its data): both work fine.
+
 ### 2026-11-04 - game frame rate: 60, 90, 120 or 144 (branch above60)
 
 The in-between frames flickered on Harry's PC: steps wanted 17 to 30 MB of kept vertices (most not blended) and a replay
