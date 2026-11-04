@@ -18,6 +18,11 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-11-04 - release 1.5
+
+Harry: release 1.5 (the game frame rate). Notes docs/releases/v1.5.md; the tag makes a draft, Harry builds the three
+packages from it and publishes.
+
 ### 2026-11-04 - game frame rate on the other two discs (Harry)
 
 Europe and Australia 1.0 and USA 1.0, built from main ba1599f in his build clones (assets holding only the ISO to play:
