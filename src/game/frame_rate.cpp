@@ -1,16 +1,16 @@
 // The frame rate. PGR1 advances its game one fixed tick a frame: the main loop (0xC9710) calls 0xC5480, which runs every
 // task's update once with the step 0x15AA84 x 1/60 (0x143784; 0x15AA84 is 1.1 at 60 Hz, set by 0xC9200), and nothing
-// catches up. So a frame later than 1/60 s put the whole game in slow motion (50 fps is 83% speed), and a frame rate
-// above 60 would have sped it up.
+// catches up. So a frame later than 1/60 s put the whole game in slow motion (50 fps is 83% speed).
 //
 // Game time follows the clock: the main loop's tick (called at 0xC97AC, in a replay at 0xC9769) runs here as many times
-// as 1/60 s steps have passed since the last, at least once and at most four times (the replay's fast forward runs four);
-// a gap over 0.15 s (a load) is not caught up. PGR1_FIXED_TIME=1 goes back to one a frame; PGR1_TICK_LOG=1 logs the count.
+// as ticks are due since the last, at least once and at most four times (the replay's fast forward runs four); a gap over
+// 0.15 s (a load) is not caught up. PGR1_FIXED_TIME=1 goes back to one a frame; PGR1_TICK_LOG=1 logs the count each second.
 //
-// Above 60: the game still draws one frame a tick, 60 a second. PGR1_INTERP=1: in a race the runtime draws frames in
-// between up to the frame rate cap (GameInfo::step_interpolation, gpu/interp.cpp). Off by default: on Harry's PC a race
-// frame takes the render thread about 13 ms (3600 draws), and each blended frame draws them all again, so few fit and
-// those land unevenly, which flickers.
+// frame_rate (settings file; PGR1_HZ overrides it): above 60, the game told the display runs that fast, as its 30 a
+// second split screen mode is told 30. The rate 0x2BA9F0 (a float, read by 79 places, which 0xC5400 copies from the
+// display's 0x2BA9F4) is set to it, the step scaled to match, and frames paced at it: every frame drawn by the game, a
+// tick each. Car speed and the race clock keep real time (headless, against 60). The display's rate stays 60: a save is
+// tagged with it, and only offered and loaded on a display of the same rate (FINDINGS, "Frame rate").
 #include <algorithm>
 #include <chrono>
 #include <cstdlib>
@@ -22,35 +22,28 @@
 #include "kernel/kernel.h"
 
 namespace pgr1 {
-bool Racing();  // src/game/hooks.cpp
-
-bool StepInterpolation() {
-    static const bool on = [] {
-        const char* e = std::getenv("PGR1_INTERP");
-        return e && *e == '1';
-    }();
-    if (!on) return false;
-    uint32_t cap = app::Get().fps_cap;
-    return (cap == 0 || cap > 60) && Racing();
+extern uint32_t frame_rate;
 }
-}  // namespace pgr1
 
 namespace {
 using Clock = std::chrono::steady_clock;
 constexpr double kLongestGap = 0.15;
 
-// PGR1_HZ=N (61 to 240), an experiment: the game told the display runs at N, as its 30 a second split screen mode is
-// told 30 (the rate 0x2BA9F0, a float read by 79 places, which 0xC5400 copies from the display's 0x2BA9F4), with its step
-// 0x15AA84 (1.1 x 1/60 at 60 Hz) scaled to match, and paced at N. The display's rate stays 60: a save is tagged with it
-// and listed as one to load only on a display of the same rate (0x5EDB0: PAL's 50 and 60 Hz saves kept apart)
+// the rate above 60 the game runs at, read once (the setting applies at the next start), 0 at 60
 uint32_t Hz() {
     static const uint32_t hz = [] {
         const char* e = std::getenv("PGR1_HZ");
-        uint32_t v = e ? uint32_t(std::atoi(e)) : 0;
+        uint32_t v = e ? uint32_t(std::atoi(e)) : pgr1::frame_rate;
         v = v > 60 && v <= 240 ? v : 0;
         if (v) {
-            LOGR("pgr1: experiment, the game told the display runs at %u", v);
+            LOGR("pgr1: the game runs at %u frames a second", v);
             app::g_pace_hz = v;
+            // a frame rate cap below it would leave the game drawing fewer frames than it runs ticks
+            app::Settings& s = app::Get();
+            if (s.fps_cap && s.fps_cap < v) {
+                LOGR("pgr1: the frame rate cap raised from %u to %u", s.fps_cap, v);
+                s.fps_cap = v;
+            }
         }
         return v;
     }();

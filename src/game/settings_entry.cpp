@@ -23,7 +23,7 @@
 namespace pgr1 {
 
 extern bool skip_intro, hide_hud;
-extern uint32_t fov_percent, radio_percent;
+extern uint32_t fov_percent, radio_percent, frame_rate;
 
 namespace {
 
@@ -100,7 +100,7 @@ struct Row {
 Choices OnOff() { return {"off", "on"}; }
 
 const std::vector<uint32_t> kRender = {25, 50, 75, 100, 125, 150, 175, 200}, kAniso = {0, 2, 4, 8, 16},
-                            kFov = {75, 90, 100, 110, 125, 150}, kRadio = {0, 50, 100, 150, 200, 300, 400},
+                            kFov = {75, 90, 100, 110, 125, 150}, kRadio = {0, 50, 100, 150, 200, 300, 400}, kRates = {60, 90, 120, 144},
                             kSharpen = {0, 25, 50, 75, 100}, kCaps = {30, 60, 120, 144, 240, 0},
                             kSens = {25, 50, 75, 100, 150, 200, 400, 800},
                             kWheelRange = {180, 270, 360, 540, 720, 900, 1080, 2880},
@@ -230,6 +230,14 @@ const std::vector<Row> kDisplay = {
 };
 
 const std::vector<Row> kGame = {
+    {"game frame rate", [] { return Choices{"60", "90", "120", "144"}; },
+     [] { return Nearest(kRates, frame_rate); },
+     [](uint32_t i) {
+         frame_rate = kRates[i];
+         // a cap below it would hold the game's frames back
+         app::Settings& s = app::Get();
+         if (s.fps_cap && s.fps_cap < frame_rate) s.fps_cap = frame_rate;
+     }},
     {"field of view",
      [] { return Choices{"75%", "90%", "100%", "110%", "125%", "150%"}; },
      [] { return Nearest(kFov, fov_percent); },

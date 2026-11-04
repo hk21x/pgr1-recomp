@@ -18,6 +18,17 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-11-04 - game frame rate: 60, 90, 120 or 144 (branch above60)
+
+The in-between frames flickered on Harry's PC: steps wanted 17 to 30 MB of kept vertices (most not blended) and a replay
+took 3 to 6 ms to send besides the render thread's 13. Third attempt, stopped. Instead the game is told the display runs
+faster, as its 30 a second split screen mode is told 30: the rate 0x2BA9F0 and the step scaled, a tick each frame. Harry
+at 120: works, no flicker, about 90 in busy races, one core of 16 busy (the render thread). His save would not load: saves
+carry the display's rate (FINDINGS); the display's rate now stays 60, and a driver tagged above 60 lists and loads as 60
+(his loaded on Windows). Now a setting, frame_rate (recomp > game and F1 > Game, next start; a lower frame cap raised to it;
+PGR1_HZ for one start). The in-between frames removed from PGR1 (SDK branch interp-defer left unmerged); SDK at fork main.
+Headless: smoke OK on all three discs, 120 in a race at the right speed. Next: Harry's check on Windows, then release.
+
 ### 2026-11-03 - release 1.4
 
 Tag v1.4 on fabc51a (prebuilt merged into main). Harry built the three packages from the tag in his build clones

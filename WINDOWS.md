@@ -74,8 +74,7 @@ Help and reports: the [Discord server](https://discord.gg/PQjkKsdtc). The files 
   `set PGR1_DEBUG_LOG=1` puts the game's own debug messages in the log (the files it loads, its sound set-up).
 - Stutter: `set XBE_PERF=1` before starting adds timing lines to the log. `set PGR1_TICK_LOG=1` logs the game's steps
   and frames every 10 seconds (60 steps a second is real time); `set PGR1_FIXED_TIME=1` goes back to one step a frame, as
-  on the console. `set PGR1_INTERP=1` with a frame rate cap above 60 draws blended frames between the game's steps in
-  races (experimental: it flickers while the renderer is too slow for the extra frames).
+  on the console. `set PGR1_HZ=120` runs the game at that rate for one start, whatever the settings say.
 - A crash with "contiguous allocation ... failed" in the log: `set XBE_MEM_LOG=1` before starting lists the game's large
   memory blocks as races load and end.
 

@@ -7,12 +7,12 @@
 
 namespace pgr1 {
 void SettingsLoaded();  // src/game/settings_entry.cpp
-bool StepInterpolation();  // src/game/frame_rate.cpp
 std::vector<achievements::Def> AchievementSet();  // src/game/achievement_set.cpp
 void WheelFeel(input::WheelFeel& feel);  // src/game/hooks.cpp
 bool skip_intro = false;  // no intro movie, logos or warning at start (src/game/hooks.cpp)
 bool hide_hud = false;  // no race HUD, for screenshots (src/game/hooks.cpp)
 uint32_t fov_percent = 100;  // the race camera's field of view, percent of the console's (src/game/hooks.cpp)
+uint32_t frame_rate = 60;      // the rate the game runs and draws at: 60, 90, 120 or 144, at the next start (frame_rate.cpp)
 uint32_t radio_percent = 150;  // the radio's music against engine and effects, percent of the game's own balance
 }
 
@@ -45,6 +45,8 @@ const app::GameInfo app::kGame = {
                 {"hide_hud", &pgr1::hide_hud, nullptr, "Hide the race HUD", "For screenshots; at once."},
                 {"fov_percent", nullptr, &pgr1::fov_percent, "Race camera field of view (%)",
                  "100 is the console's; 50 to 200, at once."},
+                {"frame_rate", nullptr, &pgr1::frame_rate, "Game frame rate",
+                 "60, 90, 120 or 144: the game runs and draws at this rate; busy races may run below it. At the next start."},
                 {"radio_percent", nullptr, &pgr1::radio_percent, "Radio music volume (%)",
                  "Against engine and effects. 100 is the game's own mix, where they drown it out; 0 to 400, at once."}},
     .load = nullptr,                      // reads more from the settings file's toml::table
@@ -63,7 +65,6 @@ const app::GameInfo app::kGame = {
     .bink_frame_hold = false,  // the movie player (0xE9780) waits on BinkWait itself (0xE98D0) and counts its frames
     .hud_aspect = 4.0f / 3.0f,  // no widescreen mode: menus and HUD are laid out 4:3, the 3D widens (src/game/hooks.cpp)
     .sharpen_2d = true,         // the menus', HUD's and text's textures enlarged with sharp edges (Sharp text and HUD)
-    .step_interpolation = pgr1::StepInterpolation,  // above 60, frames in between in a race (src/game/frame_rate.cpp)
     .auto_fills_screen = true,  // "from the screen's shape" follows an ultrawide: the 3D widens, HUD at 16:9 (src/game/hooks.cpp)
     .pcm_stream_level = MusicLevel,
     .other_voice_level = OtherLevel,

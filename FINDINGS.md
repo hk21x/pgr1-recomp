@@ -155,6 +155,10 @@ Asia's xbe (c14b35767fddc5a7af4b3aa13b53e374be23fe57) has USA's sections with an
   0xC8BD0 measures the frame time and lowers detail (0x15ABD0, 0x15ABD4, 0x159ADC) and an update budget (0x2B1DC0) past
   15 to 22 ms. Pads are polled once a tick (0xC64B0, XInputGetState at 0xD001B). src/game/frame_rate.cpp runs the
   main loop's tick as often as 1/60 s steps have passed (1 to 4).
+- **[game]** Above 60: with the rate 0x2BA9F0 set to N and the step 0x15AA84 scaled by 60/N (USA keeps the 1.1 in its data
+  at 0x158284 rather than setting it at boot), the game runs N ticks a second at the right speed: headless at 120 the car's
+  acceleration and the race clock match 60. Blending in-between frames (the SDK's step_interpolation) did not work for PGR1:
+  a step wants up to 30 MB of kept vertices, and each blended frame redraws its 3600 draws.
 - **[game]** Saves carry the display's rate: 0xD0650 writes it (from the float 0x2BA9F4, 60 or 50) into the profile's
   byte 0x2C68E6, and a driver is only offered to load (0x5EDB0, 0x5EB6C: the list's byte 6 before each 0x40 byte entry
   from 0x190C10) and only loads (0xD0490, at 0xD0591) when it matches. So the display rate must stay 60; only the rate
