@@ -21,7 +21,9 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 ### 2026-11-04 - release 1.5
 
 Harry: release 1.5 (the game frame rate). Notes docs/releases/v1.5.md; the tag makes a draft, Harry builds the three
-packages from it and publishes.
+packages from it and publishes. Published 2026-11-04. The USA package first attached was v1.4's (the same sha256, 0e49f02b...); rebuilt from
+the tag and swapped (45bb7e62...). Check each package's .json against the last release's before publishing: an unchanged
+sha256 is a package not rebuilt.
 
 ### 2026-11-04 - game frame rate on the other two discs (Harry)
 
