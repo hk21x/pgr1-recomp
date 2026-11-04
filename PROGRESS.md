@@ -27,7 +27,8 @@ at 120: works, no flicker, about 90 in busy races, one core of 16 busy (the rend
 carry the display's rate (FINDINGS); the display's rate now stays 60, and a driver tagged above 60 lists and loads as 60
 (his loaded on Windows). Now a setting, frame_rate (recomp > game and F1 > Game, next start; a lower frame cap raised to it;
 PGR1_HZ for one start). The in-between frames removed from PGR1 (SDK branch interp-defer left unmerged); SDK at fork main.
-Headless: smoke OK on all three discs, 120 in a race at the right speed. Next: Harry's check on Windows, then release.
+Headless: smoke OK on all three discs, 120 in a race at the right speed, repro.sh a live race. Harry on Windows:
+tested and happy. Merged into main.
 
 ### 2026-11-03 - release 1.4
 
