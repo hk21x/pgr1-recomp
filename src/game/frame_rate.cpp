@@ -40,8 +40,9 @@ using Clock = std::chrono::steady_clock;
 constexpr double kLongestGap = 0.15;
 
 // PGR1_HZ=N (61 to 240), an experiment: the game told the display runs at N, as its 30 a second split screen mode is
-// told 30 (0xC5400 copies the rate 0x2BA9F4 into 0x2BA9F0, floats, read by 79 places), with its step 0x15AA84 (1.1 x 1/60 at
-// 60 Hz) scaled to match, and paced at N
+// told 30 (the rate 0x2BA9F0, a float read by 79 places, which 0xC5400 copies from the display's 0x2BA9F4), with its step
+// 0x15AA84 (1.1 x 1/60 at 60 Hz) scaled to match, and paced at N. The display's rate stays 60: a save is tagged with it
+// and listed as one to load only on a display of the same rate (0x5EDB0: PAL's 50 and 60 Hz saves kept apart)
 uint32_t Hz() {
     static const uint32_t hz = [] {
         const char* e = std::getenv("PGR1_HZ");
@@ -59,6 +60,18 @@ uint32_t Hz() {
 // the step's factor: USA keeps it in its data, the European discs set it at boot
 constexpr uint32_t kStepAt = PGR1_VA(0x15AA84, 0x15A9A4, 0x158284);
 
+// a save tagged with a rate above 60 (made by a build that told the display it ran faster) listed as this display's
+// own, as it is: the drivers found (0x190C00 of them, 0x40 bytes each from 0x190C10) carry it as a byte 6 before
+void LoadableSaves() {
+    const uint32_t count = kernel::R32(pgr1::Va(0x190C00));
+    float display;
+    std::memcpy(&display, &kernel::G<uint32_t>(pgr1::Va(0x2BA9F4)), 4);
+    for (uint32_t i = 0; i < count && i < 64; i++) {
+        uint8_t& tag = kernel::G<uint8_t>(pgr1::Va(0x190C10) + i * 0x40 - 6);
+        if (tag > 60 && display == 60.0f) tag = 60;
+    }
+}
+
 void ApplyHz() {
     const uint32_t hz = Hz();
     if (!hz) return;
@@ -71,7 +84,6 @@ void ApplyHz() {
     if (step != want) std::memcpy(&kernel::G<uint32_t>(kStepAt), &want, 4);
     // floats: 60.0 at 60 Hz
     const float rate = float(hz);
-    std::memcpy(&kernel::G<uint32_t>(pgr1::Va(0x2BA9F4)), &rate, 4);
     float now;
     std::memcpy(&now, &kernel::G<uint32_t>(pgr1::Va(0x2BA9F0)), 4);
     if (now == 60.0f) std::memcpy(&kernel::G<uint32_t>(pgr1::Va(0x2BA9F0)), &rate, 4);
@@ -97,6 +109,7 @@ X86_FUNC(PGR1_FN(000C5480, 000C54A0, 000C2A80)) {
         return;
     }
     ApplyHz();
+    LoadableSaves();
     const double kStep = 1.0 / (Hz() ? Hz() : 60);
     static Clock::time_point last{};
     static double owed = 0;  // seconds of game time not yet run
@@ -130,5 +143,17 @@ X86_FUNC(PGR1_FN(000C5480, 000C54A0, 000C2A80)) {
             kernel::W32(ctx.esp, ret);
         }
         PGR1_ORIG(000C5480, 000C54A0, 000C2A80)(ctx, base);
+    }
+}
+
+// a driver loaded from a save (0xD0210 reads the profile block whole) whose rate tag, the byte 0x2C68E6, is above 60: the
+// tag the display's own, or 0xD0490 refuses the driver ("Unable to load driver save game")
+X86_EXTERN_FUNC(PGR1_ORIG(000D0210, 000D0230, 000CD490));
+X86_FUNC(PGR1_FN(000D0210, 000D0230, 000CD490)) {
+    PGR1_ORIG(000D0210, 000D0230, 000CD490)(ctx, base);
+    uint8_t& tag = kernel::G<uint8_t>(pgr1::Va(0x2C68E6));
+    if (tag > 60) {
+        LOGR("pgr1: a driver saved with the display at %u loaded as 60", tag);
+        tag = 60;
     }
 }

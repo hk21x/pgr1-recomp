@@ -155,3 +155,7 @@ Asia's xbe (c14b35767fddc5a7af4b3aa13b53e374be23fe57) has USA's sections with an
   0xC8BD0 measures the frame time and lowers detail (0x15ABD0, 0x15ABD4, 0x159ADC) and an update budget (0x2B1DC0) past
   15 to 22 ms. Pads are polled once a tick (0xC64B0, XInputGetState at 0xD001B). src/game/frame_rate.cpp runs the
   main loop's tick as often as 1/60 s steps have passed (1 to 4).
+- **[game]** Saves carry the display's rate: 0xD0650 writes it (from the float 0x2BA9F4, 60 or 50) into the profile's
+  byte 0x2C68E6, and a driver is only offered to load (0x5EDB0, 0x5EB6C: the list's byte 6 before each 0x40 byte entry
+  from 0x190C10) and only loads (0xD0490, at 0xD0591) when it matches. So the display rate must stay 60; only the rate
+  the game runs at (0x2BA9F0) is raised. The save file is HMAC-SHA1 (zero key) over the profile block, in its first 20 bytes.
