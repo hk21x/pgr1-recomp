@@ -164,3 +164,15 @@ data file the same as USA's: it plays as USA (GameInfo::same_code, the USA packa
   byte 0x2C68E6, and a driver is only offered to load (0x5EDB0, 0x5EB6C: the list's byte 6 before each 0x40 byte entry
   from 0x190C10) and only loads (0xD0490, at 0xD0591) when it matches. So the display rate must stay 60; only the rate
   the game runs at (0x2BA9F0) is raised. The save file is HMAC-SHA1 (zero key) over the profile block, in its first 20 bytes.
+
+## Japan
+
+- **[game]** Japan's xbe (4c38cf63...) is Europe 1.1's layout moved: code +0x10 to +0x60, data and D3D -0xA0 (every hook
+  and data address ported by xbe_port, all at 12 or more matching instructions or 40 of 40 votes), XAPI 3911 (XDK 3948
+  otherwise, so sdk/xdk/3948 serves it). config/jpn_*.toml; four refused callbacks named (0x41B10, 0x46860, 0x5BF80,
+  0x5F180). Smoke OK, RECOMP in its menus, in English.
+- **[game]** Language: 0x584F0 keeps XGetLanguage's 1, 3 to 6, anything else English; Japanese (2) only when
+  XGetGameRegion (0xD4410) says Japan. With it answered Japan the frontend loads Japanese.ini and the menus draw only their
+  text: no backdrop, panels or numbers, headless on the reference renderer, though 600 draws a frame are made (as in
+  English) and the start-up screens draw. Not the 2D sharpening (off: the same). Not found after three tries; Windows not
+  tried. PGR1_JAPANESE=1 turns it on.

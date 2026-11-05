@@ -1,7 +1,7 @@
 // The release an executable is built for. Each disc's default.xbe is another compile of the game, every address elsewhere;
 // CMakeLists.txt sets PGR1_RELEASE from assets/default.xbe's SHA-1: 0 Europe 1.1 (the addresses the comments cite), 1
-// Europe and Australia 1.0, 2 USA. The hooks give a function's address for each, PGR1_FN(11, 10, usa) the function to
-// replace and PGR1_ORIG(...) its recompiled body; PGR1_VA(...) a code address as a value; pgr1::Va(1.1's address) a
+// Europe and Australia 1.0, 2 USA (and Asia, the same code), 3 Japan. The hooks give a function's address for each,
+// PGR1_FN(11, 10, usa, jpn) the function to replace and PGR1_ORIG(...) its recompiled body; PGR1_VA(...) a code address as a value; pgr1::Va(1.1's address) a
 // data address. The others are 1.1's ported by sdk/tools/symbols/xbe_port.py.
 #pragma once
 #include <cstdint>
@@ -12,16 +12,18 @@
 
 #define PGR1_CAT_(a, b) a##b
 #define PGR1_CAT(a, b) PGR1_CAT_(a, b)
-#if PGR1_RELEASE == 2
-#define PGR1_PICK(e11, e10, usa) usa
+#if PGR1_RELEASE == 3
+#define PGR1_PICK(e11, e10, usa, jpn) jpn
+#elif PGR1_RELEASE == 2
+#define PGR1_PICK(e11, e10, usa, jpn) usa
 #elif PGR1_RELEASE == 1
-#define PGR1_PICK(e11, e10, usa) e10
+#define PGR1_PICK(e11, e10, usa, jpn) e10
 #else
-#define PGR1_PICK(e11, e10, usa) e11
+#define PGR1_PICK(e11, e10, usa, jpn) e11
 #endif
-#define PGR1_FN(e11, e10, usa) PGR1_CAT(sub_, PGR1_PICK(e11, e10, usa))
-#define PGR1_ORIG(e11, e10, usa) PGR1_CAT(__imp__sub_, PGR1_PICK(e11, e10, usa))
-#define PGR1_VA(e11, e10, usa) PGR1_PICK(e11, e10, usa)
+#define PGR1_FN(e11, e10, usa, jpn) PGR1_CAT(sub_, PGR1_PICK(e11, e10, usa, jpn))
+#define PGR1_ORIG(e11, e10, usa, jpn) PGR1_CAT(__imp__sub_, PGR1_PICK(e11, e10, usa, jpn))
+#define PGR1_VA(e11, e10, usa, jpn) PGR1_PICK(e11, e10, usa, jpn)
 
 namespace pgr1 {
 // a data address of Europe 1.1 in this release: .rdata on, and the D3D section's data, each move by one amount
@@ -36,6 +38,8 @@ constexpr uint32_t Va(uint32_t e11) {
            : e11 < 0x2E8000 ? e11 - 0x3B80
            : e11 < 0x2EB000 ? e11 - 0x3BA0
                             : e11 - 0x4820;
+#elif PGR1_RELEASE == 3
+    return e11 - 0xA0;  // Japan: every address the hooks and achievements use (xbe_port: .data and the D3D section's)
 #elif PGR1_RELEASE == 1
     return e11 - 0xE0;
 #else

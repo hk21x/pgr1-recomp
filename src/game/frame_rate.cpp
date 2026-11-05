@@ -51,7 +51,7 @@ uint32_t Hz() {
 }
 
 // the step's factor: USA keeps it in its data, the European discs set it at boot
-constexpr uint32_t kStepAt = PGR1_VA(0x15AA84, 0x15A9A4, 0x158284);
+constexpr uint32_t kStepAt = PGR1_VA(0x15AA84, 0x15A9A4, 0x158284, 0x15A9E4);
 
 // a save tagged with a rate above 60 (made by a build that told the display it ran faster) listed as this display's
 // own, as it is: the drivers found (0x190C00 of them, 0x40 bytes each from 0x190C10) carry it as a byte 6 before
@@ -94,11 +94,11 @@ bool FollowClock() {
 }
 }  // namespace
 
-X86_EXTERN_FUNC(PGR1_ORIG(000C5480, 000C54A0, 000C2A80));
-X86_FUNC(PGR1_FN(000C5480, 000C54A0, 000C2A80)) {
+X86_EXTERN_FUNC(PGR1_ORIG(000C5480, 000C54A0, 000C2A80, 000C5490));
+X86_FUNC(PGR1_FN(000C5480, 000C54A0, 000C2A80, 000C5490)) {
     uint32_t ret = kernel::R32(ctx.esp);
-    if (!FollowClock() || (ret != PGR1_VA(0xC97B1, 0xC97D1, 0xC6A81) && ret != PGR1_VA(0xC976E, 0xC978E, 0xC6A3E))) {
-        PGR1_ORIG(000C5480, 000C54A0, 000C2A80)(ctx, base);
+    if (!FollowClock() || (ret != PGR1_VA(0xC97B1, 0xC97D1, 0xC6A81, 0xC9801) && ret != PGR1_VA(0xC976E, 0xC978E, 0xC6A3E, 0xC97BE))) {
+        PGR1_ORIG(000C5480, 000C54A0, 000C2A80, 000C5490)(ctx, base);
         return;
     }
     ApplyHz();
@@ -135,15 +135,15 @@ X86_FUNC(PGR1_FN(000C5480, 000C54A0, 000C2A80)) {
             ctx.esp -= 4;  // the call again, to the same return
             kernel::W32(ctx.esp, ret);
         }
-        PGR1_ORIG(000C5480, 000C54A0, 000C2A80)(ctx, base);
+        PGR1_ORIG(000C5480, 000C54A0, 000C2A80, 000C5490)(ctx, base);
     }
 }
 
 // a driver loaded from a save (0xD0210 reads the profile block whole) whose rate tag, the byte 0x2C68E6, is above 60: the
 // tag the display's own, or 0xD0490 refuses the driver ("Unable to load driver save game")
-X86_EXTERN_FUNC(PGR1_ORIG(000D0210, 000D0230, 000CD490));
-X86_FUNC(PGR1_FN(000D0210, 000D0230, 000CD490)) {
-    PGR1_ORIG(000D0210, 000D0230, 000CD490)(ctx, base);
+X86_EXTERN_FUNC(PGR1_ORIG(000D0210, 000D0230, 000CD490, 000D0270));
+X86_FUNC(PGR1_FN(000D0210, 000D0230, 000CD490, 000D0270)) {
+    PGR1_ORIG(000D0210, 000D0230, 000CD490, 000D0270)(ctx, base);
     uint8_t& tag = kernel::G<uint8_t>(pgr1::Va(0x2C68E6));
     if (tag > 60) {
         LOGR("pgr1: a driver saved with the display at %u loaded as 60", tag);

@@ -1,0 +1,16 @@
+# Japan (Project Gotham: World Street Racer): config/pgr1.toml's hand entries with this release's addresses
+# (sdk/tools/symbols/xbe_port.py). config/jpn_game.toml is xbe_symbols output for this xbe.
+includes = ["jpn_game.toml"]
+
+[xbe]
+library = "PGR1.dll"  # the game code DLL on Windows (XBE_GAME_DLL)
+data_ranges = [[0x13AFE0, 0x13B1AC]]
+
+[functions]
+0xFEAB8 = "CDirectSoundStream_Constructor"
+0x13B1AC = "MU_Init"
+0x5C440 = "MusicManager_Callback"
+0x41B10 = "Callback_41B10"  # immediates the scan refused: real entries (1.1's 0x41AF0, 0x46840, 0x5BF50, 0x5F140)
+0x46860 = "Callback_46860"
+0x5BF80 = "Callback_5BF80"
+0x5F180 = "Callback_5F180"

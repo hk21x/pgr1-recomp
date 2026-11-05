@@ -18,6 +18,14 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-11-05 - Japan (branch japan, on asia)
+
+Harry: support the Asia and Japan discs. Japan's ISO (fdca8086..., the one reviewed on 11-01) extracted to .local/jpntest
+(4725 files linked to Europe 1.1's, 71 read from the ISO, all checksums right). PGR1_RELEASE 3: every hook given its
+Japan address (132 sites, src/common/release.h), configs, CMake, launcher (PGR1-JPN-package.zip), release-package.bat.
+Smoke OK; RECOMP in its menus. In Japanese the menus draw only their text: stopped after three tries (FINDINGS, "Japan"),
+so English by default, PGR1_JAPANESE=1 to try. Also: the SDK gate passes on all six games for submix-3d 8f4e536.
+
 ### 2026-11-05 - Asia (branch asia)
 
 Asia's default.xbe (c14b3576...) has all 26 of USA's sections byte for byte, its certificate's version 6, and every data

@@ -22,9 +22,9 @@ recompiles the one you give it:
 | Europe and Australia 1.0 | `28bbf6c115f096eeb5785752e1bee34dc2cd7764` | `ba7763e6e946ab40aed6706f2c9bc1df3a990fa0` |
 | USA 1.0 | `c20a9d1d0ee04daf6e9723767b1b9d1a8007445d` | `0d55fff29ceb34ab4dfcfc4820e823d967ca1469` |
 | Asia | `95b9788eca5390a6246280095fc7756658f137e4` | `c14b35767fddc5a7af4b3aa13b53e374be23fe57` |
+| Japan (World Street Racer) | `fdca8086c5bcbf9542f218863d413b48ba77402a` | `4c38cf630f7dc92a845d2141020157e78e682e3d` |
 
-The log (`logs\pgr1.log`) names the SHA-1 of the `default.xbe` it found. The Japanese release has not been
-added, and the launcher will not build them. To change disc, choose the other one in the launcher and build again.
+The log (`logs\pgr1.log`) names the SHA-1 of the `default.xbe` it found. The Japan disc plays in English for now. To change disc, choose the other one in the launcher and build again.
 
 ## Getting Started
 

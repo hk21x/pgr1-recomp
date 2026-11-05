@@ -28,23 +28,23 @@ extern uint32_t fov_percent, radio_percent, frame_rate;
 namespace {
 
 // the front end's widgets
-constexpr uint32_t kItem = PGR1_VA(0x62880, 0x628A0, 0x61B50);       // cdecl: place in the list, label, icon, A's handler
-constexpr uint32_t kRow = PGR1_VA(0x64C70, 0x64C90, 0x63E10);        // cdecl: place, label, icon, table, count, the int
-constexpr uint32_t kLink = PGR1_VA(0x64CC0, 0x64CE0, 0x63E60);       // cdecl: items, count, 0
-constexpr uint32_t kOn = PGR1_VA(0xC0CC0, 0xC0CE0, 0xBE2F0);         // cdecl: item, event (5 A, 7 B), handler
-constexpr uint32_t kAlso = PGR1_VA(0xC0B90, 0xC0BB0, 0xBE1C0);       // the same, a second handler
-constexpr uint32_t kFocus = PGR1_VA(0xC0E60, 0xC0E80, 0xBE490);      // cdecl: item
-constexpr uint32_t kNewPage = PGR1_VA(0xC0760, 0xC0780, 0xBDD80);    // cdecl: the byte that remembers the focus
-constexpr uint32_t kTitle = PGR1_VA(0x62A30, 0x62A50, 0x61D00);      // cdecl: first item, title, icon (-1 none)
-constexpr uint32_t kBackPage = PGR1_VA(0x61950, 0x61920, 0x60C60);
-constexpr uint32_t kLeavePage = PGR1_VA(0x618F0, 0x618C0, 0x60C00);
-constexpr uint32_t kOptionsBack = PGR1_VA(0x5B620, 0x5B640, 0x5AB30);
-constexpr uint32_t kShowChoice = PGR1_VA(0x5B720, 0x5B740, 0x5AC20);  // a row's value, in its choice's entry
-constexpr uint32_t kAButton = PGR1_VA(0x5B180, 0x5B1A0, 0x5A690), kBButton = PGR1_VA(0x5B080, 0x5B0A0, 0x5A590);
+constexpr uint32_t kItem = PGR1_VA(0x62880, 0x628A0, 0x61B50, 0x628B0);       // cdecl: place in the list, label, icon, A's handler
+constexpr uint32_t kRow = PGR1_VA(0x64C70, 0x64C90, 0x63E10, 0x64CA0);        // cdecl: place, label, icon, table, count, the int
+constexpr uint32_t kLink = PGR1_VA(0x64CC0, 0x64CE0, 0x63E60, 0x64CF0);       // cdecl: items, count, 0
+constexpr uint32_t kOn = PGR1_VA(0xC0CC0, 0xC0CE0, 0xBE2F0, 0xC0CD0);         // cdecl: item, event (5 A, 7 B), handler
+constexpr uint32_t kAlso = PGR1_VA(0xC0B90, 0xC0BB0, 0xBE1C0, 0xC0BA0);       // the same, a second handler
+constexpr uint32_t kFocus = PGR1_VA(0xC0E60, 0xC0E80, 0xBE490, 0xC0E70);      // cdecl: item
+constexpr uint32_t kNewPage = PGR1_VA(0xC0760, 0xC0780, 0xBDD80, 0xC0770);    // cdecl: the byte that remembers the focus
+constexpr uint32_t kTitle = PGR1_VA(0x62A30, 0x62A50, 0x61D00, 0x62A60);      // cdecl: first item, title, icon (-1 none)
+constexpr uint32_t kBackPage = PGR1_VA(0x61950, 0x61920, 0x60C60, 0x61930);
+constexpr uint32_t kLeavePage = PGR1_VA(0x618F0, 0x618C0, 0x60C00, 0x618D0);
+constexpr uint32_t kOptionsBack = PGR1_VA(0x5B620, 0x5B640, 0x5AB30, 0x5B650);
+constexpr uint32_t kShowChoice = PGR1_VA(0x5B720, 0x5B740, 0x5AC20, 0x5B750);  // a row's value, in its choice's entry
+constexpr uint32_t kAButton = PGR1_VA(0x5B180, 0x5B1A0, 0x5A690, 0x5B1B0), kBButton = PGR1_VA(0x5B080, 0x5B0A0, 0x5A590, 0x5B0B0);
 // the pause menu's
-constexpr uint32_t kMenuDraw = PGR1_VA(0x85FA0, 0x85FC0, 0x84C70), kMenuInput = PGR1_VA(0x86080, 0x860A0, 0x84D50);
-constexpr uint32_t kMenuItem = PGR1_VA(0x83BE0, 0x83C00, 0x828C0);
-constexpr uint32_t kCanSound = PGR1_VA(0x84B80, 0x84BA0, 0x83860), kStepSound = PGR1_VA(0xB7D50, 0xB7D70, 0xB5370);
+constexpr uint32_t kMenuDraw = PGR1_VA(0x85FA0, 0x85FC0, 0x84C70, 0x85FD0), kMenuInput = PGR1_VA(0x86080, 0x860A0, 0x84D50, 0x860B0);
+constexpr uint32_t kMenuItem = PGR1_VA(0x83BE0, 0x83C00, 0x828C0, 0x83C10);
+constexpr uint32_t kCanSound = PGR1_VA(0x84B80, 0x84BA0, 0x83860, 0x84BB0), kStepSound = PGR1_VA(0xB7D50, 0xB7D70, 0xB5370, 0xB7D60);
 
 constexpr uint32_t kTag = 0x52430000;  // a RECOMP item's +0x58, which the game's widget maker zeroes; low: what it opens
 constexpr uint32_t kOpenPage = 0xFF, kOpenWindow = 0xFE;
@@ -77,8 +77,8 @@ uint32_t Id(const std::string& text) {
 
 // an item's icon: the sprite numbers Options gives its items, in turn (the game fills these as it starts)
 uint32_t Icon(uint32_t i) {
-    constexpr uint32_t kIcons[] = {PGR1_VA(0x2E8D80, 0x2E8CA0, 0x2E5200), PGR1_VA(0x2E8DC8, 0x2E8CE8, 0x2E5248), PGR1_VA(0x2E8E00, 0x2E8D20, 0x2E527E),
-                                   PGR1_VA(0x2E8D9A, 0x2E8CBA, 0x2E521A), PGR1_VA(0x2E8EC4, 0x2E8DE4, 0x2E5340)};
+    constexpr uint32_t kIcons[] = {PGR1_VA(0x2E8D80, 0x2E8CA0, 0x2E5200, 0x2E8CE0), PGR1_VA(0x2E8DC8, 0x2E8CE8, 0x2E5248, 0x2E8D28), PGR1_VA(0x2E8E00, 0x2E8D20, 0x2E527E, 0x2E8D60),
+                                   PGR1_VA(0x2E8D9A, 0x2E8CBA, 0x2E521A, 0x2E8CFA), PGR1_VA(0x2E8EC4, 0x2E8DE4, 0x2E5340, 0x2E8E24)};
     return uint32_t(int32_t(kernel::G<int16_t>(kIcons[i % 5])));
 }
 
@@ -444,7 +444,7 @@ void BuildLanding(X86Context& ctx) {
     uint32_t t = Table(kQuit);
     items.push_back(kernel::CallGuest(ctx, kRow, {n, Guest(kQuit.label), Icon(n), t, kernel::G<uint32_t>(t + 4), g_tables[t].value}));
     kernel::G<uint32_t>(items.back() + 0x58) = 0;
-    Finish(ctx, items, 0, "RECOMP", PGR1_VA(0x5CE80, 0x5CEA0, 0x5C340), n);
+    Finish(ctx, items, 0, "RECOMP", PGR1_VA(0x5CE80, 0x5CEA0, 0x5C340, 0x5CEB0), n);
 }
 
 void BuildSection(X86Context& ctx, uint32_t section) {
@@ -565,9 +565,9 @@ void SettingsLoaded() {
 using namespace pgr1;
 
 // The Options page: RECOMP after its eight items, in its array of twenty (0x5CE80, the link at 0x5D021)
-X86_EXTERN_FUNC(PGR1_ORIG(00064CC0, 00064CE0, 00063E60));
-X86_FUNC(PGR1_FN(00064CC0, 00064CE0, 00063E60)) {
-    bool options = kernel::R32(ctx.esp) == PGR1_VA(0x5D026, 0x5D046, 0x5C4E6) && kernel::R32(ctx.esp + 8) == 8;
+X86_EXTERN_FUNC(PGR1_ORIG(00064CC0, 00064CE0, 00063E60, 00064CF0));
+X86_FUNC(PGR1_FN(00064CC0, 00064CE0, 00063E60, 00064CF0)) {
+    bool options = kernel::R32(ctx.esp) == PGR1_VA(0x5D026, 0x5D046, 0x5C4E6, 0x5D056) && kernel::R32(ctx.esp + 8) == 8;
     uint32_t list = kernel::R32(ctx.esp + 4), item = 0;
     if (options) {
         item = kernel::CallGuest(ctx, kItem, {8, Guest("RECOMP"), Icon(0), kAButton});
@@ -575,7 +575,7 @@ X86_FUNC(PGR1_FN(00064CC0, 00064CE0, 00063E60)) {
         kernel::G<uint32_t>(list + 8 * 4) = item;
         kernel::G<uint32_t>(ctx.esp + 8) = 9;
     }
-    PGR1_ORIG(00064CC0, 00064CE0, 00063E60)(ctx, base);
+    PGR1_ORIG(00064CC0, 00064CE0, 00063E60, 00064CF0)(ctx, base);
     if (options) {
         kernel::CallGuest(ctx, kOn, {item, 7, kOptionsBack});
         kernel::CallGuest(ctx, kAlso, {item, 5, kLeavePage});
@@ -584,8 +584,8 @@ X86_FUNC(PGR1_FN(00064CC0, 00064CE0, 00063E60)) {
 }
 
 // A on a RECOMP item, or a choice taken in a RECOMP spinner: otherwise the game's Time Attack Options
-X86_EXTERN_FUNC(PGR1_ORIG(0005B180, 0005B1A0, 0005A690));
-X86_FUNC(PGR1_FN(0005B180, 0005B1A0, 0005A690)) {
+X86_EXTERN_FUNC(PGR1_ORIG(0005B180, 0005B1A0, 0005A690, 0005B1B0));
+X86_FUNC(PGR1_FN(0005B180, 0005B1A0, 0005A690, 0005B1B0)) {
     uint32_t w = kernel::R32(ctx.esp + 4);
     auto bound = w ? g_tables.find(kernel::R32(w + 0x64)) : g_tables.end();
     if (bound != g_tables.end()) {
@@ -602,24 +602,24 @@ X86_FUNC(PGR1_FN(0005B180, 0005B1A0, 0005A690)) {
         ctx.esp += 4;  // ret
         return;
     }
-    PGR1_ORIG(0005B180, 0005B1A0, 0005A690)(ctx, base);
+    PGR1_ORIG(0005B180, 0005B1A0, 0005A690, 0005B1B0)(ctx, base);
 }
 
 // B on a section's row: otherwise the game's own page
-X86_EXTERN_FUNC(PGR1_ORIG(0005B080, 0005B0A0, 0005A590));
-X86_FUNC(PGR1_FN(0005B080, 0005B0A0, 0005A590)) {
+X86_EXTERN_FUNC(PGR1_ORIG(0005B080, 0005B0A0, 0005A590, 0005B0B0));
+X86_FUNC(PGR1_FN(0005B080, 0005B0A0, 0005A590, 0005B0B0)) {
     uint32_t w = kernel::R32(ctx.esp + 4);
     if (w && kernel::R32(w + 0x6C) == kTag) {
         BuildLanding(ctx);
         ctx.esp += 4;  // ret
         return;
     }
-    PGR1_ORIG(0005B080, 0005B0A0, 0005A590)(ctx, base);
+    PGR1_ORIG(0005B080, 0005B0A0, 0005A590, 0005B0B0)(ctx, base);
 }
 
 // the pause menu's plain item: RECOMP's section lists and rows use it, each entry told apart by its address
-X86_EXTERN_FUNC(PGR1_ORIG(00083BE0, 00083C00, 000828C0));
-X86_FUNC(PGR1_FN(00083BE0, 00083C00, 000828C0)) {
+X86_EXTERN_FUNC(PGR1_ORIG(00083BE0, 00083C00, 000828C0, 00083C10));
+X86_FUNC(PGR1_FN(00083BE0, 00083C00, 000828C0, 00083C10)) {
     uint32_t entry = kernel::R32(ctx.esp + 8), action = kernel::R32(ctx.esp + 12);
     auto it = g_pause_rows.find(entry);
     if (it != g_pause_rows.end()) {
@@ -662,13 +662,13 @@ X86_FUNC(PGR1_FN(00083BE0, 00083C00, 000828C0)) {
                            : i < int(kSections.size()) ? kSections[i].label : kWindowLabel;
         kernel::G<uint32_t>(Strings() + id * 4) = Guest(text);
     }
-    PGR1_ORIG(00083BE0, 00083C00, 000828C0)(ctx, base);
+    PGR1_ORIG(00083BE0, 00083C00, 000828C0, 00083C10)(ctx, base);
 }
 
 // the root menu's frame: the game hides items (reset ghost car, screen split) by flag in its own table, so the flags
 // follow into the copy
-X86_EXTERN_FUNC(PGR1_ORIG(00085D20, 00085D40, 000849F0));
-X86_FUNC(PGR1_FN(00085D20, 00085D40, 000849F0)) {
+X86_EXTERN_FUNC(PGR1_ORIG(00085D20, 00085D40, 000849F0, 00085D50));
+X86_FUNC(PGR1_FN(00085D20, 00085D40, 000849F0, 00085D50)) {
     for (uint32_t i = 0, to = 0; i < g_root_count; i++, to++) {
         if (i == g_root_count - 1) to++;
         kernel::G<uint32_t>(g_root_copy + to * kEntrySize + 0x10) = kernel::R32(g_root_static + i * kEntrySize + 0x10);
@@ -676,13 +676,13 @@ X86_FUNC(PGR1_FN(00085D20, 00085D40, 000849F0)) {
     // recomp only in a race of one's own: not in a recording played back (0x2E71C8) or multiplayer (mode 0x2C6F80, 6)
     bool hide = kernel::R32(Va(0x2E71C8)) != 0 || kernel::R32(Va(0x2C6F80)) == 6;
     kernel::G<uint32_t>(g_root_copy + (g_root_count - 1) * kEntrySize + 0x10) = hide;
-    PGR1_ORIG(00085D20, 00085D40, 000849F0)(ctx, base);
+    PGR1_ORIG(00085D20, 00085D40, 000849F0, 00085D50)(ctx, base);
 }
 
 // RECOMP's menus start beside the item that opened them, as the game's do, but are longer: moved up to end above
 // "Press START" (a menu's +0x24 is that item, whose +0x20 is its height). USA's pause text is larger
-X86_EXTERN_FUNC(PGR1_ORIG(00086080, 000860A0, 00084D50));
-X86_FUNC(PGR1_FN(00086080, 000860A0, 00084D50)) {
+X86_EXTERN_FUNC(PGR1_ORIG(00086080, 000860A0, 00084D50, 000860B0));
+X86_FUNC(PGR1_FN(00086080, 000860A0, 00084D50, 000860B0)) {
     constexpr float kBottom = 400.0f, kStep = PGR1_RELEASE == 2 ? 32.0f : 23.0f;
     uint32_t menu = kernel::R32(ctx.esp + 4), opener = kernel::R32(menu + 0x24);
     if (g_my_menus.count(menu) && opener) {
@@ -696,9 +696,9 @@ X86_FUNC(PGR1_FN(00086080, 000860A0, 00084D50)) {
         std::memcpy(&bits, &y, 4);
         kernel::G<uint32_t>(fake + 0x20) = bits;
         kernel::G<uint32_t>(menu + 0x24) = fake;
-        PGR1_ORIG(00086080, 000860A0, 00084D50)(ctx, base);
+        PGR1_ORIG(00086080, 000860A0, 00084D50, 000860B0)(ctx, base);
         kernel::G<uint32_t>(menu + 0x24) = opener;
         return;
     }
-    PGR1_ORIG(00086080, 000860A0, 00084D50)(ctx, base);
+    PGR1_ORIG(00086080, 000860A0, 00084D50, 000860B0)(ctx, base);
 }
