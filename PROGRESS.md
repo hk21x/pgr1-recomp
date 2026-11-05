@@ -23,8 +23,8 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 Harry: the SDK's Language row for PGR1 before the next release. GameInfo::languages {1, 4, 3, 5, 6} on the Europe and
 Japan builds (USA and Asia have English.Ini only), and a language row in recomp > game. Headless on Europe 1.1: a first boot
 in German and then French on the same hard disk load German.Ini and French.Ini, menus in each language, no errors. Smoke
-OK on all five discs, wincheck clean. v1.6 was tagged (draft, unpublished) before this; notes for 1.7 in
-docs/releases/v1.7.md, the tag waiting for Harry.
+OK on all five discs, wincheck clean. Harry deleted the first v1.6 draft and its tag (on 0f8d340); v1.6 is tagged again
+here, with the language setting in its notes.
 
 ### 2026-11-05 - release 1.6
 
