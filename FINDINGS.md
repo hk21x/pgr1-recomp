@@ -176,3 +176,16 @@ data file the same as USA's: it plays as USA (GameInfo::same_code, the USA packa
   text: no backdrop, panels or numbers, headless on the reference renderer, though 600 draws a frame are made (as in
   English) and the start-up screens draw. Not the 2D sharpening (off: the same). Not found after three tries; Windows not
   tried. PGR1_JAPANESE=1 turns it on.
+## Sound in 3D
+
+- **[game]** Each car's sounds (2D ADPCM buffers, 12 to 14 a car) are routed with IDirectSoundBuffer_SetOutputBuffer (0xFE85E)
+  into a per-car 3D mixin buffer (flags 0x2010, DSBCAPS_MIXIN | CTRL3D; SetMode head relative, min distance 2.5 or 5;
+  positions from 0xAFBC1, 0xB8D08 and others), and the listener's rolloff factor is 0.4 (IDirectSound_SetRolloffFactor).
+  The SDK ignored SetOutputBuffer, so every car's engine played at full level in the centre ("opponents' audio is 2D").
+  SDK submix-3d mixes a routed voice through its buffer's volume, bins and 3D place, and honours the rolloff factor:
+  headless, opponents 300 to 1200 units away, one at 600 about 34 dB down.
+- **[game]** Its head relative positions have +x to the LEFT (+y up, +z ahead): on the start grid the pack ahead and a
+  little left of the picture's centre has x +2 to +8, and when the road turns right their x goes negative. Harry heard
+  passes in the wrong ear; GameInfo::sound_x_left (SDK) turns the pan round for it. The player's own engine buffers sit
+  10 to 20 units ahead of the listener (the chase camera), so they come out about 3 to 4 dB under full: as DirectSound
+  rolls off, not a fault.

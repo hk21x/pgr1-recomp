@@ -33,6 +33,22 @@ file the same as USA's but the xbes. So it is USA: CMake picks the USA configs f
 GameInfo::same_code, and the launcher accepts it and installs USA's package. Headless with Asia's xbe in place of USA's:
 PGR1 release 2, 5948 functions (as USA), smoke OK. The release check (same_code) runs only on Windows. Japan's is another
 compile (Europe 1.1's layout shifted 0xA0, XAPI 3911); its ISO is on the windows-vm, not here.
+### 2026-11-05 - 3D sound: pan the right way round (branch audio-3d)
+
+Harry on Windows (USA disc, headset): no crash, fading works (0 to 3 engines loud at once, coming and going), but a car
+overtaken was heard in the other ear. Measured headless on the start grid against the picture: PGR1's head relative +x is
+left (FINDINGS). SDK GameInfo::sound_x_left, set for PGR1. The loud line now shows a stereo voice's second channel (the
+radio stream B00B7890, "0.25/0.00", is 0.00/0.25 on its right channel: it is stereo) and each routed voice's submix buffer
+and place. The player's engine about 3 to 4 dB quieter than before: its buffers are 10 to 20 units from the chase camera,
+DirectSound's rolloff. Smoke OK, wincheck clean.
+Harry on Windows (a868dac): passes now heard on the right side, "fixed".
+
+### 2026-11-05 - opponents' engines heard where they are (branch audio-3d, SDK submix-3d)
+
+A player's report via Harry: every car's engine plays from the player's position. Cause and fix in FINDINGS ("Sound in
+3D"): SetOutputBuffer into each car's 3D mixin buffer was ignored. SDK 37947ae on fork branch submix-3d. Gate: smoke OK on
+all six games, PGR1 repro.sh a live race. Asked the windows-vm session to check it on Windows (XBE_DSOUND_LOG=1, a quick
+race). Next: its results and Harry listening, then the SDK into fork main and a PGR1 release.
 
 ### 2026-11-04 - release 1.5
 
