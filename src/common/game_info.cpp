@@ -68,6 +68,12 @@ const app::GameInfo app::kGame = {
     .bink_frame_hold = false,  // the movie player (0xE9780) waits on BinkWait itself (0xE98D0) and counts its frames
     .hud_aspect = 4.0f / 3.0f,  // no widescreen mode: menus and HUD are laid out 4:3, the 3D widens (src/game/hooks.cpp)
     .sharpen_2d = true,         // the menus', HUD's and text's textures enlarged with sharp edges (Sharp text and HUD)
+#if PGR1_RELEASE != 2
+    // the console's language (F1 > Game, recomp > game, at the next start): the European and Japan discs carry English,
+    // German, French, Spanish and Italian, which the game takes from XGetLanguage (0x584C0); USA and Asia have English only.
+    // Japanese is left out: its menus draw only their text (FINDINGS, "Japan")
+    .languages = {1, 4, 3, 5, 6},
+#endif
     .auto_fills_screen = true,  // "from the screen's shape" follows an ultrawide: the 3D widens, HUD at 16:9 (src/game/hooks.cpp)
     .pcm_stream_level = MusicLevel,
     .other_voice_level = OtherLevel,

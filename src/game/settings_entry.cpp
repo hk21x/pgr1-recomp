@@ -100,7 +100,7 @@ struct Row {
 Choices OnOff() { return {"off", "on"}; }
 
 const std::vector<uint32_t> kRender = {25, 50, 75, 100, 125, 150, 175, 200}, kAniso = {0, 2, 4, 8, 16},
-                            kFov = {75, 90, 100, 110, 125, 150}, kRadio = {0, 50, 100, 150, 200, 300, 400}, kRates = {60, 90, 120, 144},
+                            kFov = {75, 90, 100, 110, 125, 150}, kRadio = {0, 50, 100, 150, 200, 300, 400}, kRates = {60, 90, 120, 144}, kLanguages = {1, 4, 3, 5, 6},
                             kSharpen = {0, 25, 50, 75, 100}, kCaps = {30, 60, 120, 144, 240, 0},
                             kSens = {25, 50, 75, 100, 150, 200, 400, 800},
                             kWheelRange = {180, 270, 360, 540, 720, 900, 1080, 2880},
@@ -250,6 +250,11 @@ const std::vector<Row> kGame = {
      [] { return Choices{"0%", "50%", "100%", "150%", "200%", "300%", "400%"}; },
      [] { return Nearest(kRadio, radio_percent); },
      [](uint32_t i) { radio_percent = kRadio[i]; }},
+#if PGR1_RELEASE != 2
+    {"language", [] { return Choices{"english", "francais", "deutsch", "espanol", "italiano"}; },
+     [] { return Nearest(kLanguages, app::Get().language); },
+     [](uint32_t i) { app::Get().language = kLanguages[i]; }},
+#endif
     {"skip intro", OnOff,
      [] { return uint32_t(skip_intro); },
      [](uint32_t i) { skip_intro = i != 0; }},

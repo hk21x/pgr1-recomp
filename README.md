@@ -160,6 +160,8 @@ In the settings window (F1); they apply at once. All of these are the same spot 
   and a frame rate cap.
 - **Monitor** - Chooses which display the game uses.
 - **Steady Speed** - The game keeps real time when the frame rate dips: on the console a late frame slowed the whole game.
+- **Language** - English, French, German, Spanish or Italian on the Europe and Japan discs (recomp > game, or F1), at the
+  next start. The USA and Asia discs have English only.
 - **Game Frame Rate** - 60, 90, 120 or 144 (recomp > game, or F1): the game runs and draws every frame at that rate, at
   the right speed. Busy races are limited by the renderer, which draws on one CPU core (about 90 on a Ryzen 7 5800X3D).
 - **FPS Counter** - Shows the frame rate in a corner.
