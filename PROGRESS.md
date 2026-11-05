@@ -18,6 +18,13 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-11-05 - opponents' engines heard where they are (branch audio-3d, SDK submix-3d)
+
+A player's report via Harry: every car's engine plays from the player's position. Cause and fix in FINDINGS ("Sound in
+3D"): SetOutputBuffer into each car's 3D mixin buffer was ignored. SDK 37947ae on fork branch submix-3d. Gate: smoke OK on
+all six games, PGR1 repro.sh a live race. Asked the windows-vm session to check it on Windows (XBE_DSOUND_LOG=1, a quick
+race). Next: its results and Harry listening, then the SDK into fork main and a PGR1 release.
+
 ### 2026-11-04 - release 1.5
 
 Harry: release 1.5 (the game frame rate). Notes docs/releases/v1.5.md; the tag makes a draft, Harry builds the three

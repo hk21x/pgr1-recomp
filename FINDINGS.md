@@ -163,3 +163,12 @@ Asia's xbe (c14b35767fddc5a7af4b3aa13b53e374be23fe57) has USA's sections with an
   byte 0x2C68E6, and a driver is only offered to load (0x5EDB0, 0x5EB6C: the list's byte 6 before each 0x40 byte entry
   from 0x190C10) and only loads (0xD0490, at 0xD0591) when it matches. So the display rate must stay 60; only the rate
   the game runs at (0x2BA9F0) is raised. The save file is HMAC-SHA1 (zero key) over the profile block, in its first 20 bytes.
+
+## Sound in 3D
+
+- **[game]** Each car's sounds (2D ADPCM buffers, 12 to 14 a car) are routed with IDirectSoundBuffer_SetOutputBuffer (0xFE85E)
+  into a per-car 3D mixin buffer (flags 0x2010, DSBCAPS_MIXIN | CTRL3D; SetMode head relative, min distance 2.5 or 5;
+  positions from 0xAFBC1, 0xB8D08 and others), and the listener's rolloff factor is 0.4 (IDirectSound_SetRolloffFactor).
+  The SDK ignored SetOutputBuffer, so every car's engine played at full level in the centre ("opponents' audio is 2D").
+  SDK submix-3d mixes a routed voice through its buffer's volume, bins and 3D place, and honours the rolloff factor:
+  headless, opponents 300 to 1200 units away, one at 600 about 34 dB down.
