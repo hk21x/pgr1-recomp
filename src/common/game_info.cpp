@@ -75,6 +75,7 @@ const app::GameInfo app::kGame = {
     .languages = {1, 4, 3, 5, 6},
 #endif
     .auto_fills_screen = true,  // "from the screen's shape" follows an ultrawide: the 3D widens, HUD at 16:9 (src/game/hooks.cpp)
+    .fills_narrow_screens = true,  // 16:10 and the like: the 4:3 game widened to the screen, as at 16:9 and wider
     .pcm_stream_level = MusicLevel,
     .other_voice_level = OtherLevel,
     .sound_x_left = true,  // its head relative 3D sound positions have +x to the left (measured against the picture)

@@ -18,6 +18,13 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-11-05 - 16:10 screens (test branch aspect-16x10)
+
+The SDK session's aspect-16x10 (183f945, the all-games candidate plus GameInfo::fills_narrow_screens), not on fork main:
+PGR1 sets the flag. Its four uses of FrameAspect() take 1.6 as they are (3D widening, HUD spread capped at 16:9, the intro's
+bars, the menu margins). Headless: smoke OK at OUTPUT=1280x800; a race at 16:10 widened to 1.600:1, rev counter round, HUD
+columns moved 54 (16:9 unchanged: 1.778:1, 91). wincheck clean. Waits on the windows-vm's check, then the SDK branch's merge.
+
 ### 2026-11-05 - languages
 
 Harry: the SDK's Language row for PGR1 before the next release. GameInfo::languages {1, 4, 3, 5, 6} on the Europe and
