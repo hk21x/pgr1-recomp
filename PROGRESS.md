@@ -26,6 +26,7 @@ left (FINDINGS). SDK GameInfo::sound_x_left, set for PGR1. The loud line now sho
 radio stream B00B7890, "0.25/0.00", is 0.00/0.25 on its right channel: it is stereo) and each routed voice's submix buffer
 and place. The player's engine about 3 to 4 dB quieter than before: its buffers are 10 to 20 units from the chase camera,
 DirectSound's rolloff. Smoke OK, wincheck clean.
+Harry on Windows (a868dac): passes now heard on the right side, "fixed".
 
 ### 2026-11-05 - opponents' engines heard where they are (branch audio-3d, SDK submix-3d)
 
