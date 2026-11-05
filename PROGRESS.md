@@ -18,6 +18,14 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-11-05 - Asia (branch asia)
+
+Asia's default.xbe (c14b3576...) has all 26 of USA's sections byte for byte, its certificate's version 6, and every data
+file the same as USA's but the xbes. So it is USA: CMake picks the USA configs for it, the USA build lists it in
+GameInfo::same_code, and the launcher accepts it and installs USA's package. Headless with Asia's xbe in place of USA's:
+PGR1 release 2, 5948 functions (as USA), smoke OK. The release check (same_code) runs only on Windows. Japan's is another
+compile (Europe 1.1's layout shifted 0xA0, XAPI 3911); its ISO is on the windows-vm, not here.
+
 ### 2026-11-04 - release 1.5
 
 Harry: release 1.5 (the game frame rate). Notes docs/releases/v1.5.md; the tag makes a draft, Harry builds the three

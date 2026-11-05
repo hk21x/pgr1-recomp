@@ -6,12 +6,14 @@
     "releases": {
         "4878c3bdbd44663b64ce64986b313e8c6b7f8917": "Europe 1.1",
         "ba7763e6e946ab40aed6706f2c9bc1df3a990fa0": "Europe and Australia 1.0",
-        "0d55fff29ceb34ab4dfcfc4820e823d967ca1469": "USA 1.0"
+        "0d55fff29ceb34ab4dfcfc4820e823d967ca1469": "USA 1.0",
+        "c14b35767fddc5a7af4b3aa13b53e374be23fe57": "Asia"
     },
     "packages": {
         "4878c3bdbd44663b64ce64986b313e8c6b7f8917": "PGR1-E11-package.zip",
         "ba7763e6e946ab40aed6706f2c9bc1df3a990fa0": "PGR1-E10-package.zip",
-        "0d55fff29ceb34ab4dfcfc4820e823d967ca1469": "PGR1-USA-package.zip"
+        "0d55fff29ceb34ab4dfcfc4820e823d967ca1469": "PGR1-USA-package.zip",
+        "c14b35767fddc5a7af4b3aa13b53e374be23fe57": "PGR1-USA-package.zip"
     },
     "repo": "https://github.com/hk21x/pgr1-recomp.git",
     "branch": "main",

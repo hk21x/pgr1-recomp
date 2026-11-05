@@ -61,6 +61,9 @@ const app::GameInfo app::kGame = {
     // optional, after these: .achievements (conditions on guest memory), .same_code (other releases' xbe SHA-1s with
     // the same code), .wheel (what a steering wheel's force feedback follows)
     .achievements = pgr1::AchievementSet(),  // conditions on guest memory, checked each frame
+#if PGR1_RELEASE == 2
+    .same_code = {"c14b35767fddc5a7af4b3aa13b53e374be23fe57"},  // Asia: USA's code, every section the same (its certificate's version 6)
+#endif
     .wheel = pgr1::WheelFeel,   // a steering wheel's force feedback follows the player's car (src/game/hooks.cpp)
     .bink_frame_hold = false,  // the movie player (0xE9780) waits on BinkWait itself (0xE98D0) and counts its frames
     .hud_aspect = 4.0f / 3.0f,  // no widescreen mode: menus and HUD are laid out 4:3, the 3D widens (src/game/hooks.cpp)

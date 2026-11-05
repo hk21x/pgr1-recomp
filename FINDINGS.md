@@ -125,7 +125,8 @@ game's own code and data, with its addresses).
 Each disc's default.xbe is another compile. Europe 1.0's code and data are Europe 1.1's moved by 0xE0 where hooks look.
 USA 1.0 is a build with XDK 3925's D3D8 and DSOUND: data moves in steps (pgr1::Va in src/common/release.h), and
 105 data files differ from Europe's (cars.ini only in DemoCar; the chapter files are the same). The Bink section moved whole.
-Asia's xbe (c14b35767fddc5a7af4b3aa13b53e374be23fe57) has USA's sections with another version number; Japan's
+Asia's xbe (c14b35767fddc5a7af4b3aa13b53e374be23fe57) has USA's sections with another version number (6), and every
+data file the same as USA's: it plays as USA (GameInfo::same_code, the USA package); Japan's
 (4c38cf630f7dc92a845d2141020157e78e682e3d) is another build. Neither is supported yet.
 
 ## Menus

@@ -16,7 +16,8 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/assets/default.xbe)
     if(PGR1_XBE_SHA1 STREQUAL "ba7763e6e946ab40aed6706f2c9bc1df3a990fa0")  # Europe and Australia 1.0
         set(PGR1_PREFIX "e10_")
         set(PGR1_RELEASE 1)
-    elseif(PGR1_XBE_SHA1 STREQUAL "0d55fff29ceb34ab4dfcfc4820e823d967ca1469")  # USA
+    elseif(PGR1_XBE_SHA1 STREQUAL "0d55fff29ceb34ab4dfcfc4820e823d967ca1469" OR PGR1_XBE_SHA1 STREQUAL "c14b35767fddc5a7af4b3aa13b53e374be23fe57")
+        # USA, and Asia: its xbe is USA's code, every section the same, its certificate's version 6
         set(PGR1_PREFIX "usa_")
         set(PGR1_RELEASE 2)
     endif()

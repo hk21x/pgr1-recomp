@@ -21,8 +21,9 @@ recompiles the one you give it:
 | Europe 1.1 | `4608350bc01c9544da8bd46860ecdfb16cc2d6eb` | `4878c3bdbd44663b64ce64986b313e8c6b7f8917` |
 | Europe and Australia 1.0 | `28bbf6c115f096eeb5785752e1bee34dc2cd7764` | `ba7763e6e946ab40aed6706f2c9bc1df3a990fa0` |
 | USA 1.0 | `c20a9d1d0ee04daf6e9723767b1b9d1a8007445d` | `0d55fff29ceb34ab4dfcfc4820e823d967ca1469` |
+| Asia | `95b9788eca5390a6246280095fc7756658f137e4` | `c14b35767fddc5a7af4b3aa13b53e374be23fe57` |
 
-The log (`logs\pgr1.log`) names the SHA-1 of the `default.xbe` it found. Other releases (Japanese, Asian) have not been
+The log (`logs\pgr1.log`) names the SHA-1 of the `default.xbe` it found. The Japanese release has not been
 added, and the launcher will not build them. To change disc, choose the other one in the launcher and build again.
 
 ## Getting Started
