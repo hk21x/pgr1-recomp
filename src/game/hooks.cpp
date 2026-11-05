@@ -312,6 +312,9 @@ X86_FUNC(PGR1_FN(000A39A0, 000A39C0, 000A1210, 000A39B0)) {
     }
     if (rhw <= 0.5f || hi < 639.5f || hi > 640.5f || lo < 500 || lo > kStripStart) return;
     const float u_start = u_lo + (u_hi - u_lo) * (kStripStart - lo) / (hi - lo);  // the strip's left end in the texture
+    // the copies end a texel short of the tile's edge column: clamped and filtered, it showed as a bright seam where each
+    // margin meets the frame (Windows, 16:10)
+    u_hi -= (u_hi - u_lo) / (hi - lo);
     const float margin = 320.0f * (aspect / (4.0f / 3.0f) - 1);  // guest pixels past each edge the squeezed frame leaves
     g_margin_fill = true;
     for (int side : {-1, 1}) {

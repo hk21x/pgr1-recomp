@@ -18,6 +18,14 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-11-05 - 16:10 on Windows (windows-vm, USA disc)
+
+Passes: races fill without stretching, HUD at the sides, menus' backdrop fills the margins, intro bars fit, 16:9 unchanged,
+no errors. To fix: (1) bright 1-2 px seams where each menu margin meets the 4:3 frame: the copies started on the tile's
+clamped edge column, now a texel inside (untested on Windows). (2) A thin bright line at guest x 63 in the menus: present in
+the game's own 640x480 picture at 4:3, 16:9 and 16:10 headless, so the menu art, not the widening; left as is. (3) F1's
+window does not follow a resolution change while open (SDK overlay.cpp, ImGuiCond_Appearing): passed to the SDK session.
+
 ### 2026-11-05 - 16:10 screens (test branch aspect-16x10)
 
 The SDK session's aspect-16x10 (183f945, the all-games candidate plus GameInfo::fills_narrow_screens), not on fork main:
