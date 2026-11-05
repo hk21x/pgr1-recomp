@@ -18,6 +18,15 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-11-05 - 3D sound: pan the right way round (branch audio-3d)
+
+Harry on Windows (USA disc, headset): no crash, fading works (0 to 3 engines loud at once, coming and going), but a car
+overtaken was heard in the other ear. Measured headless on the start grid against the picture: PGR1's head relative +x is
+left (FINDINGS). SDK GameInfo::sound_x_left, set for PGR1. The loud line now shows a stereo voice's second channel (the
+radio stream B00B7890, "0.25/0.00", is 0.00/0.25 on its right channel: it is stereo) and each routed voice's submix buffer
+and place. The player's engine about 3 to 4 dB quieter than before: its buffers are 10 to 20 units from the chase camera,
+DirectSound's rolloff. Smoke OK, wincheck clean.
+
 ### 2026-11-05 - opponents' engines heard where they are (branch audio-3d, SDK submix-3d)
 
 A player's report via Harry: every car's engine plays from the player's position. Cause and fix in FINDINGS ("Sound in

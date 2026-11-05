@@ -172,3 +172,8 @@ Asia's xbe (c14b35767fddc5a7af4b3aa13b53e374be23fe57) has USA's sections with an
   The SDK ignored SetOutputBuffer, so every car's engine played at full level in the centre ("opponents' audio is 2D").
   SDK submix-3d mixes a routed voice through its buffer's volume, bins and 3D place, and honours the rolloff factor:
   headless, opponents 300 to 1200 units away, one at 600 about 34 dB down.
+- **[game]** Its head relative positions have +x to the LEFT (+y up, +z ahead): on the start grid the pack ahead and a
+  little left of the picture's centre has x +2 to +8, and when the road turns right their x goes negative. Harry heard
+  passes in the wrong ear; GameInfo::sound_x_left (SDK) turns the pan round for it. The player's own engine buffers sit
+  10 to 20 units ahead of the listener (the chase camera), so they come out about 3 to 4 dB under full: as DirectSound
+  rolls off, not a fault.
