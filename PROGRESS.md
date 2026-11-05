@@ -18,6 +18,13 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-11-05 - release 1.6
+
+Harry: Japan works in English on Windows (Japanese: the menus black there too, as headless). Release 1.6: the 3D sound
+fix, Asia, Japan in English. SDK submix-3d fast-forwarded into the fork's main (8f4e536). Smoke OK on all five discs,
+repro.sh a live race, wincheck clean. Four packages: E11, E10, USA (Asia's too) and JPN. Next: Japanese menus; the
+SDK's Language row for the European discs' five languages (GameInfo::languages), offered to Harry.
+
 ### 2026-11-05 - Japan (branch japan, on asia)
 
 Harry: support the Asia and Japan discs. Japan's ISO (fdca8086..., the one reviewed on 11-01) extracted to .local/jpntest
