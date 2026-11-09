@@ -18,6 +18,15 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-11-09 - SDK at the fork's main 89cafb8: 16:10, aspect latch
+
+Fork main 89cafb8 (with Harry's go) holds the 16:10 branch, PGR2's aspect latch and fill_follows_live, the F1 window
+following a resolution change, True Crime's renderer work (lines one console pixel wide, the D3D12 pipeline cache's
+version 2, unbound_texture_zero off by default) and EoN's. PGR1 on it: fills_narrow_screens and fill_follows_live (its
+projection hook reads the shape for every view, so a 16:9 / fill switch applies at once), and aspect-16x10's margin seam
+fix merged. Smoke OK on all five discs and at OUTPUT=1280x800, repro.sh a live race, wincheck clean. To check on Windows
+before a release: the margin seams at 16:10, a live aspect switch, lines.
+
 ### 2026-11-05 - 16:10 on Windows (windows-vm, USA disc)
 
 Passes: races fill without stretching, HUD at the sides, menus' backdrop fills the margins, intro bars fit, 16:9 unchanged,

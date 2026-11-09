@@ -75,6 +75,9 @@ const app::GameInfo app::kGame = {
     .languages = {1, 4, 3, 5, 6},
 #endif
     .auto_fills_screen = true,  // "from the screen's shape" follows an ultrawide: the 3D widens, HUD at 16:9 (src/game/hooks.cpp)
+    // the aspect choice between 16:9 and filling the screen applies at once, as PGR1's projection hook (0xA57F0) reads the
+    // shape for every view it builds; 4:3 against wide waits for the next start
+    .fill_follows_live = true,
     .fills_narrow_screens = true,  // 16:10 and the like: the 4:3 game widened to the screen, as at 16:9 and wider
     .pcm_stream_level = MusicLevel,
     .other_voice_level = OtherLevel,
