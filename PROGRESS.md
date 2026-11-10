@@ -25,6 +25,10 @@ recorded on a record thread, clears and visibility tests too, vertex copies on h
 89cafb8, so PGR1 pins it as it is. On by default on D3D12; XBE_RECORD_THREAD=0 records inline as before. Headless (no
 D3D12): smoke OK on all five discs, repro.sh a live race, wincheck clean. Next: Harry's XBE_PERF in a busy race at 144,
 with and without XBE_RECORD_THREAD=0 (busy races were about 90 on one render thread).
+Harry on Windows (Europe 1.1 ISO, game frame rate 144, XBE_PERF): record thread on, after the first second of the race
+a steady 144 (143.4 to 144.3 each second for 31 s), render thread about 4.0 ms a frame; XBE_RECORD_THREAD=0 on the same
+build, 92 to 145, mostly 100 to 125 (average 120), render thread about 7.7 ms. The first crash in a race was assets
+holding only default.xbe (files from the hard disk's cache until one was not there).
 
 ### 2026-11-09 - SDK at the fork's main 89cafb8: 16:10, aspect latch
 
