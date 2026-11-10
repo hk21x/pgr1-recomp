@@ -18,6 +18,11 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-11-10 - release 1.7
+
+Harry: release 1.7 (the multi-core renderer, 16:10, aspect changes in play, the margin seam, the F1 window). Notes in
+docs/releases/v1.7.md; the tag makes a draft; the windows-vm session builds the four packages, Harry publishes.
+
 ### 2026-11-10 - checked on Windows for 1.7
 
 Harry, on main 78faa8d (the multi-core renderer): no flickering in races; the USA and Japan discs play fine; 16:10 in a
