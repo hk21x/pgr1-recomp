@@ -18,6 +18,12 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-11-10 - checked on Windows for 1.7
+
+Harry, on main 78faa8d (the multi-core renderer): no flickering in races; the USA and Japan discs play fine; 16:10 in a
+1280x800 window with aspect "From the screen's shape" fills it after a restart, and the menu margins meet the frame
+without seams (16:9 too). Ready for a release when Harry says.
+
 ### 2026-11-10 - the multi-core renderer (test branch render-mt2)
 
 The SDK's render-mt2 (07f92a7; PGR2's and EoN's line, docs/render-parallel.md): each draw decided on the render thread and
