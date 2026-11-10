@@ -18,6 +18,14 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-11-10 - the multi-core renderer (test branch render-mt2)
+
+The SDK's render-mt2 (07f92a7; PGR2's and EoN's line, docs/render-parallel.md): each draw decided on the render thread and
+recorded on a record thread, clears and visibility tests too, vertex copies on helper threads. It already holds fork main
+89cafb8, so PGR1 pins it as it is. On by default on D3D12; XBE_RECORD_THREAD=0 records inline as before. Headless (no
+D3D12): smoke OK on all five discs, repro.sh a live race, wincheck clean. Next: Harry's XBE_PERF in a busy race at 144,
+with and without XBE_RECORD_THREAD=0 (busy races were about 90 on one render thread).
+
 ### 2026-11-09 - SDK at the fork's main 89cafb8: 16:10, aspect latch
 
 Fork main 89cafb8 (with Harry's go) holds the 16:10 branch, PGR2's aspect latch and fill_follows_live, the F1 window
