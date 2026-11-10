@@ -21,7 +21,8 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 ### 2026-11-10 - release 1.7
 
 Harry: release 1.7 (the multi-core renderer, 16:10, aspect changes in play, the margin seam, the F1 window). Notes in
-docs/releases/v1.7.md; the tag makes a draft; the windows-vm session builds the four packages, Harry publishes.
+docs/releases/v1.7.md; the tag makes a draft; the windows-vm session builds the four packages, Harry publishes. Published
+2026-11-10: four packages (about 63.6 MB each), every sha256 new against 1.6's.
 
 ### 2026-11-10 - checked on Windows for 1.7
 
