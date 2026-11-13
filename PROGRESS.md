@@ -18,6 +18,30 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-11-13 - the Metal renderer's look (fork, branch macos)
+
+gpu/metal.mm: MSAA 2x/4x/8x (twins resolved by the pass's store action, depth and stencil from sample 0) with alpha to
+coverage; SMAA; screenshots of the frame as shown; an on-disk cache of translated shaders (shadercache-metal.bin); lines
+one console pixel wide (drawn again moved by whole host pixels, unblended lines only); border colours Metal lacks logged.
+shaders.cpp: g_sample_bias, each stage's mip LOD bias added in the pixel shader (DrawConstants::lodbias), off unless a
+renderer asks (Metal's samplers on macOS have none).
+Evidence (USA 1.0, 3440x1440, attract races): 60 fps with MSAA 4x + alpha coverage + world textures + 150% + sharpen 30
++ aniso 16 (one 55 fps second with 28 new shaders); SMAA, FXAA + sharpen + upscale filter, and 200% each 60 with no
+shader errors; MSAA edges and the enlarged foliage checked in screenshots; headless SMOKE OK.
+
+### 2026-11-13 - native macOS port (fork, branch macos)
+
+The game builds and runs natively on Apple silicon (MACOS.md, ./build-macos.sh). The SDK changes are on its macos branch:
+- guest memory: the 4 GB space mapped once, commits tracked in software (16 KB host pages); physical memory through shm_open
+- core/simd.h: the runtime's SSE2 operations in NEON; generated code built with -ffp-contract=off (no fused multiply add)
+- app/main_sdl.cpp: SDL3 window, events, keys by virtual key code, pacing; audio/sdl_audio.cpp (CoreAudio);
+  core/wheel_none.cpp; settings, overlay, game files and system info made portable
+- gpu/metal.mm: the d3d11.cpp path on Metal; HLSL through glslang and SPIRV-Cross; d3d_common shared via gpu/d3d_compat.h
+- game_files.cpp: default.xbe alone beside an .iso is the build's copy, the image is the game
+Evidence (USA 1.0, M-series): headless SMOKE OK on arm64; the app renders the intro, menus and attract races at 60 with
+2000+ draws a frame (XBE_PERF), sound starts on CoreAudio. Not checked yet: keyboard and controller play by hand, how FXAA and
+sharpening look (their shader compiles), MSAA (not implemented), the Windows build with these SDK changes (wincheck needs mingw).
+
 ### 2026-11-10 - release 1.7
 
 Harry: release 1.7 (the multi-core renderer, 16:10, aspect changes in play, the margin seam, the F1 window). Notes in
