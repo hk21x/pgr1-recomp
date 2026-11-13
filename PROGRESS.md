@@ -18,6 +18,17 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-11-13 - the Metal renderer's look (fork, branch macos)
+
+gpu/metal.mm: MSAA 2x/4x/8x (twins resolved by the pass's store action, depth and stencil from sample 0) with alpha to
+coverage; SMAA; screenshots of the frame as shown; an on-disk cache of translated shaders (shadercache-metal.bin); lines
+one console pixel wide (drawn again moved by whole host pixels, unblended lines only); border colours Metal lacks logged.
+shaders.cpp: g_sample_bias, each stage's mip LOD bias added in the pixel shader (DrawConstants::lodbias), off unless a
+renderer asks (Metal's samplers on macOS have none).
+Evidence (USA 1.0, 3440x1440, attract races): 60 fps with MSAA 4x + alpha coverage + world textures + 150% + sharpen 30
++ aniso 16 (one 55 fps second with 28 new shaders); SMAA, FXAA + sharpen + upscale filter, and 200% each 60 with no
+shader errors; MSAA edges and the enlarged foliage checked in screenshots; headless SMOKE OK.
+
 ### 2026-11-13 - native macOS port (fork, branch macos)
 
 The game builds and runs natively on Apple silicon (MACOS.md, ./build-macos.sh). The SDK changes are on its macos branch:
