@@ -18,6 +18,17 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-11-18 - README in twine-pc's style, new screenshots
+
+- README restyled after CipherNovaa/twine-pc, as Juiced's (centred banner, badges, link row, hero, table of contents
+  with back-to-top links, Xbox vs. PC wipe, features table, RECOMP pages, graphics close-ups, controls, supported
+  discs, FAQ, known issues, roadmap, credits and legal with the MIT license and an AI disclosure). Facts updated: 144
+  held with the two-thread renderer, packages about 64 MB, SMAA.
+- New shots on GPU-VM (Intel Arc A750), a 1920x800 window (21:9): Quick Race, easy, San Francisco, MR2 Spyder,
+  restarted from the pause menu for repeatable timing. Keyboard throttle does not move the car there, so the shots are
+  static (the countdown and the start line). Scripts in .local/gpuvm (shot.sh, readme/batch.sh); every shot checked,
+  none drew black areas. The old 3440x1440 images (pgr1-pc-port, pgr1-settings-car) are replaced.
+
 ### 2026-11-10 - release 1.7
 
 Harry: release 1.7 (the multi-core renderer, 16:10, aspect changes in play, the margin seam, the F1 window). Notes in
