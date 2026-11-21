@@ -18,6 +18,12 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-11-21 - release 1.8
+
+Harry: ship the update. Release 1.8: H-pattern shifters (issue #14, untried on a real shifter), the race HUD's width and
+the Kudos position (issue #15). Notes in docs/releases/v1.8.md; the tag makes a draft; the windows-vm session builds the
+four packages, Harry publishes. SDK unchanged since 1.7. SMOKE OK on 71a4a0f.
+
 ### 2026-11-21 - H-pattern shifters (#14), HUD width and Kudos position (#15)
 
 - #14 (a G920 with its shifter, stuck in 1st): the SDK drives a shifter by pressing the game's shift inputs until the
