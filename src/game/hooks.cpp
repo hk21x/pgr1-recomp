@@ -112,7 +112,7 @@ void HudSide(int side) {  // -1 left, 1 right, 2 the Kudos panel (right, or cent
 }
 // how far the HUD's sides spread, as the width over the 4:3 one: hud_width's 4:3 (1), 16:9 or the screen's own, at
 // most the screen's; 0 with one player off a wide screen. The Kudos panel spans x 495 to about 595 of 640 (headless,
-// its gold K 495 to 543): centred, it moves 320 - 545.
+// its gold K 495 to 543); moved 320 - 545 it sat 15 left of the centre on a 1920x800 window (Windows), so it moves 210.
 float SpreadRatio() {
     const float frame = app::FrameAspect();
     if (frame < 4.0f / 3.0f + 0.01f || kernel::G<int32_t>(pgr1::Va(0x2C695E)) > 1) return 0.0f;
@@ -200,7 +200,7 @@ X86_EXTERN_FUNC(PGR1_ORIG(0007D270, 0007D290, 0007C000, 0007D2A0));
 X86_FUNC(PGR1_FN(0007D270, 0007D290, 0007C000, 0007D2A0)) {
     PGR1_ORIG(0007D270, 0007D290, 0007C000, 0007D2A0)(ctx, base);
     float r = SpreadRatio();
-    g_shift_kudos = r != 0 && pgr1::kudos_centre ? 320.0f - 545.0f : 0.0f;
+    g_shift_kudos = r != 0 && pgr1::kudos_centre ? -210.0f : 0.0f;
     g_spread = r > 1.001f || g_shift_kudos != 0;
     if (!g_spread) return;
     g_shift_left = (float(kernel::G<int32_t>(pgr1::Va(0x192484))) - 320.0f) * (r - 1);
