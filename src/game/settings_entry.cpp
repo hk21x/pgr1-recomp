@@ -22,8 +22,8 @@
 
 namespace pgr1 {
 
-extern bool skip_intro, hide_hud;
-extern uint32_t fov_percent, radio_percent, frame_rate;
+extern bool skip_intro, hide_hud, kudos_centre;
+extern uint32_t fov_percent, radio_percent, frame_rate, hud_width;
 
 namespace {
 
@@ -246,6 +246,14 @@ const std::vector<Row> kGame = {
      [] { return Choices{"shown", "hidden"}; },
      [] { return uint32_t(hide_hud); },
      [](uint32_t i) { hide_hud = i != 0; }},
+    {"hud width",
+     [] { return Choices{"4:3", "16:9", "screen"}; },
+     [] { return std::min<uint32_t>(hud_width, 2); },
+     [](uint32_t i) { hud_width = i; }},
+    {"kudos",
+     [] { return Choices{"top right", "top centre"}; },
+     [] { return uint32_t(kudos_centre); },
+     [](uint32_t i) { kudos_centre = i != 0; }},
     {"radio music volume",
      [] { return Choices{"0%", "50%", "100%", "150%", "200%", "300%", "400%"}; },
      [] { return Nearest(kRadio, radio_percent); },

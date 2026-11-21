@@ -4,6 +4,7 @@
 #include <chrono>
 #include <cmath>
 #include <cctype>
+#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <string>
@@ -21,6 +22,8 @@ namespace pgr1 {
 extern bool skip_intro;
 extern uint32_t fov_percent;
 extern bool hide_hud;
+extern uint32_t hud_width;
+extern bool kudos_centre;
 }
 
 // skip_intro: startup (0xC9200) plays FMV\Intro.bik (IntroJ/G/F/S/I by language, 0xC9383) through the movie player
@@ -100,15 +103,21 @@ int64_t NowMs() {
 namespace {
 bool g_spread = false;               // this HUD is spread
 float g_shift_left = 0, g_shift_right = 0;  // guest pixels
+float g_shift_kudos = 0;  // the Kudos panel's move to the top centre, or 0
 int g_side_owner = 0;  // an element with its own side is drawing: what it calls keeps that side
-void HudSide(int side) {
+void HudSide(int side) {  // -1 left, 1 right, 2 the Kudos panel (right, or centred), 0 centred
     if (g_spread && !g_side_owner)
-        d3d::State().squeeze_shift = side < 0 ? g_shift_left : side > 0 ? g_shift_right : 0.0f;
+        d3d::State().squeeze_shift = side < 0 ? g_shift_left : side == 2 && g_shift_kudos != 0 ? g_shift_kudos
+                                     : side > 0 ? g_shift_right : 0.0f;
 }
-// the 16:9 frame's width over the 4:3 one (at most) on a wide screen with one player, else 0
+// how far the HUD's sides spread, as the width over the 4:3 one: hud_width's 4:3 (1), 16:9 or the screen's own, at
+// most the screen's; 0 with one player off a wide screen. The Kudos panel spans x 495 to about 595 of 640 (headless,
+// its gold K 495 to 543): centred, it moves 320 - 545.
 float SpreadRatio() {
-    float r = std::min(app::FrameAspect(), 16.0f / 9.0f) / (4.0f / 3.0f);
-    return r > 1.001f && kernel::G<int32_t>(pgr1::Va(0x2C695E)) <= 1 ? r : 0.0f;
+    const float frame = app::FrameAspect();
+    if (frame < 4.0f / 3.0f + 0.01f || kernel::G<int32_t>(pgr1::Va(0x2C695E)) > 1) return 0.0f;
+    const float width = pgr1::hud_width == 0 ? 4.0f / 3.0f : pgr1::hud_width == 1 ? 16.0f / 9.0f : frame;
+    return std::min(frame, width) / (4.0f / 3.0f);
 }
 }  // namespace
 
@@ -127,12 +136,33 @@ X86_FUNC(PGR1_FN(000820F0, 00082110, 00080DD0, 00082120)) {
 namespace pgr1 {
 // GameInfo::wheel: a steering wheel's forces follow the player's car while its race HUD is drawn (the ARCADE_RACER task
 // runs in the player's races, not the attract demo); its speed is the float at 0x2EC9D8, m/s (the top speed challenge
-// 0x44C60 times it by 3.6; 26.8 against the speedometer's 57 mph, 32.3 against 71, headless). The gear is not known.
+// 0x44C60 times it by 3.6; 26.8 against the speedometer's 57 mph, 32.3 against 71, headless).
+// The gear, for an H-pattern shifter: the int at +0x144 of the player's car (0x2EC980, the speed is its +0x58): -1
+// reverse, 0 neutral (before the start, 0x333F0), 1 and up; changed by 0x22A00, automatic or not. With the manual
+// gearbox (0x2C6E52 0, player 1's copy of the race setup's 0x2C694E) A shifts up and B down (headless: three As took
+// 1st to 4th, three Bs back). With the automatic one, in a replay and once the race is over, the gear is not reported,
+// so a shifter presses nothing.
 void WheelFeel(input::WheelFeel& feel) {
     feel.racing = NowMs() - g_hud_drawn.load() < 200;
     float speed;
     std::memcpy(&speed, &kernel::G<uint32_t>(pgr1::Va(0x2EC9D8)), 4);
     feel.speed = feel.racing && std::isfinite(speed) ? speed : 0;
+    // driving: a live race (0x2E71C8 0, as the achievements' PGR1_LIVE), not over (0x2E5D49, set at the finish and when
+    // time runs out: the results screen replays the race behind it with the HUD task running)
+    const bool driving = kernel::G<uint8_t>(pgr1::Va(0x2E71C8)) == 0 && kernel::G<uint8_t>(pgr1::Va(0x2E5D49)) == 0;
+    if (feel.racing && driving && kernel::G<int32_t>(pgr1::Va(0x2C6E52)) == 0) {
+        int gear = kernel::G<int32_t>(pgr1::Va(0x2ECAC4));
+        if (gear >= -1 && gear <= 7) feel.gear = gear;
+        feel.shift_up = input::kA;
+        feel.shift_down = input::kB;
+    }
+    // PGR1_GEAR_LOG=1: what the shifter is told, at each change
+    static const bool log = [] {
+        const char* e = std::getenv("PGR1_GEAR_LOG");
+        return e && *e == '1';
+    }();
+    static int logged = input::kGearUnknown - 1;
+    if (log && feel.gear != logged) LOGR("pgr1: the shifter is told gear %d", logged = feel.gear);
 }
 }  // namespace pgr1
 
@@ -170,7 +200,8 @@ X86_EXTERN_FUNC(PGR1_ORIG(0007D270, 0007D290, 0007C000, 0007D2A0));
 X86_FUNC(PGR1_FN(0007D270, 0007D290, 0007C000, 0007D2A0)) {
     PGR1_ORIG(0007D270, 0007D290, 0007C000, 0007D2A0)(ctx, base);
     float r = SpreadRatio();
-    g_spread = r != 0;
+    g_shift_kudos = r != 0 && pgr1::kudos_centre ? 320.0f - 545.0f : 0.0f;
+    g_spread = r > 1.001f || g_shift_kudos != 0;
     if (!g_spread) return;
     g_shift_left = (float(kernel::G<int32_t>(pgr1::Va(0x192484))) - 320.0f) * (r - 1);
     g_shift_right = (float(kernel::G<int32_t>(pgr1::Va(0x192494))) - 320.0f) * (r - 1);
@@ -207,7 +238,7 @@ PGR1_HUD_ELEMENT(0007F510, 0007F530, 0007E270, 0007F540, -1)
 PGR1_HUD_ELEMENT(0007E8F0, 0007E910, 0007D650, 0007E920, -1)
 PGR1_HUD_ELEMENT(0007EEF0, 0007EF10, 0007DC50, 0007EF20, 1)
 PGR1_HUD_ELEMENT(000813F0, 00081410, 00080100, 00081420, 1)
-PGR1_HUD_ELEMENT(0007FEC0, 0007FEE0, 0007EC20, 0007FEF0, 1)  // the Kudos panel and its pop-ups, top right (drawn through 0x7F8E0)
+PGR1_HUD_ELEMENT(0007FEC0, 0007FEE0, 0007EC20, 0007FEF0, 2)  // the Kudos panel and its pop-ups, top right (drawn through 0x7F8E0)
 PGR1_HUD_ELEMENT(0007D590, 0007D5B0, 0007C2F0, 0007D5C0, 0)
 PGR1_HUD_ELEMENT(0007DCB0, 0007DCD0, 0007CA10, 0007DCE0, 0)
 PGR1_HUD_ELEMENT(0007DE50, 0007DE70, 0007CBB0, 0007DE80, 0)

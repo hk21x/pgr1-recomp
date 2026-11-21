@@ -11,6 +11,8 @@ std::vector<achievements::Def> AchievementSet();  // src/game/achievement_set.cp
 void WheelFeel(input::WheelFeel& feel);  // src/game/hooks.cpp
 bool skip_intro = false;  // no intro movie, logos or warning at start (src/game/hooks.cpp)
 bool hide_hud = false;  // no race HUD, for screenshots (src/game/hooks.cpp)
+uint32_t hud_width = 1;     // the race HUD on a wide screen: 0 at 4:3, 1 laid out at 16:9, 2 the screen's width (hooks.cpp)
+bool kudos_centre = false;  // the Kudos panel and its pop-ups at the top centre (src/game/hooks.cpp)
 uint32_t fov_percent = 100;  // the race camera's field of view, percent of the console's (src/game/hooks.cpp)
 uint32_t frame_rate = 60;      // the rate the game runs and draws at: 60, 90, 120 or 144, at the next start (frame_rate.cpp)
 uint32_t radio_percent = 150;  // the radio's music against engine and effects, percent of the game's own balance
@@ -43,6 +45,10 @@ const app::GameInfo app::kGame = {
     // game settings kept in the settings file
     .options = {{"skip_intro", &pgr1::skip_intro, nullptr, "Skip intro", "The movie, logos and warning; at the next start."},
                 {"hide_hud", &pgr1::hide_hud, nullptr, "Hide the race HUD", "For screenshots; at once."},
+                {"hud_width", nullptr, &pgr1::hud_width, "Race HUD width",
+                 "On a wide screen: 0 the console's 4:3, 1 laid out at 16:9, 2 out to the screen's sides; at once."},
+                {"kudos_centre", &pgr1::kudos_centre, nullptr, "Kudos at the top centre",
+                 "The Kudos panel and its pop-ups move to the top centre of the screen; at once."},
                 {"fov_percent", nullptr, &pgr1::fov_percent, "Race camera field of view (%)",
                  "100 is the console's; 50 to 200, at once."},
                 {"frame_rate", nullptr, &pgr1::frame_rate, "Game frame rate",
