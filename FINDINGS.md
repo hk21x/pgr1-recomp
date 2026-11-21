@@ -54,7 +54,15 @@ game's own code and data, with its addresses).
   elements read anchors themselves (0x7F040, 0x7F510 top left; 0x7E8F0 bottom left: Lap; 0x7EEF0, 0x813F0 bottom right:
   the speedometer); the Kudos panel and its pop-ups are 0x7FEC0 (through 0x7F8E0), the targets 0x81170. The game does not
   draw its medals and big digits left of x 0 nor the Kudos panel right of 640, so a wider layout cannot move the game's
-  coordinates: the renderer moves each element (gpu::State::squeeze_shift, src/game/hooks.cpp).
+  coordinates: the renderer moves each element (gpu::State::squeeze_shift, src/game/hooks.cpp). hud_width spreads the
+  sides to 4:3 (none), 16:9 or the screen's width; kudos_centre moves the Kudos panel (x 495 to about 595 of 640) 210 to
+  the left, which centres it on a 1920x800 window (320 - 545 left it 15 short of the centre).
+- **[game]** The gear: the int at +0x144 of each car (player 1's car 0x2EC980, its speed +0x58): -1 reverse (0x1E7ED and
+  0x35568 compare it), 0 before the start (0x333F0 sets 0, then 1 at the go), 1 up. Every change, automatic or manual,
+  is written by 0x22A00 (the car's update, from 0x22C80; a gdb watchpoint headless). In a manual race A shifts up and B
+  down (three of each: 1st to 4th and back); X, Y, Black and White do nothing. The live race: 0x2E71C8 0; race over
+  0x2E5D49 (also when time runs out, while the results screen replays the race behind it with the HUD task running).
+  An H-pattern shifter is given the gear (GameInfo::wheel) only in a live manual race that is not over.
 - **[game]** The HUD and menus are pretransformed (FVF 0x144) with depth on and the comparison ALWAYS (0x207); the SDK's
   2D squeeze now counts only real depth tests, and squeezes PGR1's 2D into the centred 4:3 (GameInfo::hud_aspect).
 - **[game]** The car shadow: the car drawn from above into a 256x256 R5G6B5 target (cleared white, no depth, FVF

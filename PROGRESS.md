@@ -18,6 +18,18 @@ Newest first. Each entry: date, what changed, what was learned, what's next.
 
 ## Log
 
+### 2026-11-21 - H-pattern shifters (#14), HUD width and Kudos position (#15)
+
+- #14 (a G920 with its shifter, stuck in 1st): the SDK drives a shifter by pressing the game's shift inputs until the
+  car's gear matches, so the game must report the gear, and PGR1 reported none. Found headless: the gear is car +0x144
+  (a gdb watchpoint: every change written by 0x22A00), A shifts up and B down in a manual race. GameInfo::wheel now
+  reports it in a live manual race that is not over (the results screen replays the race with the HUD task running).
+  PGR1_GEAR_LOG=1 logs what the shifter is told. Not testable here or on GPU-VM (no wheel): needs the reporter.
+- #15: hud_width (4:3, 16:9 as before, the screen's width) and kudos_centre (the Kudos panel at the top centre), in
+  recomp > game and F1, at once. Checked on GPU-VM at 1920x800: all three widths, and the Kudos centred at 16:9 and
+  screen width (moved 210 of 640 to the left).
+- Smoke OK, repro.sh race frame normal.
+
 ### 2026-11-18 - README in twine-pc's style, new screenshots
 
 - README restyled after CipherNovaa/twine-pc, as Juiced's (centred banner, badges, link row, hero, table of contents

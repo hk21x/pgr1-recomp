@@ -66,13 +66,13 @@ the game's own picture.
 
 | | |
 |---|---|
-| **Widescreen** | True proportions on any screen, 16:10, 16:9, 21:9 and wider. The 3D views widen to the screen at full sharpness; the race HUD is laid out at 16:9 with its panels out towards the sides; the menus keep their 4:3 shape with the leather backdrop filling the sides. |
+| **Widescreen** | True proportions on any screen, 16:10, 16:9, 21:9 and wider. The 3D views widen to the screen at full sharpness; the race HUD is laid out at 4:3, 16:9 or out to the screen's sides, with the Kudos at the top right or top centre; the menus keep their 4:3 shape with the leather backdrop filling the sides. |
 | **Game frame rate** | 60, 90, 120 or 144: the game runs and draws every frame at that rate, at the right speed. The renderer prepares each frame on two threads, so busy races hold 144 on a fast PC. |
 | **Steady speed** | The game keeps real time when the frame rate dips; on the console a late frame put the whole game in slow motion. |
 | **Sharper graphics** | Render scale from 25% to 200%, MSAA up to 8x, FXAA or SMAA, sharpening, anisotropic filtering up to 16x, enhanced world textures and sharp text and HUD. |
 | **RECOMP in the game** | Options > RECOMP on the title menus and recomp in a race's pause menu, in the game's own style. Everything is also in the F1 window and `pgr1.toml`. |
 | **Languages** | English, French, German, Spanish or Italian on the Europe and Japan discs. |
-| **Controllers and wheels** | Xbox, PlayStation and Switch pads with hot plugging and rumble; any DirectInput wheel, pedals, shifter or button box, with force feedback. |
+| **Controllers and wheels** | Xbox, PlayStation and Switch pads with hot plugging and rumble; any DirectInput wheel, pedals, H-pattern shifter or button box, with force feedback. |
 | **3D sound** | The other cars' engines placed around you as the game intended, over XAudio2. |
 | **Achievements** | 31, from every Kudos Challenge level to clean and night wins, with pop-ups and a list in the settings window. |
 | **The launcher** | Choose your disc, Get the game ready, Play, Update: nothing installed in Windows, no admin rights, saves and settings kept. |
@@ -81,10 +81,11 @@ the game's own picture.
 ## Widescreen and the menus
 <sup>[(Back to top)](#table-of-contents)</sup>
 
-The console game is 4:3 only. In a race the 3D view widens to your screen's shape, and the HUD is laid out at 16:9 with
-its panels out towards the sides, each at its true shape. The race intro's black bars fit the screen, and on 16:10
-screens (1920x1200, the Steam Deck) the game fills the screen too. **race hud: hidden** (recomp > game) clears the HUD
-for screenshots.
+The console game is 4:3 only. In a race the 3D view widens to your screen's shape, and the HUD keeps each panel at its
+true shape. **hud width** (recomp > game) lays it out at the console's **4:3**, at **16:9** (the default) or out to the
+**screen**'s sides, and **kudos** puts the Kudos panel and its pop-ups at the **top right** or the **top centre**. The
+race intro's black bars fit the screen, and on 16:10 screens (1920x1200, the Steam Deck) the game fills the screen too.
+**race hud: hidden** clears the HUD for screenshots.
 
 <p align="center">
   <img src="docs/images/pgr1-menus.webp" alt="Car select at 4:3 in the middle of a 21:9 screen, the blue leather backdrop filling the sides" width="800">
@@ -109,7 +110,7 @@ pause menu. Most apply at once.
 | **picture** | MSAA, smooth alpha, edge smoothing (FXAA, SMAA), sharpening, texture filtering, world textures, sharp text and HUD |
 | **performance** | Render scale, scaling filter, frame rate cap, low latency, frame counter, renderer (Direct3D 12 or 11) |
 | **display** | Monitor, mode (full screen, borderless, window), resolution, vertical sync, aspect ratio |
-| **game** | Game frame rate, field of view, race HUD, radio music volume, language, skip intro, pause in background |
+| **game** | Game frame rate, field of view, race HUD, HUD width, Kudos position, radio music volume, language, skip intro, pause in background |
 | **controls** | Keyboard, mouse look, default keys and controller |
 | **wheel** | Invert steering, wheel rotation, steering lock, dead zone, force feedback, road and impacts |
 
@@ -181,7 +182,8 @@ and any of them can be changed in the F1 window.
 
 **Steering wheels and rigs:** any DirectInput wheel, pedal box, button box or shifter, also spread over several USB
 devices. Each control is bound in F1 > Wheel by moving or pressing it, and force feedback on the steering's device
-follows the player's car.
+follows the player's car. An **H-pattern shifter** works with the manual gearbox: bind its positions in F1 > Wheel, and
+the car follows the gear you select (the port presses the game's own shift up and down, A and B, until they match).
 
 ## Achievements
 <sup>[(Back to top)](#table-of-contents)</sup>
